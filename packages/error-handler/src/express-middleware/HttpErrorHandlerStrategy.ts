@@ -5,7 +5,7 @@ import { HttpError } from "../errors/HttpError.js";
 import { ILogger } from "../errors/types.js";
 import { IHttpErrorSerializer } from "../serializers/interfaces/IHttpErrorSerializer.js";
 
-export class HttpErrorStrategy implements IErrorHandlingStrategy {
+export class HttpErrorHandlerStrategy implements IErrorHandlingStrategy {
   constructor(
     private httpErrorSerializer: IHttpErrorSerializer,
     private logger?: ILogger
