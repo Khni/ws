@@ -24,5 +24,5 @@ export interface IZodErrorSerializer {
       | "custom";
   }[];
 
-  serializerResponse: (zodError: ZodError) => InputValidationError;
+  serializeResponse: (zodError: ZodError) => InputValidationError;
 }

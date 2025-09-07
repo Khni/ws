@@ -3,8 +3,8 @@ import { IErrorHandlingStrategy } from "../interfaces/IErrorHandlingStrategy.js"
 import { HttpErrorHandlerStrategy } from "../HttpErrorHandlerStrategy.js";
 import { mockHttpErrorSerializer } from "../../serializers/interfaces/mocks.js";
 import { HttpError } from "../../errors/HttpError.js";
-import { httpErrorConstructor } from "./data.js";
-import { mockResponse } from "../mocks.js";
+import { httpErrorConstructor, serializeErrorReturnValue } from "./data.js";
+import { mockLogger, mockResponse } from "../mocks.js";
 import type { Response } from "express";
 describe("HttpErrorHandlerStrategy", () => {
   let httpErrorHandlerStrategy: IErrorHandlingStrategy;
@@ -32,7 +32,7 @@ describe("HttpErrorHandlerStrategy", () => {
     expect(httpErrorHandlerStrategy.canHandle(new Error())).toBe(false);
   });
 
-  it("call res.status and res.json", () => {
+  it("call res.status and res.json and not call httpErrorSerializer.serializerError and log[logLevel] when logger is not passed when creating HttpErrorStrategyHandler instance ", () => {
     mockHttpErrorSerializer.serializeResponse.mockReturnValue({
       message: "message",
       code: "code",
@@ -42,11 +42,35 @@ describe("HttpErrorHandlerStrategy", () => {
       new HttpErrorInstance(httpErrorConstructor),
       res
     );
+
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({
       message: "message",
       code: "code",
       name: "name",
     });
+    expect(mockHttpErrorSerializer.serializerError).not.toHaveBeenCalled();
+    expect(mockLogger.warn).not.toHaveBeenCalled();
+  });
+  it("call httpErrorSerializer.serializerError and log[logLevel] when logger is passed when creating HttpErrorStrategyHandler instance", () => {
+    const httpErrorHandlerStrategyWithLogger = new HttpErrorHandlerStrategy(
+      mockHttpErrorSerializer,
+      mockLogger
+    );
+    mockHttpErrorSerializer.serializeResponse.mockReturnValue({
+      message: "message",
+      code: "code",
+      name: "name",
+    });
+    mockHttpErrorSerializer.serializerError.mockReturnValue(
+      serializeErrorReturnValue
+    );
+    httpErrorHandlerStrategyWithLogger.handle(
+      new HttpErrorInstance(httpErrorConstructor),
+      res
+    );
+
+    expect(mockHttpErrorSerializer.serializerError).toHaveBeenCalled();
+    expect(mockLogger.warn).toHaveBeenCalled();
   });
 });

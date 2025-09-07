@@ -11,7 +11,7 @@ export class ZodErrorSerializer implements IZodErrorSerializer {
     }));
   };
 
-  serializerResponse = (zodError: ZodError) => {
+  serializeResponse = (zodError: ZodError) => {
     const errors = zodError.issues.reduce(
       (acc: Record<string, string[]>, error) => {
         const path = error.path.join(".");

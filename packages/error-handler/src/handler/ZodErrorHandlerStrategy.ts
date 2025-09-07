@@ -5,7 +5,7 @@ import { IErrorHandlingStrategy } from "./interfaces/IErrorHandlingStrategy.js";
 import { ILogger } from "../errors/types.js";
 import { IZodErrorSerializer } from "../serializers/interfaces/IZodErrorSerializer.js";
 
-export class ZodErrorStrategy implements IErrorHandlingStrategy {
+export class ZodErrorhandlerStrategy implements IErrorHandlingStrategy {
   constructor(
     private zodErrorSerializer: IZodErrorSerializer,
     private logger?: ILogger
@@ -25,8 +25,7 @@ export class ZodErrorStrategy implements IErrorHandlingStrategy {
       );
     }
 
-    const formattedErrors =
-      this.zodErrorSerializer.serializerResponse(zodError);
+    const formattedErrors = this.zodErrorSerializer.serializeResponse(zodError);
 
     res.status(400).json(formattedErrors);
   }

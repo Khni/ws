@@ -38,7 +38,7 @@ export type InputValidationError = {
      *
      * Example: "email", "password"
      */
-    field?: string;
+    field: string;
 
     /**
      * One or more messages describing the error(s).
