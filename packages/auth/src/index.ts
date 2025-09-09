@@ -12,10 +12,10 @@ export * from "./local-auth/EmailUserStrategy.js";
 export * from "./local-auth/LocalAuthContext.js";
 
 // refreshtoken interface
-export * from "./tokens/interfaces/IRefreshTokenService.js";
+export * from "./auth-tokens/interfaces/IRefreshTokenService.js";
 
 // refreshtoken service
-export * from "./tokens/RefreshTokenService.js";
+export * from "./auth-tokens/RefreshTokenService.js";
 
 // errors
 export * from "./errors/errors.js";
