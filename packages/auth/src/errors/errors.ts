@@ -20,6 +20,8 @@ export const AuthUnexpectedErrorCodes = {
   ISSUE_TOKEN_FAILED: "ISSUE_TOKEN_FAILED",
   PASSWORD_RESET_FAILED: "PASSWORD_RESET_FAILED",
   REFRESHTOKEN_REVOKE_FAILED: "REFRESHTOKEN_REVOKE_FAILED",
+  REFRESHTOKEN_CREATE_FAILED: "REFRESHTOKEN_CREATE_FAILED",
+  REFRESHTOKEN_VERIFY_FAILED: "REFRESHTOKEN_VERIFY_FAILED",
   LOGIN_FAILED: "LOGIN_FAILED",
   OTP_CREATION_FAILED: "OTP_CREATION_FAILED",
   OTP_VERIFICATION_FAILED: "OTP_VERIFICATION_FAILED",
@@ -107,6 +109,14 @@ export const authUnexpectedErrorMapping = {
   [AuthUnexpectedErrorCodes.REFRESHTOKEN_REVOKE_FAILED]: {
     statusCode: 500, // Internal Server Error
     responseMessage: "Failed to Logout",
+  },
+  [AuthUnexpectedErrorCodes.REFRESHTOKEN_CREATE_FAILED]: {
+    statusCode: 500, // Internal Server Error
+    responseMessage: "Failed to create refresh token",
+  },
+  [AuthUnexpectedErrorCodes.REFRESHTOKEN_VERIFY_FAILED]: {
+    statusCode: 500, // Internal Server Error
+    responseMessage: "Failed to verify refresh token",
   },
   [AuthUnexpectedErrorCodes.LOGIN_FAILED]: {
     statusCode: 500,

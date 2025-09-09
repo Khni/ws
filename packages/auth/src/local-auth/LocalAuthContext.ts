@@ -1,8 +1,8 @@
 import { BcryptHasher } from "../hasher/BcryptHasher.js";
 import { IHasher } from "../hasher/IHasher.js";
-import { AuthDomainError } from "./errors/AuthDomainError.js";
-import { AuthUnexpectedError } from "./errors/AuthUnexpectedError.js";
-import { AuthUnexpectedErrorCodesType } from "./errors/errors.js";
+import { AuthDomainError } from "../errors/AuthDomainError.js";
+import { AuthUnexpectedError } from "../errors/AuthUnexpectedError.js";
+import { AuthUnexpectedErrorCodesType } from "../errors/errors.js";
 import { ILocalAuthContext } from "./interfaces/IlocalAuthContext.js";
 import {
   CreateUserStrategyParams,
