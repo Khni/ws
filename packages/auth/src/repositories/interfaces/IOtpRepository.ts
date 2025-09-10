@@ -6,11 +6,12 @@ export type OtpModel<OtpType> = {
   userId: string;
   expiresAt: Date;
   type: OtpType;
+  hashedOtp: string;
 };
 
 export type OtpCreateInput<OtpType> = Pick<
   OtpModel<OtpType>,
-  "userId" | "type" | "expiresAt"
+  "userId" | "type" | "expiresAt" | "hashedOtp"
 >;
 
 export type OtpUpdateInput<OtpType> = Partial<OtpModel<OtpType>>;

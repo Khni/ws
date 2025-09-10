@@ -1,3 +1,9 @@
+export type OtpSendParams = {
+  expiresIn: number;
+  otpType: string;
+  recipient: string;
+  generatedOtp: string;
+};
 export interface IOtpSenderStrategy {
-  send(): Promise<void>;
+  send(params: OtpSendParams): Promise<void>;
 }

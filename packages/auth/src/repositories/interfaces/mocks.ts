@@ -1,3 +1,4 @@
+import { IOtpRepository } from "./IOtpRepository.js";
 import { IRefreshTokenRepository } from "./IRefreshTokenRepository.js";
 import { IUserRepository } from "./IUserRepository.js";
 import { Mocked, vi } from "vitest";
@@ -20,3 +21,5 @@ function createMockRepository<T>(): Mocked<T> {
 export const mockUserRepository = createMockRepository<IUserRepository>();
 export const mockRefreshTokenRepository =
   createMockRepository<IRefreshTokenRepository>();
+
+export const mockOtpRepository = createMockRepository<IOtpRepository<any>>();
