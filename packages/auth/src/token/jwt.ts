@@ -1,12 +1,12 @@
 import jwt, { SignOptions, VerifyOptions, JwtPayload } from "jsonwebtoken";
-import { IToken } from "./IToken.js";
+import { IToken, SignTokenOptions } from "./IToken.js";
 export type SafeSignOptions = Omit<SignOptions, "expiresIn"> & {
   expiresIn?: `${number}${"s" | "m" | "h" | "d"}`;
 };
 export class Jwt<T extends object = JwtPayload> implements IToken<T> {
   constructor(private JWT_SECRET: string) {}
 
-  sign(payload: T, options?: SafeSignOptions): string {
+  sign(payload: T, options: SignTokenOptions): string {
     if (options?.expiresIn && typeof options.expiresIn === "number") {
       throw new Error(
         `expiresIn should be a string like '10m' or '1h'. Passing a number means seconds, which may not be what you intended.`

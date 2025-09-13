@@ -13,6 +13,7 @@ function createMockRepository<T>(): Mocked<T> {
     }),
     delete: vi.fn(),
     findMany: vi.fn(),
+    findFirst: vi.fn(),
     findUnique: vi.fn(),
     update: vi.fn(),
   } as unknown as Mocked<T>;

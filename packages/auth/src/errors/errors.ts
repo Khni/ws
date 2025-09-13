@@ -9,13 +9,14 @@ export const AuthDomainErrorCodes = {
     "MISSING_OR_MALFORMED_AUTHORIZATION_HEADER",
   INVALID_ACCESS_TOKEN: "INVALID_ACCESS_TOKEN",
   MISSING_REFRESH_TOKEN: "MISSING_REFRESH_TOKEN",
-  EMAIL_IS_NOT_EXIST: "EMAIL_IS_NOT_EXIST",
+  EMAIL_IS_NOT_EXIST: "USER_IS_NOT_EXIST",
   OTP_INVALID: "OTP_INVALID",
   OTP_EXPIRED: "OTP_EXPIRED",
 } as const;
 
 // Unexpected/Internal Errors
 export const AuthUnexpectedErrorCodes = {
+  FINDING_USER_FAILED: "FINDING_USER_FAILED", //it does not mean the user is not exist but it means an expecting error while finding the user
   AUTH_USER_CREATION_FAILED: "AUTH_USER_CREATION_FAILED",
   ISSUE_TOKEN_FAILED: "ISSUE_TOKEN_FAILED",
   PASSWORD_RESET_FAILED: "PASSWORD_RESET_FAILED",
@@ -129,6 +130,10 @@ export const authUnexpectedErrorMapping = {
   [AuthUnexpectedErrorCodes.OTP_VERIFICATION_FAILED]: {
     statusCode: 500,
     responseMessage: "something went wrong while creating OTP",
+  },
+  [AuthUnexpectedErrorCodes.FINDING_USER_FAILED]: {
+    statusCode: 500,
+    responseMessage: "something went wrong while finding the user",
   },
 } as const;
 

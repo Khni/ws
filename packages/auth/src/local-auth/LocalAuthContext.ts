@@ -32,13 +32,15 @@ export class LocalAuthContext implements ILocalAuthContext {
 
   private handleAuthError(
     error: unknown,
-    code: AuthUnexpectedErrorCodesType
+    code: AuthUnexpectedErrorCodesType,
+    msg?: string,
+    meta?: {}
   ): never {
     if (error instanceof AuthDomainError) {
       throw error;
     }
 
-    throw new AuthUnexpectedError(code, error);
+    throw new AuthUnexpectedError(code, error, msg, meta);
   }
 
   createUser = async ({
@@ -66,6 +68,27 @@ export class LocalAuthContext implements ILocalAuthContext {
       return user;
     } catch (error) {
       this.handleAuthError(error, "AUTH_USER_CREATION_FAILED");
+    }
+  };
+
+  findUser = async ({
+    data,
+    authIdentifierType,
+  }: {
+    authIdentifierType: AuthIdentifierType;
+    data: { identifier: string };
+  }) => {
+    try {
+      const userStrategy = this.getStrategy(authIdentifierType);
+      let user = await userStrategy.find({
+        identifier: data.identifier,
+      });
+
+      return user;
+    } catch (error) {
+      this.handleAuthError(error, "FINDING_USER_FAILED", "", {
+        identifer: data.identifier,
+      });
     }
   };
 

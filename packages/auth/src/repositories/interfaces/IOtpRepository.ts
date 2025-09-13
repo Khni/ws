@@ -36,6 +36,13 @@ export interface IOtpRepository<OtpType> {
     orderBy?: Partial<Record<keyof OtpModel<OtpType>, "asc" | "desc">>;
     where?: Partial<OtpModel<OtpType>>;
   }): Promise<OtpModel<OtpType>[]>;
+  findFirst({
+    where,
+    orderBy,
+  }: {
+    where: Partial<OtpModel<OtpType>>;
+    orderBy?: Partial<Record<keyof OtpModel<OtpType>, "asc" | "desc">>;
+  }): Promise<OtpModel<OtpType> | null>;
 
   delete(params: {
     where: OtpWhereUniqueInput;

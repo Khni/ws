@@ -31,4 +31,13 @@ export interface ILocalAuthContext {
       identifier: string;
     };
   }): Promise<UserModel>;
+  findUser: ({
+    data,
+    authIdentifierType,
+  }: {
+    authIdentifierType: AuthIdentifierType;
+    data: {
+      identifier: string;
+    };
+  }) => Promise<UserModel | null>;
 }
