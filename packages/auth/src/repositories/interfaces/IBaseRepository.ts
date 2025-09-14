@@ -6,7 +6,7 @@ export interface IBaseRepository<
 > {
   create(params: { data: CreateInput; tx?: unknown }): Promise<Model>;
 
-  update<Keys extends keyof Model>(params: {
+  update(params: {
     data: UpdateInput;
     where: WhereUniqueInput;
     tx?: unknown;
@@ -31,9 +31,7 @@ export interface IBaseRepository<
     tx?: unknown;
   }): Promise<{ id: string }>;
 
-  findUnique<Keys extends keyof Model>(
-    where: WhereUniqueInput
-  ): Promise<Model | null>;
+  findUnique(params: { where: WhereUniqueInput }): Promise<Model | null>;
 
   count(params?: { where?: Partial<Model> }): Promise<number>;
   createTransaction<T>(callback: (tx: unknown) => Promise<T>): Promise<T>;
