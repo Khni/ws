@@ -56,7 +56,6 @@ describe("CreateOtpService", () => {
     // Act
     const result = await createOtpService.execute({
       data: {
-        userId: "user-123",
         otpType: "VERIFY_EMAIL",
         recipient: "test@example.com",
       },
@@ -68,7 +67,7 @@ describe("CreateOtpService", () => {
     expect(mockOtpRepository.create).toHaveBeenCalledWith({
       data: expect.objectContaining({
         hashedOtp: fakeHashedOtp,
-        userId: "user-123",
+        identifier: "test@example.com",
         type: "VERIFY_EMAIL",
         expiresAt: new Date("2025-01-01T00:00:00.000Z"),
       }),
@@ -95,7 +94,6 @@ describe("CreateOtpService", () => {
     await expect(
       createOtpService.execute({
         data: {
-          userId: "user-123",
           otpType: "VERIFY_PHONE",
           recipient: "+15551234567",
         },

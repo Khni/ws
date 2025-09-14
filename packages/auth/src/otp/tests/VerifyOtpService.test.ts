@@ -10,7 +10,7 @@ import { IVerifyOtpService } from "../interfaces/IVerifyOtpService.js";
 describe("VerifyOtpService", () => {
   let verifyOtpService: IVerifyOtpService<any>;
 
-  const userId = "user-123";
+  const identifier = "user-123@gmail.com";
   const otp = "123456";
   const type = "VERIFY_EMAIL";
 
@@ -26,11 +26,11 @@ describe("VerifyOtpService", () => {
     });
     mockHasher.compare.mockResolvedValue(true);
 
-    const result = await verifyOtpService.execute({ userId, otp, type });
+    const result = await verifyOtpService.execute({ identifier, otp, type });
 
     expect(result).toBe(true);
     expect(mockOtpRepository.findFirst).toHaveBeenCalledWith({
-      where: { userId, type },
+      where: { identifier, type },
       orderBy: { createdAt: "desc" },
     });
     expect(mockHasher.compare).toHaveBeenCalledWith(
@@ -43,7 +43,7 @@ describe("VerifyOtpService", () => {
     mockOtpRepository.findFirst.mockResolvedValue(null);
 
     await expect(
-      verifyOtpService.execute({ userId, otp, type })
+      verifyOtpService.execute({ identifier, otp, type })
     ).rejects.toThrowError(new AuthDomainError("OTP_INVALID"));
   });
 
@@ -52,7 +52,7 @@ describe("VerifyOtpService", () => {
     mockHasher.compare.mockResolvedValue(false);
 
     await expect(
-      verifyOtpService.execute({ userId, otp, type })
+      verifyOtpService.execute({ identifier, otp, type })
     ).rejects.toThrowError(new AuthDomainError("OTP_INVALID"));
   });
 
@@ -65,7 +65,7 @@ describe("VerifyOtpService", () => {
     mockHasher.compare.mockResolvedValue(true);
 
     await expect(
-      verifyOtpService.execute({ userId, otp, type })
+      verifyOtpService.execute({ identifier, otp, type })
     ).rejects.toThrowError(new AuthDomainError("OTP_EXPIRED"));
   });
 
@@ -73,7 +73,7 @@ describe("VerifyOtpService", () => {
     mockOtpRepository.findFirst.mockRejectedValue(new Error("DB crash"));
 
     await expect(
-      verifyOtpService.execute({ userId, otp, type })
+      verifyOtpService.execute({ identifier, otp, type })
     ).rejects.toThrowError(AuthUnexpectedError);
   });
 
@@ -82,7 +82,7 @@ describe("VerifyOtpService", () => {
     mockHasher.compare.mockRejectedValue(new Error("Hasher crash"));
 
     await expect(
-      verifyOtpService.execute({ userId, otp, type })
+      verifyOtpService.execute({ identifier, otp, type })
     ).rejects.toThrowError(AuthUnexpectedError);
   });
 });

@@ -12,7 +12,7 @@ export class ForgetPasswordWithOtp<OtpType> {
     private createOtpService: ICreateOtpService<OtpType>,
     private verifyOtpService: IVerifyOtpService<OtpType>,
     private tokenService: IToken<{
-      userId: string;
+      identifier: string;
       otpType: OtpType;
       verified: boolean;
     }>,
@@ -38,12 +38,11 @@ export class ForgetPasswordWithOtp<OtpType> {
       data: {
         otpType: this.otpType,
         recipient: data.identifier,
-        userId: user.id,
       },
     });
     const token = this.tokenService.sign(
       {
-        userId: user.id,
+        identifier: data.identifier,
         otpType: this.otpType,
         verified: false,
       },
@@ -59,7 +58,7 @@ export class ForgetPasswordWithOtp<OtpType> {
     const isVerified = await this.verifyOtpService.execute({
       otp: otp,
       type: this.otpType,
-      userId: payload?.userId,
+      identifier: payload?.identifier,
     });
     if (isVerified) {
       return this.tokenService.sign(

@@ -2,25 +2,26 @@ import { AuthDomainError } from "../errors/AuthDomainError.js";
 import { AuthUnexpectedError } from "../errors/AuthUnexpectedError.js";
 import { IHasher } from "../hasher/IHasher.js";
 import { IOtpRepository } from "../repositories/interfaces/IOtpRepository.js";
+import { IVerifyOtpService } from "./interfaces/IVerifyOtpService.js";
 
-export class VerifyOtpService<OtpType> implements VerifyOtpService<OtpType> {
+export class VerifyOtpService<OtpType> implements IVerifyOtpService<OtpType> {
   constructor(
     private otpRepository: IOtpRepository<OtpType>,
     private hasher: IHasher
   ) {}
 
   async execute({
-    userId,
+    identifier,
     otp,
     type,
   }: {
-    userId: string;
+    identifier: string;
     otp: string;
     type: OtpType;
   }) {
     try {
       const otpRecord = await this.otpRepository.findFirst({
-        where: { userId, type },
+        where: { identifier, type },
         orderBy: { createdAt: "desc" },
       });
 

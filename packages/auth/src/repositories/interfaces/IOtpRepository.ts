@@ -5,7 +5,7 @@ export type OtpModel<OtpType> = {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
-  userId: string;
+  identifier: string;
   expiresAt: Date;
   type: OtpType;
   hashedOtp: string;
@@ -13,7 +13,7 @@ export type OtpModel<OtpType> = {
 
 export type OtpCreateInput<OtpType> = Pick<
   OtpModel<OtpType>,
-  "userId" | "type" | "expiresAt" | "hashedOtp"
+  "identifier" | "type" | "expiresAt" | "hashedOtp"
 >;
 
 export type OtpUpdateInput<OtpType> = Partial<OtpModel<OtpType>>;

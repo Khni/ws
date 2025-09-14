@@ -5,7 +5,7 @@ export const fakeOtpRecord: OtpModel<"VERIFY_EMAIL"> = {
   isActive: true,
   createdAt: new Date("2025-01-01T00:00:00.000Z"),
   updatedAt: new Date("2025-01-01T00:00:00.000Z"),
-  userId: "user-123",
+  identifier: "user-123",
   expiresAt: new Date("2025-01-01T00:05:00.000Z"),
   type: "VERIFY_EMAIL",
   hashedOtp: "hashed_123456",

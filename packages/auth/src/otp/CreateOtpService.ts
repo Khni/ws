@@ -41,7 +41,7 @@ export class CreateOtpService<OtpType> implements ICreateOtpService<OtpType> {
         data: {
           expiresAt,
           hashedOtp,
-          userId: data.userId,
+          identifier: data.recipient,
           type: data.otpType,
         },
       });

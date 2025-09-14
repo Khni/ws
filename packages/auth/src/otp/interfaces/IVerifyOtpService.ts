@@ -1,10 +1,10 @@
 export interface IVerifyOtpService<OtpType> {
   execute({
-    userId,
+    identifier,
     otp,
     type,
   }: {
-    userId: string;
+    identifier: string;
     otp: string;
     type: OtpType;
   }): Promise<boolean>;
