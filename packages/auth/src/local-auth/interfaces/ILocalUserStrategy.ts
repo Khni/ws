@@ -1,8 +1,3 @@
-import {
-  UserModel,
-  UserUpdateInput,
-} from "../../repositories/interfaces/IUserRepository.js";
-
 export type CreateUserStrategyParams = {
   firstName: string;
   lastName: string;
@@ -11,15 +6,15 @@ export type CreateUserStrategyParams = {
   verified: boolean;
 };
 
-export type UpdateUserStrategyParams = {
-  data: UserUpdateInput;
+export type UpdateUserStrategyParams<UserModel> = {
+  data: Partial<UserModel>;
   identifier: string;
 };
 
 export type FindUserStrategyParams = { identifier: string };
-export interface ILocalUserStrategy {
+export interface ILocalUserStrategy<UserModel> {
   name: string;
   find(params: FindUserStrategyParams): Promise<UserModel | null>;
   create(params: CreateUserStrategyParams): Promise<UserModel>;
-  update(params: UpdateUserStrategyParams): Promise<UserModel>;
+  update(params: UpdateUserStrategyParams<UserModel>): Promise<UserModel>;
 }

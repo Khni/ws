@@ -1,19 +1,22 @@
-export type UserModel = {
+type UserBaseModel = {
   id: string;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+  verified: boolean;
+  oauthProvider: "NONE" | "FACEBOOK" | "GOOGLE";
+  oauthId: string | null;
+  password: string | null; //null for social user
+};
+export type UserModel = {
   email: string | null;
   phone: string | null;
   username?: string;
   firstName: string;
   lastName: string;
-  password: string | null; //null for social user
+
   picture: string | null;
-  verified: boolean;
-  oauthProvider: "NONE" | "FACEBOOK" | "GOOGLE";
-  oauthId: string | null;
-};
+} & UserBaseModel;
 
 type UserCreateInputBase = Partial<UserModel> & {
   firstName: string;
