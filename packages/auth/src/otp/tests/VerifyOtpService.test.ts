@@ -6,6 +6,7 @@ import { mockOtpRepository } from "../../repositories/interfaces/mocks.js";
 import { mockHasher } from "../../hasher/mocks.js";
 import { fakeOtpRecord } from "./data.js";
 import { IVerifyOtpService } from "../interfaces/IVerifyOtpService.js";
+import { mockToken } from "../../token/mocks.js";
 
 describe("VerifyOtpService", () => {
   let verifyOtpService: IVerifyOtpService<any>;
@@ -16,7 +17,11 @@ describe("VerifyOtpService", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    verifyOtpService = new VerifyOtpService(mockOtpRepository, mockHasher);
+    verifyOtpService = new VerifyOtpService(
+      mockOtpRepository,
+      mockHasher,
+      mockToken
+    );
   });
 
   it("✅ should return true when OTP is valid and not expired", async () => {
@@ -25,10 +30,11 @@ describe("VerifyOtpService", () => {
       expiresAt: new Date(Date.now() + 300 * 1000),
     });
     mockHasher.compare.mockResolvedValue(true);
+    mockToken.sign.mockReturnValue("fake-token");
 
     const result = await verifyOtpService.execute({ identifier, otp, type });
 
-    expect(result).toBe(true);
+    expect(result).toEqual({ token: "fake-token" });
     expect(mockOtpRepository.findFirst).toHaveBeenCalledWith({
       where: { identifier, type },
       orderBy: { createdAt: "desc" },
