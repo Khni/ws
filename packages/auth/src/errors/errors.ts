@@ -1,6 +1,7 @@
 // Domain Errors (expected, user-facing)
 export const AuthDomainErrorCodes = {
   AUTH_USED_EMAIL: "AUTH_USED_EMAIL",
+  AUTH_USED_IDENTIFIER: "AUTH_USED_IDENTIFIER",
   AUTH_UNVERIFIED_EMAIL: "AUTH_UNVERIFIED_EMAIL",
   INCORRECT_CREDENTIALS: "INCORRECT_CREDENTIALS",
   USER_NOT_LOCAL: "USER_NOT_LOCAL",
@@ -47,6 +48,10 @@ export const authDomainErrorMapping = {
   [AuthDomainErrorCodes.AUTH_USED_EMAIL]: {
     statusCode: 409, // Conflict
     responseMessage: "Email already registered",
+  },
+  [AuthDomainErrorCodes.AUTH_USED_IDENTIFIER]: {
+    statusCode: 409, // Conflict
+    responseMessage: "Identifier already registered",
   },
   [AuthDomainErrorCodes.AUTH_UNVERIFIED_EMAIL]: {
     statusCode: 403, // Forbidden
