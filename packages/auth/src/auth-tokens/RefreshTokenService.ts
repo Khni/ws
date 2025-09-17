@@ -8,13 +8,15 @@ import {
   IRefreshTokenService,
   RefreshTokenVerifyInput,
 } from "./interfaces/IRefreshTokenService.js";
-
+export interface FindUniqueUserById {
+  findUnique(params: { where: { id: string } }): Promise<any>;
+}
 export class RefreshTokenService implements IRefreshTokenService {
   constructor(
     private refreshTokenRepository: IRefreshTokenRepository,
     private crypto: ICrypto,
     private expiresAt: Date,
-    private userRepository: IUserRepository
+    private userRepository: FindUniqueUserById
   ) {}
   verify = async ({ token }: RefreshTokenVerifyInput) => {
     try {

@@ -3,14 +3,14 @@ import { AuthUnexpectedError } from "../errors/AuthUnexpectedError.js";
 import { AuthUnexpectedErrorCodesType } from "../errors/errors.js";
 import { BcryptHasher } from "../hasher/BcryptHasher.js";
 import { IHasher } from "../hasher/IHasher.js";
-import { ILocalAuthContext } from "./interfaces/ILocalAuthContext.js";
-import { ILocalUserStrategy } from "./interfaces/IUserServiceStrategy.js";
+import { ILocalAuthService } from "./interfaces/ILocalAuthService.js";
+import { IUserService } from "./interfaces/IUserRepository.js";
 import { BaseCreateUserData, UserIdentifierType } from "./types.js";
 
-export class LocalAuthContext<
-  S extends ILocalUserStrategy<any, BaseCreateUserData>, // Full strategy type
+export class LocalAuthService<
+  S extends IUserService<any, BaseCreateUserData>, // Full strategy type
 > implements
-    ILocalAuthContext<
+    ILocalAuthService<
       Awaited<ReturnType<S["create"]>>, // infer UserType from strategy
       Parameters<S["create"]>[0] // infer CreateDataType from strategy
     >
@@ -38,7 +38,7 @@ export class LocalAuthContext<
   }): Promise<Awaited<ReturnType<S["create"]>>> => {
     try {
       // check if identifier already used
-      let user = await this.localAuthStrategy.find({
+      let user = await this.localAuthStrategy.findByIdentifier({
         identifier: data.identifier,
       });
 
@@ -67,9 +67,9 @@ export class LocalAuthContext<
       password: string;
       identifier: string;
     };
-  }): Promise<Awaited<ReturnType<S["find"]>>> => {
+  }): Promise<Awaited<ReturnType<S["findByIdentifier"]>>> => {
     try {
-      let user = await this.localAuthStrategy.find({
+      let user = await this.localAuthStrategy.findByIdentifier({
         identifier: data.identifier,
       });
       if (!user) {
@@ -127,9 +127,9 @@ export class LocalAuthContext<
 
   findUserByIdentifier = async (
     identifier: string
-  ): Promise<Awaited<ReturnType<S["find"]>>> => {
+  ): Promise<Awaited<ReturnType<S["findByIdentifier"]>>> => {
     try {
-      let user = await this.localAuthStrategy.find({
+      let user = await this.localAuthStrategy.findByIdentifier({
         identifier,
       });
 
@@ -161,13 +161,15 @@ type CreateUserData = BaseCreateUserData & {
   lastName: string;
 };
 
-class PrismaLocalUserStrategy
-  implements ILocalUserStrategy<User, CreateUserData>
-{
+class PrismaLocalUserStrategy implements IUserService<User, CreateUserData> {
   update(params: { data: Partial<User>; identifier: string }): Promise<User> {
     throw new Error("Method not implemented.");
   }
-  async find({ identifier }: { identifier: string }): Promise<User | null> {
+  async findByIdentifier({
+    identifier,
+  }: {
+    identifier: string;
+  }): Promise<User | null> {
     // find user in DB
     return null;
   }
@@ -178,7 +180,7 @@ class PrismaLocalUserStrategy
   }
 }
 
-const auth = new LocalAuthContext(new PrismaLocalUserStrategy());
+const auth = new LocalAuthService(new PrismaLocalUserStrategy());
 const user = await auth.createUser({
   data: {
     identifier: "test@example.com",

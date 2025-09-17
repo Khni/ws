@@ -29,7 +29,7 @@ export interface IBaseRepository<
   delete(params: {
     where: WhereUniqueInput;
     tx?: unknown;
-  }): Promise<{ id: string }>;
+  }): Promise<{ id: string } | null>;
 
   findUnique(params: { where: WhereUniqueInput }): Promise<Model | null>;
 

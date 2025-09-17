@@ -3,7 +3,7 @@ import { IToken, SignTokenOptions } from "./IToken.js";
 export type SafeSignOptions = Omit<SignOptions, "expiresIn"> & {
   expiresIn?: `${number}${"s" | "m" | "h" | "d"}`;
 };
-export class Jwt<T extends object = JwtPayload> implements IToken<T> {
+export class Jwt<T extends object> implements IToken<T> {
   constructor(private JWT_SECRET: string) {}
 
   sign(payload: T, options: SignTokenOptions): string {

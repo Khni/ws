@@ -1,6 +1,6 @@
 import { BaseCreateUserData } from "../types.js";
 
-export interface ILocalAuthContext<
+export interface ILocalAuthService<
   UserType,
   CreateDataType extends BaseCreateUserData = BaseCreateUserData,
 > {
