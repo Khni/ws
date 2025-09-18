@@ -45,9 +45,7 @@ export class UserService implements IUserService<UserType, UserCreateInput> {
   findByIdentifier = async ({ identifier }: { identifier: string }) => {
     try {
       const result = await prisma.userIdentifier.findFirst({
-        where: {
-          value: identifier,
-        },
+        where: { value: identifier },
         include: {
           user: {
             include: {
@@ -58,13 +56,18 @@ export class UserService implements IUserService<UserType, UserCreateInput> {
         },
       });
 
+      if (!result || !result.user) return null;
+
+      const { user, value, type } = result;
+      const { id, password, profile } = user;
+
       return {
-        id: result?.user.id!,
-        firstName: result?.user.profile?.firstName!,
-        lastName: result?.user.profile?.lastName!,
-        password: result?.user.password!,
-        identifier: result?.value!,
-        identifierType: result?.type! as "email" | "phone",
+        id,
+        firstName: profile?.firstName ?? "",
+        lastName: profile?.lastName ?? "",
+        password: password ?? "",
+        identifier: value,
+        identifierType: type as "email" | "phone",
       };
     } catch (error) {
       throw new Error(
@@ -85,6 +88,9 @@ export class UserService implements IUserService<UserType, UserCreateInput> {
   }) => {
     try {
       const _user = await this.findByIdentifier({ identifier });
+      if (!_user) {
+        return null;
+      }
       const user = await prisma.user.update({
         where: {
           id: _user.id,

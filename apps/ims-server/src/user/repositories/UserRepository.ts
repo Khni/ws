@@ -1,7 +1,7 @@
 import { Prisma, User } from "../../../generated/prisma/index.js";
 import prisma from "../../database/prisma.js";
 import { PrismaTransactionManager } from "../../core/database/PrismaTransactionManager.js";
-import { IUserRepository } from "../../interfaces/IUserRepository.js";
+import { IUserRepository } from "../interfaces/IUserRepository.js";
 
 type UserModel = User;
 type UserCreateInput = Prisma.UserCreateInput;

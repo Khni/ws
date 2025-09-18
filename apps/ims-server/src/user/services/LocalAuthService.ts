@@ -15,7 +15,7 @@ export class LocalAuth {
   constructor(
     private localAuthService: LocalAuthService<
       IUserService<UserType, UserCreateInput>
-    >
+    > = new LocalAuthService(new UserService())
   ) {
     this.authTokenService = authTokenService();
   }

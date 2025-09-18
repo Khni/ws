@@ -1,441 +1,161 @@
 {
-  "openapi": "3.0.0",
-  "components": {
-    "examples": {},
-    "headers": {},
-    "parameters": {},
-    "requestBodies": {},
-    "responses": {},
-    "schemas": {
-      "UserReturnType": {
-        "properties": {
-          "lastName": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          }
-        },
-        "required": ["lastName", "firstName", "email", "id"],
-        "type": "object"
-      },
-      "GetUserProfileResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/UserReturnType"
-          }
-        ],
-        "nullable": true
-      },
-      "OtpType": {
-        "type": "string",
-        "enum": ["VERIFY_EMAIL", "LOGIN", "FORGET_PASSWORD"],
-        "description": "OtpType"
-      },
-      "CreateOtpInput": {
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/OtpType"
-          },
-          "email": {
-            "type": "string"
-          }
-        },
-        "required": ["type", "email"],
-        "type": "object"
-      },
-      "VerifyOtpInput": {
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/OtpType"
-          },
-          "otp": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          }
-        },
-        "required": ["type", "otp", "email"],
-        "type": "object"
-      },
-      "RefreshTokenInput": {
-        "properties": {
-          "refreshToken": {
-            "type": "string"
-          }
-        },
-        "type": "object"
-      },
-      "LocalRegisterInput": {
-        "properties": {
-          "lastName": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          }
-        },
-        "required": ["lastName", "firstName", "password", "email"],
-        "type": "object"
-      },
-      "LocalLoginInput": {
-        "properties": {
-          "password": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          }
-        },
-        "required": ["password", "email"],
-        "type": "object"
-      },
-      "ForgetPasswordInput": {
-        "properties": {
-          "confirmNewPassword": {
-            "type": "string"
-          },
-          "newPassword": {
-            "type": "string"
-          }
-        },
-        "required": ["confirmNewPassword", "newPassword"],
-        "type": "object"
-      }
-    },
-    "securitySchemes": {}
-  },
-  "info": {
-    "title": "@khaled/ims-server",
-    "version": "1.2.0",
-    "contact": {}
-  },
-  "paths": {
-    "/user": {
-      "get": {
-        "operationId": "GetProfile",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetUserProfileResponse"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Authentication"],
-        "security": [],
-        "parameters": []
-      }
-    },
-    "/otp": {
-      "post": {
-        "operationId": "GenerateOtp",
-        "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  },
-                  "required": ["message"],
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["OTP"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateOtpInput"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/otp/verify": {
-      "post": {
-        "operationId": "VerifyOtp",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "token": {
-                      "type": "string"
-                    }
-                  },
-                  "required": ["token"],
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["OTP"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VerifyOtpInput"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/token/refresh": {
-      "post": {
-        "operationId": "RefreshToken",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "accessToken": {
-                      "type": "string"
-                    }
-                  },
-                  "required": ["accessToken"],
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["token"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RefreshTokenInput"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/oauth/google": {
-      "get": {
-        "operationId": "OAuth",
-        "responses": {
-          "302": {
-            "description": "Redirect"
-          }
-        },
-        "tags": ["OAuth"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "code",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/auth/register": {
-      "post": {
-        "operationId": "Register",
-        "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "user": {
-                      "properties": {
-                        "lastName": {
-                          "type": "string"
-                        },
-                        "firstName": {
-                          "type": "string"
-                        },
-                        "email": {
-                          "type": "string"
-                        },
-                        "id": {
-                          "type": "string"
-                        }
-                      },
-                      "required": ["lastName", "firstName", "email", "id"],
-                      "type": "object"
-                    },
-                    "accessToken": {
-                      "type": "string"
-                    }
-                  },
-                  "required": ["user", "accessToken"],
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Authentication"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LocalRegisterInput"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/auth/login": {
-      "post": {
-        "operationId": "Login",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "user": {
-                      "properties": {
-                        "lastName": {
-                          "type": "string"
-                        },
-                        "firstName": {
-                          "type": "string"
-                        },
-                        "email": {
-                          "type": "string"
-                        },
-                        "id": {
-                          "type": "string"
-                        }
-                      },
-                      "required": ["lastName", "firstName", "email", "id"],
-                      "type": "object"
-                    },
-                    "accessToken": {
-                      "type": "string"
-                    }
-                  },
-                  "required": ["user", "accessToken"],
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Authentication"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LocalLoginInput"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/auth/forget-password": {
-      "post": {
-        "operationId": "ForgetPassword",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Authentication"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ForgetPasswordInput"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/auth/logout": {
-      "post": {
-        "operationId": "Logout",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Authentication"],
-        "security": [],
-        "parameters": []
-      }
-    }
-  },
-  "servers": [
-    {
-      "url": "/"
-    }
-  ]
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "@khaled/ims-server",
+		"version": "1.2.0",
+		"contact": {}
+	},
+	"paths": {
+		"/auth/register": {
+			"post": {
+				"operationId": "Register",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"properties": {
+												"tokens": {
+													"properties": {
+														"accessToken": {
+															"type": "string"
+														},
+														"refreshToken": {
+															"type": "string"
+														}
+													},
+													"required": [
+														"accessToken",
+														"refreshToken"
+													],
+													"type": "object"
+												},
+												"user": {
+													"properties": {
+														"identifierType": {
+															"type": "string",
+															"enum": [
+																"email",
+																"phone"
+															]
+														},
+														"identifier": {
+															"type": "string"
+														},
+														"lastName": {
+															"type": "string"
+														},
+														"firstName": {
+															"type": "string"
+														},
+														"id": {
+															"type": "string"
+														}
+													},
+													"required": [
+														"identifierType",
+														"identifier",
+														"lastName",
+														"firstName",
+														"id"
+													],
+													"type": "object"
+												}
+											},
+											"required": [
+												"tokens",
+												"user"
+											],
+											"type": "object"
+										},
+										{
+											"type": "string",
+											"enum": [
+												"error"
+											]
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Authentication"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"lastName": {
+										"type": "string"
+									},
+									"firstName": {
+										"type": "string"
+									},
+									"identifier": {
+										"type": "string"
+									},
+									"password": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"lastName",
+									"firstName",
+									"identifier",
+									"password"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/health-check": {
+			"get": {
+				"operationId": "HealthCheck",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"description": "Simple health check endpoint",
+				"tags": [
+					"Health"
+				],
+				"security": [],
+				"parameters": []
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
 }

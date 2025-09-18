@@ -3,7 +3,7 @@ import {
   UserCreateInput,
   UserUpdateInput,
   UserWhereUniqueInput,
-} from "../interfaces/IUserRepository.js";
+} from "../user/interfaces/IUserRepository.js";
 import prisma from "../database/prisma.js";
 import { User } from "../../generated/prisma/index.js";
 export class UserRepository implements IUserRepository {

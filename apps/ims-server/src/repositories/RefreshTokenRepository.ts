@@ -3,7 +3,7 @@ import prisma from "../database/prisma.js";
 import {
   IRefreshTokenRepository,
   RefreshToken,
-} from "../interfaces/IRefreshTokenRepository.js";
+} from "../user/interfaces/IRefreshTokenRepository.js";
 
 export class RefreshTokenRepository implements IRefreshTokenRepository {
   async create(input: {
