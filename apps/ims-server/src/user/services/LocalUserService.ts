@@ -89,7 +89,9 @@ export class UserService implements IUserService<UserType, UserCreateInput> {
     try {
       const _user = await this.findByIdentifier({ identifier });
       if (!_user) {
-        return null;
+        throw new Error(
+          `update failed: user is not exist with identifier ${identifier}`
+        );
       }
       const user = await prisma.user.update({
         where: {

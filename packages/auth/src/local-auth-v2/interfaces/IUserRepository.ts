@@ -12,5 +12,5 @@ export interface IUserService<
   update(params: {
     data: Partial<UserType>;
     identifier: string;
-  }): Promise<UserType | null>;
+  }): Promise<UserType>;
 }
