@@ -10,16 +10,26 @@ import {
 } from "tsoa";
 import { LocalAuth } from "../services/LocalAuthService.js";
 import type { Request as ExpressRequestType, Response } from "express";
+import { AuthError, authErrorMapping, RefreshTokenCookie } from "@khaled/auth";
+import { errorMapper } from "@khaled/error-handler";
+import { RegisterBodyschema } from "./schema.js";
+import { config } from "../../config/envSchema.js";
+import { validateBodySchema } from "../../utils/schema/validateBodySchemaMiddleware.js";
 @Tags("Authentication")
 @Route("auth")
 export class AuthController extends Controller {
   private localAuthService: LocalAuth;
+  private refreshTokenCookie: RefreshTokenCookie;
 
   constructor() {
     super();
     this.localAuthService = new LocalAuth();
+    this.refreshTokenCookie = new RefreshTokenCookie(
+      config.NODE_ENV === "production"
+    );
   }
 
+  @Middlewares([validateBodySchema(RegisterBodyschema)])
   @Post("register")
   @SuccessResponse("201", "Created")
   public async register(
@@ -33,14 +43,16 @@ export class AuthController extends Controller {
     @Request() req: ExpressRequestType
   ) {
     try {
-      const result = await this.localAuthService.register({
-        ...body,
-        identifierType: "email",
-      });
-      return result;
+      const data = RegisterBodyschema.parse(body);
+      const { user, tokens } = await this.localAuthService.register(data);
+      this.refreshTokenCookie.setToken(tokens.refreshToken, req.res!);
+
+      return { accessToken: tokens.accessToken, user };
     } catch (error) {
-      console.error(error, "error");
-      return "error";
+      if (error instanceof AuthError) {
+        throw errorMapper(error, authErrorMapping);
+      }
+      throw error;
     }
   }
 }

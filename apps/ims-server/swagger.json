@@ -24,69 +24,47 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"anyOf": [
-										{
+									"properties": {
+										"user": {
 											"properties": {
-												"tokens": {
-													"properties": {
-														"accessToken": {
-															"type": "string"
-														},
-														"refreshToken": {
-															"type": "string"
-														}
-													},
-													"required": [
-														"accessToken",
-														"refreshToken"
-													],
-													"type": "object"
+												"identifierType": {
+													"type": "string",
+													"enum": [
+														"email",
+														"phone"
+													]
 												},
-												"user": {
-													"properties": {
-														"identifierType": {
-															"type": "string",
-															"enum": [
-																"email",
-																"phone"
-															]
-														},
-														"identifier": {
-															"type": "string"
-														},
-														"lastName": {
-															"type": "string"
-														},
-														"firstName": {
-															"type": "string"
-														},
-														"id": {
-															"type": "string"
-														}
-													},
-													"required": [
-														"identifierType",
-														"identifier",
-														"lastName",
-														"firstName",
-														"id"
-													],
-													"type": "object"
+												"identifier": {
+													"type": "string"
+												},
+												"lastName": {
+													"type": "string"
+												},
+												"firstName": {
+													"type": "string"
+												},
+												"id": {
+													"type": "string"
 												}
 											},
 											"required": [
-												"tokens",
-												"user"
+												"identifierType",
+												"identifier",
+												"lastName",
+												"firstName",
+												"id"
 											],
 											"type": "object"
 										},
-										{
-											"type": "string",
-											"enum": [
-												"error"
-											]
+										"accessToken": {
+											"type": "string"
 										}
-									]
+									},
+									"required": [
+										"user",
+										"accessToken"
+									],
+									"type": "object"
 								}
 							}
 						}

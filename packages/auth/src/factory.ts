@@ -6,12 +6,14 @@ import {
 } from "./auth-tokens/RefreshTokenService.js";
 import { CryptoTokenGenerator } from "./crypto/Crypto.js";
 import { IRefreshTokenRepository } from "./repositories/interfaces/IRefreshTokenRepository.js";
+import { ValidTimeString } from "./token/IToken.js";
 import { Jwt } from "./token/jwt.js";
 export const createAuthTokenService = (
   refreshTokenRepository: IRefreshTokenRepository,
   findUniqueUserById: FindUniqueUserById,
   expiresAt: Date,
-  jwtSecret: string
+  jwtSecret: string,
+  jwtExpiresIn: ValidTimeString
 ) =>
   new AuthTokensService(
     new RefreshTokenService(
@@ -20,5 +22,5 @@ export const createAuthTokenService = (
       expiresAt,
       findUniqueUserById
     ),
-    new AccessTokenService(new Jwt<{ userId: string }>(jwtSecret), "10m")
+    new AccessTokenService(new Jwt<{ userId: string }>(jwtSecret), jwtExpiresIn)
   );
