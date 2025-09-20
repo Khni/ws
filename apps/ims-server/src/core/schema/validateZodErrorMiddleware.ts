@@ -3,17 +3,19 @@ import { Request, Response, NextFunction } from "express";
 import { z, ZodError } from "zod";
 import { zodErrorSerializer } from "./ZodErrorSerializer.js";
 
-export const validateZodErrorMiddleware =
-  (schema: z.ZodSchema<any>) =>
+export const validateZodSchemaMiddleware =
+  (bodySchema: z.ZodSchema<any>) =>
   (req: Request, _res: Response, next: NextFunction) => {
     try {
       // Will throw if invalid
-      const parsed = schema.parse(req.body);
+
+      const parsed = bodySchema.parse(req.body);
+      req.meta = parsed.meta;
       req.body = parsed; // override with transformed data
+
       next();
     } catch (err) {
       if (err instanceof ZodError) {
-        // 🚀 throw your standardized error right here
         throw new InputValidationError(err, zodErrorSerializer);
       }
       next(err); // unknown error, pass along

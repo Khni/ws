@@ -16,7 +16,7 @@ import { RegisterBodyschema } from "./schema.js";
 import { config } from "../../config/envSchema.js";
 import { validateBodySchema } from "../../utils/schema/validateBodySchemaMiddleware.js";
 import { ZodError } from "zod";
-import { validateZodErrorMiddleware } from "../../core/schema/validateZodErrorMiddleware.js";
+import { validateZodSchemaMiddleware } from "../../core/schema/validateZodErrorMiddleware.js";
 import { zodErrorSerializer } from "../../core/schema/ZodErrorSerializer.js";
 
 @Tags("Authentication")
@@ -33,7 +33,7 @@ export class AuthController extends Controller {
     );
   }
 
-  @Middlewares([validateZodErrorMiddleware(RegisterBodyschema)])
+  @Middlewares([validateZodSchemaMiddleware(RegisterBodyschema)])
   @Post("register")
   @SuccessResponse("201", "Created")
   public async register(
@@ -43,12 +43,12 @@ export class AuthController extends Controller {
       identifier: string;
       firstName: string;
       lastName: string;
+      identifierType: "email" | "phone"; //this will be added by zod
     },
     @Request() req: ExpressRequestType
   ) {
     try {
-      const data = RegisterBodyschema.parse(body);
-      const { user, tokens } = await this.localAuthService.register(data);
+      const { user, tokens } = await this.localAuthService.register(body);
       this.refreshTokenCookie.setToken(tokens.refreshToken, req.res!);
 
       return { accessToken: tokens.accessToken, user };
@@ -56,9 +56,8 @@ export class AuthController extends Controller {
       if (error instanceof AuthError) {
         throw errorMapper(error, authErrorMapping);
       }
-      if (error instanceof ZodError) {
-        throw new InputValidationError(error, zodErrorSerializer);
-      }
+      console.log(error);
+
       throw error;
     }
   }
