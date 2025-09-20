@@ -16,8 +16,9 @@ import { RegisterBodyschema } from "./schema.js";
 import { config } from "../../config/envSchema.js";
 import { validateBodySchema } from "../../utils/schema/validateBodySchemaMiddleware.js";
 import { ZodError } from "zod";
-import { zodErrorSerializer } from "../../core/ZodErrorSerializer.js";
-import { validateZodErrorMiddleware } from "../../core/validateZodErrorMiddleware.js";
+import { validateZodErrorMiddleware } from "../../core/schema/validateZodErrorMiddleware.js";
+import { zodErrorSerializer } from "../../core/schema/ZodErrorSerializer.js";
+
 @Tags("Authentication")
 @Route("auth")
 export class AuthController extends Controller {
