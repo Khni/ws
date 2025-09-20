@@ -1,5 +1,5 @@
 import { ZodError } from "zod";
-import { InputValidationError } from "../../errors/types.js";
+import { InputValidationErrorType } from "../../errors/types.js";
 
 export interface IZodErrorSerializer {
   serializeError: (error: ZodError) => {
@@ -24,5 +24,5 @@ export interface IZodErrorSerializer {
       | "custom";
   }[];
 
-  serializeResponse: (zodError: ZodError) => InputValidationError;
+  serializeResponse: (zodError: ZodError) => InputValidationErrorType;
 }

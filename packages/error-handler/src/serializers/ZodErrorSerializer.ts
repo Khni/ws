@@ -1,5 +1,5 @@
 import { ZodError } from "zod";
-import { InputValidationError } from "../errors/types.js";
+import { InputValidationErrorType } from "../errors/types.js";
 import { IZodErrorSerializer } from "./interfaces/IZodErrorSerializer.js";
 
 export class ZodErrorSerializer implements IZodErrorSerializer {
@@ -24,7 +24,7 @@ export class ZodErrorSerializer implements IZodErrorSerializer {
       {}
     );
 
-    const formattedErrors: InputValidationError = {
+    const formattedErrors: InputValidationErrorType = {
       name: "inputValidationError",
       errors: Object.entries(errors).map(([field, messages]) => ({
         field: field.replace("body.", ""),

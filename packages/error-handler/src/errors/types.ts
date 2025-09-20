@@ -21,7 +21,7 @@ export type HttpErrorConstructor = CustomErrorConstructor<unknown> & {
 /**
  * Represents a standardized error response format.
  */
-export type InputValidationError = {
+export type InputValidationErrorType = {
   /**
    * A string identifier for the type of error.
    * Examples: "ValidationError", "IncorrectOtpError", "AuthError"
