@@ -8,10 +8,11 @@ import { IUserService } from "./interfaces/IUserRepository.js";
 import { BaseCreateUserData, UserIdentifierType } from "./types.js";
 
 export class LocalAuthService<
-  S extends IUserService<any, BaseCreateUserData>, // Full strategy type
+  UserType,
+  S extends IUserService<any, BaseCreateUserData>,
 > implements
     ILocalAuthService<
-      Awaited<ReturnType<S["create"]>>, // infer UserType from strategy
+      UserType, // infer UserType from strategy
       Parameters<S["create"]>[0] // infer CreateDataType from strategy
     >
 {
@@ -67,7 +68,7 @@ export class LocalAuthService<
       password: string;
       identifier: string;
     };
-  }): Promise<Awaited<ReturnType<S["findByIdentifier"]>>> => {
+  }): Promise<UserType> => {
     try {
       let user = await this.localAuthStrategy.findByIdentifier({
         identifier: data.identifier,

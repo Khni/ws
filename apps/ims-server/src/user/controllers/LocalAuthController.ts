@@ -18,7 +18,7 @@ import { validateBodySchema } from "../../utils/schema/validateBodySchemaMiddlew
 import { ZodError } from "zod";
 import { validateZodSchemaMiddleware } from "../../core/schema/validateZodErrorMiddleware.js";
 import { zodErrorSerializer } from "../../core/schema/ZodErrorSerializer.js";
-import { registerBodySchema } from "@khaled/ims-shared";
+import { loginBodySchema, registerBodySchema } from "@khaled/ims-shared";
 
 @Tags("Authentication")
 @Route("auth")
@@ -57,7 +57,31 @@ export class AuthController extends Controller {
       if (error instanceof AuthError) {
         throw errorMapper(error, authErrorMapping);
       }
-      console.log(error);
+
+      throw error;
+    }
+  }
+
+  @Middlewares([validateZodSchemaMiddleware(loginBodySchema)])
+  @Post("login")
+  @SuccessResponse("200", "Success")
+  public async login(
+    @Body()
+    body: {
+      password: string;
+      identifier: { type: "email" | "phone"; value: string }; //this will be added by zod
+    },
+    @Request() req: ExpressRequestType
+  ) {
+    try {
+      const { user, tokens } = await this.localAuthService.login(body);
+      this.refreshTokenCookie.setToken(tokens.refreshToken, req.res!);
+
+      return { accessToken: tokens.accessToken, user };
+    } catch (error) {
+      if (error instanceof AuthError) {
+        throw errorMapper(error, authErrorMapping);
+      }
 
       throw error;
     }

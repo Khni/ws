@@ -33,15 +33,19 @@ export const registerBodySchema: z.ZodType<
 
 export type RegisterBodySchemaType = z.infer<typeof registerBodySchema>;
 
-export const loginBodySchema: z.ZodType<LocalLoginInput, LocalLoginInput> =
-  z.object({
-    identifier: z.union([z.e164(), z.email()]),
-    password: z
-      .string()
-      .min(8, { message: "Password must be at least 8 characters" })
-      .max(20, { message: "Password must be at most 20 characters" }),
-  });
-
+export const loginBodySchema: z.ZodType<
+  Omit<LocalLoginInput, "identifier"> & {
+    identifier: { type: "email" | "phone"; value: string };
+  },
+  LocalLoginInput
+> = z.object({
+  identifier,
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters" })
+    .max(20, { message: "Password must be at most 20 characters" }),
+});
+export type LoginBodySchemaType = z.infer<typeof loginBodySchema>;
 export const refreshTokenBodySchema: z.ZodType<RefreshTokenInput> = z.object({
   refreshToken: z
     .string()

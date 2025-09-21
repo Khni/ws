@@ -6,7 +6,43 @@
 		"parameters": {},
 		"requestBodies": {},
 		"responses": {},
-		"schemas": {},
+		"schemas": {
+			"UserType": {
+				"properties": {
+					"identifierType": {
+						"type": "string",
+						"enum": [
+							"email",
+							"phone"
+						]
+					},
+					"identifier": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"firstName": {
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"identifierType",
+					"identifier",
+					"password",
+					"lastName",
+					"firstName",
+					"id"
+				],
+				"type": "object"
+			}
+		},
 		"securitySchemes": {}
 	},
 	"info": {
@@ -114,6 +150,78 @@
 									"identifier",
 									"lastName",
 									"firstName",
+									"password"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"user": {
+											"$ref": "#/components/schemas/UserType"
+										},
+										"accessToken": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"user",
+										"accessToken"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Authentication"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"identifier": {
+										"properties": {
+											"value": {
+												"type": "string"
+											},
+											"type": {
+												"type": "string",
+												"enum": [
+													"email",
+													"phone"
+												]
+											}
+										},
+										"required": [
+											"value",
+											"type"
+										],
+										"type": "object"
+									},
+									"password": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"identifier",
 									"password"
 								],
 								"type": "object"

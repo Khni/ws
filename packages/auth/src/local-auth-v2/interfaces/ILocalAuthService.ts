@@ -12,7 +12,7 @@ export interface ILocalAuthService<
       password: string;
       identifier: string;
     };
-  }) => Promise<UserType | null>;
+  }) => Promise<UserType>;
   resetPassword({
     data,
   }: {
@@ -20,7 +20,7 @@ export interface ILocalAuthService<
       newPassword: string;
       identifier: string;
     };
-  }): Promise<UserType | null>;
+  }): Promise<UserType>;
 
   findUserByIdentifier: (identifier: string) => Promise<UserType | null>;
 }

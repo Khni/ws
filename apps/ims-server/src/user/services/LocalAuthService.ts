@@ -9,12 +9,17 @@ import { UserCreateInput, UserType } from "../types.js";
 import { RefreshTokenRepository } from "../repositories/RefreshTokenRepository.js";
 import { UserRepository } from "../repositories/UserRepository.js";
 import { authTokenService } from "./factory.js";
-import { registerBodySchema, RegisterBodySchemaType } from "@khaled/ims-shared";
+import {
+  LoginBodySchemaType,
+  registerBodySchema,
+  RegisterBodySchemaType,
+} from "@khaled/ims-shared";
 
 export class LocalAuth {
   authTokenService: AuthTokensService;
   constructor(
     private localAuthService: LocalAuthService<
+      UserType,
       IUserService<UserType, UserCreateInput>
     > = new LocalAuthService(new UserService())
   ) {
@@ -28,6 +33,19 @@ export class LocalAuth {
         ...restData,
         identifier: identifier.value,
         identifierType: identifier.type,
+      },
+    });
+    const tokens = await this.authTokenService.generate(user.id);
+
+    return { user, tokens };
+  };
+
+  login = async (data: LoginBodySchemaType) => {
+    const { identifier, ...restData } = data;
+    const user = await this.localAuthService.verifyPassword({
+      data: {
+        password: restData.password,
+        identifier: identifier.value,
       },
     });
     const tokens = await this.authTokenService.generate(user.id);
