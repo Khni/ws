@@ -1,5 +1,5 @@
 import z from "zod";
-import { ValidateIdentifier } from "./validateIdentifier.js";
+import { ValidateIdentifier } from "../../core/schema/validateIdentifier.js";
 const validateIdentifier = new ValidateIdentifier();
 export const RegisterBodyschema = z
   .object({
