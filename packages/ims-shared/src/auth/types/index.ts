@@ -5,13 +5,13 @@ export type UserReturnType = {
   lastName: string;
 };
 export type LocalRegisterInput = {
-  email: string;
+  identifier: string;
   password: string;
   firstName: string;
   lastName: string;
 };
 export type LocalLoginInput = {
-  email: string;
+  identifier: string;
   password: string;
 };
 

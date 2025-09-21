@@ -5,12 +5,17 @@ import {
   RefreshTokenInput,
   OtpEnum,
 } from "../types/index.js";
-
+const identifier = z.union([
+  z.e164().transform((val) => ({ type: "phone" as const, value: val })),
+  z.email().transform((val) => ({ type: "email" as const, value: val })),
+]);
 export const registerBodySchema: z.ZodType<
-  LocalRegisterInput,
+  Omit<LocalRegisterInput, "identifier"> & {
+    identifier: { type: "email" | "phone"; value: string };
+  },
   LocalRegisterInput
 > = z.object({
-  email: z.email({ message: "Invalid email address" }),
+  identifier,
 
   password: z
     .string()
@@ -25,9 +30,12 @@ export const registerBodySchema: z.ZodType<
     .string()
     .min(2, { message: "Last name must be at least 2 characters" }),
 });
+
+export type RegisterBodySchemaType = z.infer<typeof registerBodySchema>;
+
 export const loginBodySchema: z.ZodType<LocalLoginInput, LocalLoginInput> =
   z.object({
-    email: z.email({ message: "Invalid email address" }),
+    identifier: z.union([z.e164(), z.email()]),
     password: z
       .string()
       .min(8, { message: "Password must be at least 8 characters" })

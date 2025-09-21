@@ -12,12 +12,13 @@ import { LocalAuth } from "../services/LocalAuthService.js";
 import type { Request as ExpressRequestType, Response } from "express";
 import { AuthError, authErrorMapping, RefreshTokenCookie } from "@khaled/auth";
 import { errorMapper, InputValidationError } from "@khaled/error-handler";
-import { RegisterBodyschema } from "./schema.js";
+
 import { config } from "../../config/envSchema.js";
 import { validateBodySchema } from "../../utils/schema/validateBodySchemaMiddleware.js";
 import { ZodError } from "zod";
 import { validateZodSchemaMiddleware } from "../../core/schema/validateZodErrorMiddleware.js";
 import { zodErrorSerializer } from "../../core/schema/ZodErrorSerializer.js";
+import { registerBodySchema } from "@khaled/ims-shared";
 
 @Tags("Authentication")
 @Route("auth")
@@ -33,17 +34,17 @@ export class AuthController extends Controller {
     );
   }
 
-  @Middlewares([validateZodSchemaMiddleware(RegisterBodyschema)])
+  @Middlewares([validateZodSchemaMiddleware(registerBodySchema)])
   @Post("register")
   @SuccessResponse("201", "Created")
   public async register(
     @Body()
     body: {
       password: string;
-      identifier: string;
+
       firstName: string;
       lastName: string;
-      identifierType: "email" | "phone"; //this will be added by zod
+      identifier: { type: "email" | "phone"; value: string }; //this will be added by zod
     },
     @Request() req: ExpressRequestType
   ) {

@@ -81,12 +81,24 @@
 						"application/json": {
 							"schema": {
 								"properties": {
-									"identifierType": {
-										"type": "string",
-										"enum": [
-											"email",
-											"phone"
-										]
+									"identifier": {
+										"properties": {
+											"value": {
+												"type": "string"
+											},
+											"type": {
+												"type": "string",
+												"enum": [
+													"email",
+													"phone"
+												]
+											}
+										},
+										"required": [
+											"value",
+											"type"
+										],
+										"type": "object"
 									},
 									"lastName": {
 										"type": "string"
@@ -94,18 +106,14 @@
 									"firstName": {
 										"type": "string"
 									},
-									"identifier": {
-										"type": "string"
-									},
 									"password": {
 										"type": "string"
 									}
 								},
 								"required": [
-									"identifierType",
+									"identifier",
 									"lastName",
 									"firstName",
-									"identifier",
 									"password"
 								],
 								"type": "object"
