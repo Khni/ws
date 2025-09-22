@@ -13,6 +13,7 @@ export const AuthDomainErrorCodes = {
   EMAIL_IS_NOT_EXIST: "USER_IS_NOT_EXIST",
   OTP_INVALID: "OTP_INVALID",
   OTP_EXPIRED: "OTP_EXPIRED",
+  TOKEN_EXPIRED: "TOKEN_EXPIRED",
 } as const;
 
 // Unexpected/Internal Errors
@@ -94,7 +95,11 @@ export const authDomainErrorMapping = {
 
   [AuthDomainErrorCodes.OTP_EXPIRED]: {
     statusCode: 401,
-    responseMessage: "The OTP has expired. Please request a new one.",
+    responseMessage: "The OTP is expired. Please request a new one.",
+  },
+  [AuthDomainErrorCodes.TOKEN_EXPIRED]: {
+    statusCode: 401,
+    responseMessage: "Token is expired.ß",
   },
 } as const;
 

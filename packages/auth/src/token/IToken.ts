@@ -3,5 +3,5 @@ export type ValidTimeString = `${number}${TimeUnit}`;
 export type SignTokenOptions = { expiresIn: ValidTimeString };
 export interface IToken<Payload> {
   sign(payload: Payload, options: SignTokenOptions): string;
-  verify(token: string): Payload | null;
+  verify(token: string): Payload;
 }

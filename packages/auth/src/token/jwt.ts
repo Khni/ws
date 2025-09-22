@@ -1,5 +1,10 @@
-import jwt, { SignOptions, VerifyOptions, JwtPayload } from "jsonwebtoken";
+import jwt, {
+  SignOptions,
+  VerifyOptions,
+  TokenExpiredError,
+} from "jsonwebtoken";
 import { IToken, SignTokenOptions } from "./IToken.js";
+import { AuthDomainError } from "../errors/AuthDomainError.js";
 export type SafeSignOptions = Omit<SignOptions, "expiresIn"> & {
   expiresIn?: `${number}${"s" | "m" | "h" | "d"}`;
 };
@@ -16,6 +21,15 @@ export class Jwt<T extends object> implements IToken<T> {
     return jwt.sign(payload, this.JWT_SECRET, options);
   }
   verify(token: string, options?: VerifyOptions): T {
-    return jwt.verify(token, this.JWT_SECRET, options) as T;
+    try {
+      return jwt.verify(token, this.JWT_SECRET, options) as T;
+    } catch (error) {
+      //expired token is an expected error but other errors like if secret is wrong ..etc
+      //should be unexpected errors
+      if (error instanceof TokenExpiredError) {
+        throw new AuthDomainError("TOKEN_EXPIRED");
+      }
+      throw error;
+    }
   }
 }

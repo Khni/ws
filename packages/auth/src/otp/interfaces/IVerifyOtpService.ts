@@ -7,5 +7,5 @@ export interface IVerifyOtpService<OtpType> {
     identifier: string;
     otp: string;
     type: OtpType;
-  }): Promise<{ token: string }>;
+  }): Promise<void>;
 }

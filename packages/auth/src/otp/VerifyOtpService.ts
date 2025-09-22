@@ -8,8 +8,7 @@ import { IVerifyOtpService } from "./interfaces/IVerifyOtpService.js";
 export class VerifyOtpService<OtpType> implements IVerifyOtpService<OtpType> {
   constructor(
     private otpRepository: IOtpRepository<OtpType>,
-    private hasher: IHasher,
-    private tokenService: IToken<{ identifier: string; otpType: OtpType }>
+    private hasher: IHasher
   ) {}
 
   async execute({
@@ -39,13 +38,6 @@ export class VerifyOtpService<OtpType> implements IVerifyOtpService<OtpType> {
       if (otpRecord.expiresAt < new Date()) {
         throw new AuthDomainError("OTP_EXPIRED");
       }
-
-      const token = this.tokenService.sign(
-        { identifier, otpType: type },
-        { expiresIn: "10m" }
-      );
-
-      return { token };
     } catch (error) {
       if (error instanceof AuthDomainError) {
         throw error;
