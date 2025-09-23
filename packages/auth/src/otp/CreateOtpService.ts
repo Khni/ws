@@ -1,4 +1,5 @@
 import { AuthUnexpectedError } from "../errors/AuthUnexpectedError.js";
+import { BcryptHasher } from "../hasher/BcryptHasher.js";
 import { IHasher } from "../hasher/IHasher.js";
 import { IOtpRepository } from "../repositories/interfaces/IOtpRepository.js";
 import {
@@ -10,13 +11,14 @@ import { IOtpSenderStrategy } from "./interfaces/IOtpSenderStrategy.js";
 export class CreateOtpService<OtpType> implements ICreateOtpService<OtpType> {
   constructor(
     private otpRepository: IOtpRepository<OtpType>,
-    private hasher: IHasher,
+
     private expiresIn: number, //in seconds
     private otpSenderStrategy: IOtpSenderStrategy,
     private otpConfig: { min: number; max: number } = {
       min: 101101,
       max: 989989,
-    }
+    },
+    private hasher: IHasher = new BcryptHasher()
   ) {
     if (this.otpConfig.min > otpConfig.max) {
       throw new Error("Min value cannot be greater than max value");

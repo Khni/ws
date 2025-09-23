@@ -1,9 +1,10 @@
-import { LocalAuthContext } from "../../dist/local-auth-v2/LocalAuthContext.js";
 import { IToken, ValidTimeString } from "../token/IToken.js";
+import { Jwt } from "../token/jwt.js";
+import { CreateOtpService } from "./CreateOtpService.js";
 import { ICreateOtpService } from "./interfaces/ICreateOtpService.js";
 import { IVerifyOtpService } from "./interfaces/IVerifyOtpService.js";
 
-export class OtpHandler<OtpType> {
+export class OtpHandler<OtpType, ExecuteFnTData> {
   constructor(
     private createOtpService: ICreateOtpService<OtpType>,
     private verifyOtpService: IVerifyOtpService<OtpType>,
@@ -13,6 +14,9 @@ export class OtpHandler<OtpType> {
       verified: boolean;
     }>,
     private otpType: OtpType,
+    private executeFn: (
+      data: ExecuteFnTData & { identifier: string }
+    ) => Promise<unknown>,
     private tokenExpiresIn: ValidTimeString = "10m"
   ) {}
 
@@ -66,9 +70,9 @@ export class OtpHandler<OtpType> {
   }: {
     data: TData;
     token: string;
-    fn: (data: TData) => Promise<unknown>;
+    fn: (data: TData & { identifier: string }) => Promise<unknown>;
   }) {
-    const payload = this.verifyToken(token);
-    return await fn(data);
+    const { identifier } = this.verifyToken(token);
+    return await fn({ ...data, identifier });
   }
 }

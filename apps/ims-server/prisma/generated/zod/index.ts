@@ -12,7 +12,7 @@ import type { Prisma } from '../../../generated/prisma';
 
 export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCommitted','RepeatableRead','Serializable']);
 
-export const OtpScalarFieldEnumSchema = z.enum(['id','type','otp','identifier','expiresIn','isActive','createdAt','updatedAt']);
+export const OtpScalarFieldEnumSchema = z.enum(['id','type','hashedOtp','identifier','expiresAt','isActive','createdAt','updatedAt']);
 
 export const UserScalarFieldEnumSchema = z.enum(['id','password','isActive','createdAt','updatedAt']);
 
@@ -51,9 +51,9 @@ export type IdentifierTypeType = `${z.infer<typeof IdentifierTypeSchema>}`
 export const OtpSchema = z.object({
   type: OtpTypeSchema,
   id: z.string().uuid(),
-  otp: z.string(),
+  hashedOtp: z.string(),
   identifier: z.string(),
-  expiresIn: z.coerce.date(),
+  expiresAt: z.coerce.date(),
   isActive: z.boolean(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
@@ -139,9 +139,9 @@ export type RefreshToken = z.infer<typeof RefreshTokenSchema>
 export const OtpSelectSchema: z.ZodType<Prisma.OtpSelect> = z.object({
   id: z.boolean().optional(),
   type: z.boolean().optional(),
-  otp: z.boolean().optional(),
+  hashedOtp: z.boolean().optional(),
   identifier: z.boolean().optional(),
-  expiresIn: z.boolean().optional(),
+  expiresAt: z.boolean().optional(),
   isActive: z.boolean().optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
@@ -269,9 +269,9 @@ export const OtpWhereInputSchema: z.ZodType<Prisma.OtpWhereInput> = z.object({
   NOT: z.union([ z.lazy(() => OtpWhereInputSchema),z.lazy(() => OtpWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   type: z.union([ z.lazy(() => EnumOtpTypeFilterSchema),z.lazy(() => OtpTypeSchema) ]).optional(),
-  otp: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  hashedOtp: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   identifier: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  expiresIn: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  expiresAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   isActive: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -280,9 +280,9 @@ export const OtpWhereInputSchema: z.ZodType<Prisma.OtpWhereInput> = z.object({
 export const OtpOrderByWithRelationInputSchema: z.ZodType<Prisma.OtpOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   type: z.lazy(() => SortOrderSchema).optional(),
-  otp: z.lazy(() => SortOrderSchema).optional(),
+  hashedOtp: z.lazy(() => SortOrderSchema).optional(),
   identifier: z.lazy(() => SortOrderSchema).optional(),
-  expiresIn: z.lazy(() => SortOrderSchema).optional(),
+  expiresAt: z.lazy(() => SortOrderSchema).optional(),
   isActive: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
@@ -297,9 +297,9 @@ export const OtpWhereUniqueInputSchema: z.ZodType<Prisma.OtpWhereUniqueInput> = 
   OR: z.lazy(() => OtpWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => OtpWhereInputSchema),z.lazy(() => OtpWhereInputSchema).array() ]).optional(),
   type: z.union([ z.lazy(() => EnumOtpTypeFilterSchema),z.lazy(() => OtpTypeSchema) ]).optional(),
-  otp: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  hashedOtp: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   identifier: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  expiresIn: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  expiresAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   isActive: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -308,9 +308,9 @@ export const OtpWhereUniqueInputSchema: z.ZodType<Prisma.OtpWhereUniqueInput> = 
 export const OtpOrderByWithAggregationInputSchema: z.ZodType<Prisma.OtpOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   type: z.lazy(() => SortOrderSchema).optional(),
-  otp: z.lazy(() => SortOrderSchema).optional(),
+  hashedOtp: z.lazy(() => SortOrderSchema).optional(),
   identifier: z.lazy(() => SortOrderSchema).optional(),
-  expiresIn: z.lazy(() => SortOrderSchema).optional(),
+  expiresAt: z.lazy(() => SortOrderSchema).optional(),
   isActive: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -325,9 +325,9 @@ export const OtpScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.OtpScalar
   NOT: z.union([ z.lazy(() => OtpScalarWhereWithAggregatesInputSchema),z.lazy(() => OtpScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   type: z.union([ z.lazy(() => EnumOtpTypeWithAggregatesFilterSchema),z.lazy(() => OtpTypeSchema) ]).optional(),
-  otp: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  hashedOtp: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   identifier: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  expiresIn: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
+  expiresAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   isActive: z.union([ z.lazy(() => BoolWithAggregatesFilterSchema),z.boolean() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
@@ -662,9 +662,9 @@ export const RefreshTokenScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.
 export const OtpCreateInputSchema: z.ZodType<Prisma.OtpCreateInput> = z.object({
   id: z.string().uuid().optional(),
   type: z.lazy(() => OtpTypeSchema),
-  otp: z.string(),
+  hashedOtp: z.string(),
   identifier: z.string(),
-  expiresIn: z.coerce.date(),
+  expiresAt: z.coerce.date(),
   isActive: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -673,9 +673,9 @@ export const OtpCreateInputSchema: z.ZodType<Prisma.OtpCreateInput> = z.object({
 export const OtpUncheckedCreateInputSchema: z.ZodType<Prisma.OtpUncheckedCreateInput> = z.object({
   id: z.string().uuid().optional(),
   type: z.lazy(() => OtpTypeSchema),
-  otp: z.string(),
+  hashedOtp: z.string(),
   identifier: z.string(),
-  expiresIn: z.coerce.date(),
+  expiresAt: z.coerce.date(),
   isActive: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -684,9 +684,9 @@ export const OtpUncheckedCreateInputSchema: z.ZodType<Prisma.OtpUncheckedCreateI
 export const OtpUpdateInputSchema: z.ZodType<Prisma.OtpUpdateInput> = z.object({
   id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => OtpTypeSchema),z.lazy(() => EnumOtpTypeFieldUpdateOperationsInputSchema) ]).optional(),
-  otp: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  hashedOtp: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   identifier: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  expiresIn: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  expiresAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   isActive: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -695,9 +695,9 @@ export const OtpUpdateInputSchema: z.ZodType<Prisma.OtpUpdateInput> = z.object({
 export const OtpUncheckedUpdateInputSchema: z.ZodType<Prisma.OtpUncheckedUpdateInput> = z.object({
   id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => OtpTypeSchema),z.lazy(() => EnumOtpTypeFieldUpdateOperationsInputSchema) ]).optional(),
-  otp: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  hashedOtp: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   identifier: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  expiresIn: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  expiresAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   isActive: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -706,9 +706,9 @@ export const OtpUncheckedUpdateInputSchema: z.ZodType<Prisma.OtpUncheckedUpdateI
 export const OtpCreateManyInputSchema: z.ZodType<Prisma.OtpCreateManyInput> = z.object({
   id: z.string().uuid().optional(),
   type: z.lazy(() => OtpTypeSchema),
-  otp: z.string(),
+  hashedOtp: z.string(),
   identifier: z.string(),
-  expiresIn: z.coerce.date(),
+  expiresAt: z.coerce.date(),
   isActive: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -717,9 +717,9 @@ export const OtpCreateManyInputSchema: z.ZodType<Prisma.OtpCreateManyInput> = z.
 export const OtpUpdateManyMutationInputSchema: z.ZodType<Prisma.OtpUpdateManyMutationInput> = z.object({
   id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => OtpTypeSchema),z.lazy(() => EnumOtpTypeFieldUpdateOperationsInputSchema) ]).optional(),
-  otp: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  hashedOtp: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   identifier: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  expiresIn: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  expiresAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   isActive: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -728,9 +728,9 @@ export const OtpUpdateManyMutationInputSchema: z.ZodType<Prisma.OtpUpdateManyMut
 export const OtpUncheckedUpdateManyInputSchema: z.ZodType<Prisma.OtpUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => OtpTypeSchema),z.lazy(() => EnumOtpTypeFieldUpdateOperationsInputSchema) ]).optional(),
-  otp: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  hashedOtp: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   identifier: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  expiresIn: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  expiresAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   isActive: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1094,9 +1094,9 @@ export const BoolFilterSchema: z.ZodType<Prisma.BoolFilter> = z.object({
 export const OtpCountOrderByAggregateInputSchema: z.ZodType<Prisma.OtpCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   type: z.lazy(() => SortOrderSchema).optional(),
-  otp: z.lazy(() => SortOrderSchema).optional(),
+  hashedOtp: z.lazy(() => SortOrderSchema).optional(),
   identifier: z.lazy(() => SortOrderSchema).optional(),
-  expiresIn: z.lazy(() => SortOrderSchema).optional(),
+  expiresAt: z.lazy(() => SortOrderSchema).optional(),
   isActive: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
@@ -1105,9 +1105,9 @@ export const OtpCountOrderByAggregateInputSchema: z.ZodType<Prisma.OtpCountOrder
 export const OtpMaxOrderByAggregateInputSchema: z.ZodType<Prisma.OtpMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   type: z.lazy(() => SortOrderSchema).optional(),
-  otp: z.lazy(() => SortOrderSchema).optional(),
+  hashedOtp: z.lazy(() => SortOrderSchema).optional(),
   identifier: z.lazy(() => SortOrderSchema).optional(),
-  expiresIn: z.lazy(() => SortOrderSchema).optional(),
+  expiresAt: z.lazy(() => SortOrderSchema).optional(),
   isActive: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
@@ -1116,9 +1116,9 @@ export const OtpMaxOrderByAggregateInputSchema: z.ZodType<Prisma.OtpMaxOrderByAg
 export const OtpMinOrderByAggregateInputSchema: z.ZodType<Prisma.OtpMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   type: z.lazy(() => SortOrderSchema).optional(),
-  otp: z.lazy(() => SortOrderSchema).optional(),
+  hashedOtp: z.lazy(() => SortOrderSchema).optional(),
   identifier: z.lazy(() => SortOrderSchema).optional(),
-  expiresIn: z.lazy(() => SortOrderSchema).optional(),
+  expiresAt: z.lazy(() => SortOrderSchema).optional(),
   isActive: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()

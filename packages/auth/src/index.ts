@@ -13,6 +13,14 @@ export * from "./auth-tokens/RefreshTokenCookie.js";
 // types
 export * from "./local-auth/types/index.js";
 
+// otp
+export * from "./otp/OtpHandler.js";
+export * from "./otp/CreateOtpService.js";
+export * from "./otp/VerifyOtpService.js";
+export * from "./otp/interfaces/ICreateOtpService.js";
+export * from "./otp/interfaces/IVerifyOtpService.js";
+export * from "./otp/interfaces/IOtpSenderStrategy.js";
+
 // local auth
 export * from "./local-auth-v2/interfaces/IUserRepository.js";
 export * from "./local-auth-v2/interfaces/ILocalAuthService.js";

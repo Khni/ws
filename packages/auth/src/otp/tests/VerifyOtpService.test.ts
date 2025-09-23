@@ -17,11 +17,7 @@ describe("VerifyOtpService", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    verifyOtpService = new VerifyOtpService(
-      mockOtpRepository,
-      mockHasher,
-      mockToken
-    );
+    verifyOtpService = new VerifyOtpService(mockOtpRepository, mockHasher);
   });
 
   it("✅ should return true when OTP is valid and not expired", async () => {

@@ -15,9 +15,11 @@ describe("CreateOtpService", () => {
     vi.clearAllMocks();
     createOtpService = new CreateOtpService(
       mockOtpRepository,
-      mockHasher,
+
       60 * 5,
-      mockOtpSenderStrategy
+      mockOtpSenderStrategy,
+      { min: 200, max: 100 },
+      mockHasher
     );
   });
 
@@ -26,10 +28,11 @@ describe("CreateOtpService", () => {
       () =>
         new CreateOtpService(
           mockOtpRepository,
-          mockHasher,
+
           60,
           mockOtpSenderStrategy,
-          { min: 200, max: 100 }
+          { min: 200, max: 100 },
+          mockHasher
         )
     ).toThrowError("Min value cannot be greater than max value");
   });
@@ -104,10 +107,10 @@ describe("CreateOtpService", () => {
   it("should still work when min === max (always generate same OTP)", async () => {
     const service = new CreateOtpService(
       mockOtpRepository,
-      mockHasher,
       60,
       mockOtpSenderStrategy,
-      { min: 123456, max: 123456 }
+      { min: 123456, max: 123456 },
+      mockHasher
     );
 
     const otp = service["generate"]();

@@ -38,6 +38,7 @@
     "@khaled/error-handler": "workspace:*",
     "@khaled/ims-shared": "workspace:*",
     "@khaled/utils": "workspace:*",
+    "@khaled/mailer": "workspace:*",
     "@prisma/client": "^6.11.1",
     "@tsoa/runtime": "^6.6.0",
     "body-parser": "^2.2.0",

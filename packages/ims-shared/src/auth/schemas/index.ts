@@ -4,6 +4,7 @@ import {
   LocalRegisterInput,
   RefreshTokenInput,
   OtpEnum,
+  ForgetPasswordRequestOtpInput,
 } from "../types/index.js";
 const identifier = z.union([
   z.e164().transform((val) => ({ type: "phone" as const, value: val })),
@@ -46,6 +47,20 @@ export const loginBodySchema: z.ZodType<
     .max(20, { message: "Password must be at most 20 characters" }),
 });
 export type LoginBodySchemaType = z.infer<typeof loginBodySchema>;
+
+//forget password
+export const forgetPasswordRequestOtpSchema: z.ZodType<
+  ForgetPasswordRequestOtpInput,
+  ForgetPasswordRequestOtpInput
+> = z.object({
+  identifier: z.object({
+    type: z.enum(["email", "phone"]),
+    value: z.string(),
+  }),
+});
+export type forgetPasswordRequestOtpType = z.infer<
+  typeof forgetPasswordRequestOtpSchema
+>;
 export const refreshTokenBodySchema: z.ZodType<RefreshTokenInput> = z.object({
   refreshToken: z
     .string()

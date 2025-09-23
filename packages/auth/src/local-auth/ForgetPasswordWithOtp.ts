@@ -60,14 +60,13 @@ export class ForgetPasswordWithOtp<OtpType> {
       type: this.otpType,
       identifier: payload?.identifier,
     });
-    if (isVerified) {
-      return this.tokenService.sign(
-        {
-          ...payload,
-          verified: true,
-        },
-        { expiresIn: this.tokenExpiresIn }
-      );
-    }
+
+    return this.tokenService.sign(
+      {
+        ...payload,
+        verified: true,
+      },
+      { expiresIn: this.tokenExpiresIn }
+    );
   }
 }

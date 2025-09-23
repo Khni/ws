@@ -52,4 +52,16 @@ export class LocalAuth {
 
     return { user, tokens };
   };
+
+  resetPassword = async ({
+    identifier,
+    newPassword,
+  }: {
+    identifier: string;
+    newPassword: string;
+  }) => {
+    return await this.localAuthService.resetPassword({
+      data: { identifier, newPassword },
+    });
+  };
 }

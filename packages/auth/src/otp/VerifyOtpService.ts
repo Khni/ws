@@ -1,5 +1,6 @@
 import { AuthDomainError } from "../errors/AuthDomainError.js";
 import { AuthUnexpectedError } from "../errors/AuthUnexpectedError.js";
+import { BcryptHasher } from "../hasher/BcryptHasher.js";
 import { IHasher } from "../hasher/IHasher.js";
 import { IOtpRepository } from "../repositories/interfaces/IOtpRepository.js";
 import { IToken } from "../token/IToken.js";
@@ -8,7 +9,7 @@ import { IVerifyOtpService } from "./interfaces/IVerifyOtpService.js";
 export class VerifyOtpService<OtpType> implements IVerifyOtpService<OtpType> {
   constructor(
     private otpRepository: IOtpRepository<OtpType>,
-    private hasher: IHasher
+    private hasher: IHasher = new BcryptHasher()
   ) {}
 
   async execute({

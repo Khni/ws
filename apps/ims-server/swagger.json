@@ -231,6 +231,62 @@
 				}
 			}
 		},
+		"/forget-password/request-otp": {
+			"post": {
+				"operationId": "RequestOtpForForgetPassword",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"forget-password"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"identifier": {
+										"properties": {
+											"value": {
+												"type": "string"
+											},
+											"type": {
+												"type": "string",
+												"enum": [
+													"email",
+													"phone"
+												]
+											}
+										},
+										"required": [
+											"value",
+											"type"
+										],
+										"type": "object"
+									}
+								},
+								"required": [
+									"identifier"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/health-check": {
 			"get": {
 				"operationId": "HealthCheck",

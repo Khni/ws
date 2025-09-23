@@ -40,9 +40,9 @@ enum OauthProvider {
 model Otp {
   id        String   @id @default(uuid())
   type      OtpType
-  otp       String
+  hashedOtp       String
   identifier     String
-  expiresIn DateTime
+  expiresAt DateTime
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()

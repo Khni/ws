@@ -15,6 +15,13 @@ export type LocalLoginInput = {
   password: string;
 };
 
+export type ForgetPasswordRequestOtpInput = {
+  identifier: {
+    type: "email" | "phone";
+    value: string;
+  };
+};
+
 export type RefreshTokenInput = {
   refreshToken?: string;
 };

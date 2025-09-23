@@ -10,7 +10,6 @@ import logger from "./logger/winson-logger.js";
 
 import swaggerUi from "swagger-ui-express";
 
-import { OtpRepository } from "./repositories/OtpRepository.js";
 import { RegisterRoutes } from "./routes.js";
 const app: Express = express();
 const errorHandler = createErrHandlerMiddleware(console);
