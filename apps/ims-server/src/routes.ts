@@ -21,6 +21,11 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"identifierType":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["email"]},{"dataType":"enum","enums":["phone"]}],"required":true},"identifier":{"dataType":"string","required":true},"password":{"dataType":"string","required":true},"lastName":{"dataType":"string","required":true},"firstName":{"dataType":"string","required":true},"id":{"dataType":"string","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ResetForgettenPasswordInput": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"confirmNewPassword":{"dataType":"string","required":true},"newPassword":{"dataType":"string","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
 const templateService = new ExpressTemplateService(models, {"noImplicitAdditionalProperties":"throw-on-extras","bodyCoercion":true});
 
@@ -101,7 +106,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsForgetPasswordController_requestOtpForForgetPassword: Record<string, TsoaRoute.ParameterSchema> = {
-                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"identifier":{"dataType":"nestedObjectLiteral","nestedProperties":{"value":{"dataType":"string","required":true},"type":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["email"]},{"dataType":"enum","enums":["phone"]}],"required":true}},"required":true}}},
+                undefined: {"in":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"identifier":{"dataType":"nestedObjectLiteral","nestedProperties":{"value":{"dataType":"string","required":true},"type":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["email"]},{"dataType":"enum","enums":["phone"]}],"required":true}},"required":true}}},
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
         app.post('/forget-password/request-otp',
@@ -124,7 +129,69 @@ export function RegisterRoutes(app: Router) {
                 response,
                 next,
                 validatedArgs,
-                successStatus: 201,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsForgetPasswordController_verifyOtpForForgetPassword: Record<string, TsoaRoute.ParameterSchema> = {
+                undefined: {"in":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"otp":{"dataType":"string","required":true}}},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+        };
+        app.post('/forget-password/verify-otp',
+            ...(fetchMiddlewares<RequestHandler>(ForgetPasswordController)),
+            ...(fetchMiddlewares<RequestHandler>(ForgetPasswordController.prototype.verifyOtpForForgetPassword)),
+
+            async function ForgetPasswordController_verifyOtpForForgetPassword(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsForgetPasswordController_verifyOtpForForgetPassword, request, response });
+
+                const controller = new ForgetPasswordController();
+
+              await templateService.apiHandler({
+                methodName: 'verifyOtpForForgetPassword',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsForgetPasswordController_resetForgettenPassword: Record<string, TsoaRoute.ParameterSchema> = {
+                undefined: {"in":"body","required":true,"ref":"ResetForgettenPasswordInput"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+        };
+        app.post('/forget-password/reset',
+            ...(fetchMiddlewares<RequestHandler>(ForgetPasswordController)),
+            ...(fetchMiddlewares<RequestHandler>(ForgetPasswordController.prototype.resetForgettenPassword)),
+
+            async function ForgetPasswordController_resetForgettenPassword(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsForgetPasswordController_resetForgettenPassword, request, response });
+
+                const controller = new ForgetPasswordController();
+
+              await templateService.apiHandler({
+                methodName: 'resetForgettenPassword',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
               });
             } catch (err) {
                 return next(err);

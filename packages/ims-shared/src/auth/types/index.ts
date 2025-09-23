@@ -21,6 +21,13 @@ export type ForgetPasswordRequestOtpInput = {
     value: string;
   };
 };
+export type ForgetPasswordVerifyOtpInput = {
+  otp: string;
+};
+export type ResetForgettenPasswordInput = {
+  newPassword: string;
+  confirmNewPassword: string;
+};
 
 export type RefreshTokenInput = {
   refreshToken?: string;

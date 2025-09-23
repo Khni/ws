@@ -5,7 +5,10 @@ import {
   RefreshTokenInput,
   OtpEnum,
   ForgetPasswordRequestOtpInput,
+  ForgetPasswordVerifyOtpInput,
+  ResetForgettenPasswordInput,
 } from "../types/index.js";
+import { R } from "vitest/dist/chunks/environment.d.cL3nLXbE.js";
 const identifier = z.union([
   z.e164().transform((val) => ({ type: "phone" as const, value: val })),
   z.email().transform((val) => ({ type: "email" as const, value: val })),
@@ -61,6 +64,13 @@ export const forgetPasswordRequestOtpSchema: z.ZodType<
 export type forgetPasswordRequestOtpType = z.infer<
   typeof forgetPasswordRequestOtpSchema
 >;
+
+export const forgetPasswordVerifyOtpSchema: z.ZodType<
+  ForgetPasswordVerifyOtpInput,
+  ForgetPasswordVerifyOtpInput
+> = z.object({
+  otp: z.string().min(6, "OTP must be at least 6 characters"),
+});
 export const refreshTokenBodySchema: z.ZodType<RefreshTokenInput> = z.object({
   refreshToken: z
     .string()
@@ -68,7 +78,10 @@ export const refreshTokenBodySchema: z.ZodType<RefreshTokenInput> = z.object({
     .optional(),
 });
 
-export const forgetPasswordBodySchema = z
+export const resetForgettenPasswordBodySchema: z.ZodType<
+  ResetForgettenPasswordInput,
+  ResetForgettenPasswordInput
+> = z
   .object({
     newPassword: z.string().min(6, "Password must be at least 6 characters"),
     confirmNewPassword: z.string(),

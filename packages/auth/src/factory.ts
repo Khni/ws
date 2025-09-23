@@ -6,7 +6,7 @@ import {
 } from "./auth-tokens/RefreshTokenService.js";
 import { CryptoTokenGenerator } from "./crypto/Crypto.js";
 import { CreateOtpService } from "./otp/CreateOtpService.js";
-import { IOtpSenderStrategy } from "./otp/interfaces/IOtpSenderStrategy.js";
+import { IOtpSenderContext } from "./otp/interfaces/IOtpSenderContext.js";
 import { OtpHandler } from "./otp/OtpHandler.js";
 import { VerifyOtpService } from "./otp/VerifyOtpService.js";
 import { IOtpRepository } from "./repositories/interfaces/IOtpRepository.js";
@@ -33,14 +33,14 @@ export const createAuthTokenService = (
 export const otpHandler = <OtpType, ExecuteFnTData>({
   otpRepository,
   expiresIn,
-  otpSenderStrategy,
+  otpSenderContext,
   jwtSecret,
   otpType,
   executeFn,
 }: {
   otpRepository: IOtpRepository<OtpType>;
   expiresIn: number;
-  otpSenderStrategy: IOtpSenderStrategy;
+  otpSenderContext: IOtpSenderContext;
   jwtSecret: string;
   otpType: OtpType;
   executeFn: (
@@ -48,7 +48,7 @@ export const otpHandler = <OtpType, ExecuteFnTData>({
   ) => Promise<unknown>;
 }) => {
   return new OtpHandler(
-    new CreateOtpService(otpRepository, expiresIn, otpSenderStrategy),
+    new CreateOtpService(otpRepository, expiresIn, otpSenderContext),
     new VerifyOtpService(otpRepository),
     new Jwt(jwtSecret),
     otpType,

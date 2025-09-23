@@ -41,6 +41,21 @@
 					"id"
 				],
 				"type": "object"
+			},
+			"ResetForgettenPasswordInput": {
+				"properties": {
+					"confirmNewPassword": {
+						"type": "string"
+					},
+					"newPassword": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"confirmNewPassword",
+					"newPassword"
+				],
+				"type": "object"
 			}
 		},
 		"securitySchemes": {}
@@ -235,8 +250,8 @@
 			"post": {
 				"operationId": "RequestOtpForForgetPassword",
 				"responses": {
-					"201": {
-						"description": "Created",
+					"200": {
+						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -281,6 +296,76 @@
 									"identifier"
 								],
 								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/forget-password/verify-otp": {
+			"post": {
+				"operationId": "VerifyOtpForForgetPassword",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"forget-password"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"otp": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"otp"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/forget-password/reset": {
+			"post": {
+				"operationId": "ResetForgettenPassword",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"forget-password"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ResetForgettenPasswordInput"
 							}
 						}
 					}

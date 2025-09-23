@@ -1,9 +1,7 @@
-export type OtpSendParams = {
-  expiresIn: number;
-  otpType: string;
-  recipient: string;
-  generatedOtp: string;
-};
+import { OtpSenderType } from "../types.js";
+import { OtpSendParams } from "./IOtpSenderContext.js";
+
 export interface IOtpSenderStrategy {
-  send(params: OtpSendParams): Promise<void>;
+  name: OtpSenderType;
+  send(params: Omit<OtpSendParams, "senderType">): Promise<void>;
 }

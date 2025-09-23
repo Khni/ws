@@ -6,14 +6,14 @@ import {
   CreateOtpData,
   ICreateOtpService,
 } from "./interfaces/ICreateOtpService.js";
-import { IOtpSenderStrategy } from "./interfaces/IOtpSenderStrategy.js";
+import { IOtpSenderContext } from "./interfaces/IOtpSenderContext.js";
 
 export class CreateOtpService<OtpType> implements ICreateOtpService<OtpType> {
   constructor(
     private otpRepository: IOtpRepository<OtpType>,
 
     private expiresIn: number, //in seconds
-    private otpSenderStrategy: IOtpSenderStrategy,
+    private otpSenderStrategy: IOtpSenderContext,
     private otpConfig: { min: number; max: number } = {
       min: 101101,
       max: 989989,
@@ -26,7 +26,7 @@ export class CreateOtpService<OtpType> implements ICreateOtpService<OtpType> {
   }
   private generate = () => {
     const min = Math.ceil(this.otpConfig.min);
-    const max = Math.floor(this.otpConfig.min);
+    const max = Math.floor(this.otpConfig.max);
     return (Math.floor(Math.random() * (max - min + 1)) + min).toString();
   };
 
@@ -53,6 +53,7 @@ export class CreateOtpService<OtpType> implements ICreateOtpService<OtpType> {
         generatedOtp,
         otpType: data.otpType as string,
         recipient: data.recipient,
+        senderType: data.senderType,
       });
 
       return { otpRecord, generatedOtp };

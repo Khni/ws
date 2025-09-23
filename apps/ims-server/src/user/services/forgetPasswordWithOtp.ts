@@ -1,4 +1,9 @@
-import { IOtpSenderStrategy, LocalAuthService, otpHandler } from "@khaled/auth";
+import {
+  IOtpSenderStrategy,
+  LocalAuthService,
+  otpHandler,
+  OtpSenderContext,
+} from "@khaled/auth";
 import { OtpType } from "../../../generated/prisma/index.js";
 import { OtpMailSender } from "../../core/otp/OtpMailSender.js";
 import { config } from "../../config/envSchema.js";
@@ -6,27 +11,18 @@ import { OtpRepository } from "../repositories/OtpRepository.js";
 import { IOtpRepository } from "../interfaces/IOtpRepository .js";
 import { LocalAuth } from "./LocalAuthService.js";
 
-export const forgetPasswordWithOtp = ({
-  identifierType,
-  otpRep = new OtpRepository(),
-}: {
-  identifierType: "email" | "phone";
-  otpRep?: IOtpRepository;
-}) => {
-  let otpSenderStrategy: IOtpSenderStrategy;
-  if (identifierType === "email") {
-    otpSenderStrategy = new OtpMailSender();
-  } else if (identifierType === "phone") {
-    throw new Error("Phone OTP sender not implemented yet");
-  } else {
-    throw new Error("Invalid identifier type");
-  }
+export const forgetPasswordWithOtp = () => {
+  const otpSenderStrategy: IOtpSenderStrategy[] = [new OtpMailSender()];
+  const otpSenderContext = new OtpSenderContext(otpSenderStrategy);
   const resetPasssword = new LocalAuth().resetPassword;
-  return otpHandler<OtpType, Parameters<typeof resetPasssword>[0]>({
+  return otpHandler<
+    OtpType,
+    Omit<Parameters<typeof resetPasssword>[0], "identifier">
+  >({
     otpType: "FORGET_PASSWORD",
-    otpSenderStrategy,
+    otpSenderContext,
     jwtSecret: config.JWT_SECRET,
-    otpRepository: otpRep,
+    otpRepository: new OtpRepository() as IOtpRepository,
     expiresIn: 10 * 60,
     executeFn: resetPasssword,
   });

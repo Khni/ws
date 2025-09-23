@@ -3,6 +3,8 @@ import { Jwt } from "../token/jwt.js";
 import { CreateOtpService } from "./CreateOtpService.js";
 import { ICreateOtpService } from "./interfaces/ICreateOtpService.js";
 import { IVerifyOtpService } from "./interfaces/IVerifyOtpService.js";
+import { OtpSenderType } from "./types.js";
+import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken";
 
 export class OtpHandler<OtpType, ExecuteFnTData> {
   constructor(
@@ -20,26 +22,36 @@ export class OtpHandler<OtpType, ExecuteFnTData> {
     private tokenExpiresIn: ValidTimeString = "10m"
   ) {}
 
-  async request({ identifier }: { identifier: string }) {
+  async request({
+    identifier,
+    senderType,
+  }: {
+    identifier: string;
+    senderType: OtpSenderType;
+  }) {
     const otp = await this.createOtpService.execute({
       data: {
         otpType: this.otpType,
         recipient: identifier,
+        senderType,
       },
     });
-    const token = this.tokenService.sign(
+    const token = jwt.sign(
       {
         identifier,
         otpType: this.otpType,
         verified: false,
       },
+      "secret",
       { expiresIn: this.tokenExpiresIn }
     );
     return token;
   }
 
   async verify({ otp, token }: { otp: string; token: string }) {
-    const payload = this.tokenService.verify(token);
+    console.log(token);
+    const payload = jwt.verify(token, "secret");
+    console.log(payload, "PayLoad");
 
     await this.verifyOtpService.execute({
       otp: otp,
@@ -63,16 +75,8 @@ export class OtpHandler<OtpType, ExecuteFnTData> {
     return payload;
   };
 
-  async execute<TData>({
-    data,
-    token,
-    fn,
-  }: {
-    data: TData;
-    token: string;
-    fn: (data: TData & { identifier: string }) => Promise<unknown>;
-  }) {
+  async execute({ data, token }: { data: ExecuteFnTData; token: string }) {
     const { identifier } = this.verifyToken(token);
-    return await fn({ ...data, identifier });
+    return await this.executeFn({ ...data, identifier });
   }
 }

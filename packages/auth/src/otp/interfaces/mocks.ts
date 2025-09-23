@@ -1,6 +1,6 @@
 import { Mocked, vi } from "vitest";
-import { IOtpSenderStrategy } from "./IOtpSenderStrategy.js";
+import { IOtpSenderContext } from "./IOtpSenderContext.js";
 
-export const mockOtpSenderStrategy: Mocked<IOtpSenderStrategy> = {
+export const mockOtpSenderStrategy: Mocked<IOtpSenderContext> = {
   send: vi.fn(),
 };

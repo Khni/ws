@@ -4,6 +4,7 @@ import { config } from "../../config/envSchema.js";
 
 export class OtpMailSender implements IOtpSenderStrategy {
   private mailer: IMailer;
+  name = "email" as const;
 
   constructor(mailer?: Mailer) {
     this.mailer =

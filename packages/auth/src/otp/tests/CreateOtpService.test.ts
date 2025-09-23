@@ -61,6 +61,7 @@ describe("CreateOtpService", () => {
       data: {
         otpType: "VERIFY_EMAIL",
         recipient: "test@example.com",
+        senderType: "email",
       },
     });
 
@@ -99,6 +100,7 @@ describe("CreateOtpService", () => {
         data: {
           otpType: "VERIFY_PHONE",
           recipient: "+15551234567",
+          senderType: "email",
         },
       })
     ).rejects.toThrow(AuthUnexpectedError);
