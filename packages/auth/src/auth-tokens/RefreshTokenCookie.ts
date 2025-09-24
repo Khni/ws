@@ -52,7 +52,7 @@ export class RefreshTokenCookie {
    */
   public clearToken(res: Response): void {
     if (!res) throw new Error("Express response object is required");
-    console.log(this.options.cookieName, "this.options.cookieName");
+
     res.clearCookie(this.options.cookieName, {
       httpOnly: this.options.httpOnly,
       path: this.options.path,

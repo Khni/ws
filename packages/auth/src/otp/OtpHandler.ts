@@ -36,22 +36,20 @@ export class OtpHandler<OtpType, ExecuteFnTData> {
         senderType,
       },
     });
-    const token = jwt.sign(
+    const token = this.tokenService.sign(
       {
         identifier,
         otpType: this.otpType,
         verified: false,
       },
-      "secret",
+
       { expiresIn: this.tokenExpiresIn }
     );
     return token;
   }
 
   async verify({ otp, token }: { otp: string; token: string }) {
-    console.log(token);
-    const payload = jwt.verify(token, "secret");
-    console.log(payload, "PayLoad");
+    const payload = this.tokenService.verify(token);
 
     await this.verifyOtpService.execute({
       otp: otp,
@@ -61,7 +59,8 @@ export class OtpHandler<OtpType, ExecuteFnTData> {
 
     return this.tokenService.sign(
       {
-        ...payload,
+        identifier: payload.identifier,
+        otpType: payload.otpType,
         verified: true,
       },
       { expiresIn: this.tokenExpiresIn }

@@ -15,16 +15,20 @@ export class Jwt<T extends object> implements IToken<T> {
         `expiresIn should be a string like '10m' or '1h'. Passing a number means seconds, which may not be what you intended.`
       );
     }
-    console.log("secret", this.JWT_SECRET);
 
-    return jwt.sign(payload, this.JWT_SECRET, options);
+    // If expiresIn is provided, remove existing exp and iat to avoid conflicts
+    let cleanPayload = { ...payload };
+    if (options?.expiresIn) {
+      const { exp, iat, ...rest } = cleanPayload as any;
+      cleanPayload = rest as T;
+    }
+
+    return jwt.sign(cleanPayload, this.JWT_SECRET, options);
   }
   verify(token: string, options?: VerifyOptions): T {
     try {
-      console.log("secret", this.JWT_SECRET);
       return jwt.verify(token, this.JWT_SECRET, options) as T;
     } catch (error) {
-      console.log(error);
       //expired token is an expected error but other errors like if secret is wrong ..etc
       //should be unexpected errors
       if (error instanceof TokenExpiredError) {
