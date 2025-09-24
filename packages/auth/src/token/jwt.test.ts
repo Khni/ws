@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { Jwt } from "./jwt.js";
+import { Jwt } from "./Jwt.js";
 
 type Payload = {
   userId: number;

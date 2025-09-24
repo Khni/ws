@@ -30,6 +30,14 @@ export * from "./local-auth-v2/LocalAuthService.js";
 export * from "./repositories/interfaces/IBaseRepository.js";
 export * from "./factory.js";
 
+//token
+export * from "./token/IToken.js";
+export * from "./token/Jwt.js";
+
+//hasher
+export * from "./hasher/IHasher.js";
+export * from "./hasher/BcryptHasher.js";
+
 //errors
 
 export * from "./errors/AuthError.js";

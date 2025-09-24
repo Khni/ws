@@ -1,5 +1,5 @@
 import { IToken, ValidTimeString } from "../token/IToken.js";
-import { Jwt } from "../token/jwt.js";
+import { Jwt } from "../token/Jwt.js";
 import { CreateOtpService } from "./CreateOtpService.js";
 import { ICreateOtpService } from "./interfaces/ICreateOtpService.js";
 import { IVerifyOtpService } from "./interfaces/IVerifyOtpService.js";
@@ -19,7 +19,7 @@ export class OtpHandler<OtpType, ExecuteFnTData> {
     private executeFn: (
       data: ExecuteFnTData & { identifier: string }
     ) => Promise<unknown>,
-    private tokenExpiresIn: ValidTimeString = "10m"
+    private otpTokenExpiresIn: ValidTimeString = "10m"
   ) {}
 
   async request({
@@ -43,7 +43,7 @@ export class OtpHandler<OtpType, ExecuteFnTData> {
         verified: false,
       },
 
-      { expiresIn: this.tokenExpiresIn }
+      { expiresIn: this.otpTokenExpiresIn }
     );
     return token;
   }
@@ -63,7 +63,7 @@ export class OtpHandler<OtpType, ExecuteFnTData> {
         otpType: payload.otpType,
         verified: true,
       },
-      { expiresIn: this.tokenExpiresIn }
+      { expiresIn: this.otpTokenExpiresIn }
     );
   }
   private verifyToken = (token: string) => {

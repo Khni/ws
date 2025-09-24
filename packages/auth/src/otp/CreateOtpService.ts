@@ -12,8 +12,8 @@ export class CreateOtpService<OtpType> implements ICreateOtpService<OtpType> {
   constructor(
     private otpRepository: IOtpRepository<OtpType>,
 
-    private expiresIn: number, //in seconds
-    private otpSenderStrategy: IOtpSenderContext,
+    private otpExpiresIn: number, //in seconds
+    private otpSenderContext: IOtpSenderContext,
     private otpConfig: { min: number; max: number } = {
       min: 101101,
       max: 989989,
@@ -31,7 +31,7 @@ export class CreateOtpService<OtpType> implements ICreateOtpService<OtpType> {
   };
 
   private getExpiresAt = () => {
-    return new Date(Date.now() + this.expiresIn * 1000);
+    return new Date(Date.now() + this.otpExpiresIn * 1000);
   };
   async execute({ data }: { data: CreateOtpData<OtpType> }) {
     try {
@@ -48,8 +48,8 @@ export class CreateOtpService<OtpType> implements ICreateOtpService<OtpType> {
         },
       });
 
-      await this.otpSenderStrategy.send({
-        expiresIn: this.expiresIn,
+      await this.otpSenderContext.send({
+        expiresIn: this.otpExpiresIn,
         generatedOtp,
         otpType: data.otpType as string,
         recipient: data.recipient,

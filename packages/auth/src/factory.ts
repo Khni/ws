@@ -12,7 +12,7 @@ import { VerifyOtpService } from "./otp/VerifyOtpService.js";
 import { IOtpRepository } from "./repositories/interfaces/IOtpRepository.js";
 import { IRefreshTokenRepository } from "./repositories/interfaces/IRefreshTokenRepository.js";
 import { ValidTimeString } from "./token/IToken.js";
-import { Jwt } from "./token/jwt.js";
+import { Jwt } from "./token/Jwt.js";
 export const createAuthTokenService = (
   refreshTokenRepository: IRefreshTokenRepository,
   findUniqueUserById: FindUniqueUserById,

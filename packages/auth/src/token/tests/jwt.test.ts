@@ -1,7 +1,7 @@
 // Jwt.test.ts
 import { describe, it, expect } from "vitest";
 import jwt from "jsonwebtoken";
-import { Jwt } from "../jwt.js";
+import { Jwt } from "../Jwt.js";
 
 describe("Jwt Integration", () => {
   const secret = "super-secret-key";

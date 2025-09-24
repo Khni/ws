@@ -7,7 +7,7 @@ export type SafeSignOptions = Omit<SignOptions, "expiresIn"> & {
   expiresIn?: `${number}${"s" | "m" | "h" | "d"}`;
 };
 export class Jwt<T extends object> implements IToken<T> {
-  constructor(private JWT_SECRET: string) {}
+  constructor(private jwtSecret: string) {}
 
   sign(payload: T, options: SignTokenOptions): string {
     if (options?.expiresIn && typeof options.expiresIn === "number") {
@@ -23,11 +23,11 @@ export class Jwt<T extends object> implements IToken<T> {
       cleanPayload = rest as T;
     }
 
-    return jwt.sign(cleanPayload, this.JWT_SECRET, options);
+    return jwt.sign(cleanPayload, this.jwtSecret, options);
   }
   verify(token: string, options?: VerifyOptions): T {
     try {
-      return jwt.verify(token, this.JWT_SECRET, options) as T;
+      return jwt.verify(token, this.jwtSecret, options) as T;
     } catch (error) {
       //expired token is an expected error but other errors like if secret is wrong ..etc
       //should be unexpected errors

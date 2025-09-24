@@ -5,10 +5,12 @@ import {
 import { IOtpSenderStrategy } from "./interfaces/IOtpSenderStrategy.js";
 
 export class OtpSenderContext implements IOtpSenderContext {
-  constructor(private strategy: IOtpSenderStrategy[]) {}
+  constructor(private otpSenderStrategies: IOtpSenderStrategy[]) {}
 
   async send(params: OtpSendParams): Promise<void> {
-    const strategy = this.strategy.find((s) => s.name === params.senderType);
+    const strategy = this.otpSenderStrategies.find(
+      (s) => s.name === params.senderType
+    );
     if (strategy) {
       return await strategy.send({
         expiresIn: params.expiresIn,
