@@ -33,6 +33,7 @@ import {
 } from "@khaled/ims-shared";
 import { forgetPasswordWithOtp } from "../services/forgetPasswordWithOtp.js";
 import { OtpType } from "../../../generated/prisma/index.js";
+import container from "../../container.js";
 
 @Tags("forget-password")
 @Route("forget-password")
@@ -45,7 +46,9 @@ export class ForgetPasswordController extends Controller {
   >;
   constructor() {
     super();
-    this.forgetPasswordService = forgetPasswordWithOtp();
+    this.forgetPasswordService = container.resolve<
+      OtpHandler<OtpType, { newPassword: string }>
+    >("otpForgetPasswordService");
   }
 
   @Middlewares([validateZodSchemaMiddleware(forgetPasswordRequestOtpSchema)])

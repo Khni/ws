@@ -9,17 +9,17 @@ export class Mailer implements IMailer {
   private templateDir: string;
 
   constructor(
-    config: MailerConfig,
+    mailerConfig: MailerConfig,
     private mailerHelper: IMailerHelper = new MailerHelper()
   ) {
     this.transporter = nodemailer.createTransport({
-      service: config.service,
-      host: config.host,
-      port: config.port,
-      secure: config.secure,
-      auth: config.auth,
+      service: mailerConfig.service,
+      host: mailerConfig.host,
+      port: mailerConfig.port,
+      secure: mailerConfig.secure,
+      auth: mailerConfig.auth,
     });
-    this.templateDir = config.templateDir;
+    this.templateDir = mailerConfig.templateDir;
   }
 
   async sendMail(options: MailOptions): Promise<void> {

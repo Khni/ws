@@ -3,24 +3,21 @@ import { Mailer, IMailer } from "@khaled/mailer";
 import { config } from "../../config/envSchema.js";
 
 export class OtpMailSender implements IOtpSenderStrategy {
-  private mailer: IMailer;
   name = "email" as const;
 
-  constructor(mailer?: Mailer) {
-    this.mailer =
-      mailer ??
-      new Mailer({
-        service: "gmail",
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-        auth: {
-          user: config.MAIL_USER,
-          pass: config.MAIL_PASS,
-        },
-        templateDir: "templates",
-      });
-  }
+  constructor(
+    private mailer: Mailer = new Mailer({
+      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: config.MAIL_USER,
+        pass: config.MAIL_PASS,
+      },
+      templateDir: "templates",
+    })
+  ) {}
 
   async send(params: OtpSendParams): Promise<void> {
     const { recipient, generatedOtp, otpType } = params;

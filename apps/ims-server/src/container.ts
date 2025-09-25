@@ -10,15 +10,25 @@ import {
   otpHandler,
   OtpHandler,
 } from "@khaled/auth";
-import { createContainer, asClass, asValue, asFunction } from "awilix";
+import {
+  createContainer,
+  asClass,
+  asValue,
+  asFunction,
+  InjectionMode,
+} from "awilix";
 
 import { RefreshTokenRepository } from "./user/repositories/RefreshTokenRepository.js";
 import { UserRepository } from "./user/repositories/UserRepository.js";
 import { OtpRepository } from "./user/repositories/OtpRepository.js";
 import { config } from "./config/envSchema.js";
 import { OtpMailSender } from "./core/otp/OtpMailSender.js";
+import { OtpType } from "../generated/prisma/index.js";
+import { Mailer } from "@khaled/mailer";
 
-const container = createContainer();
+const container = createContainer({
+  injectionMode: InjectionMode.CLASSIC,
+});
 
 container.register({
   // repositories
@@ -32,6 +42,9 @@ container.register({
   //hasher
   hasher: asClass(BcryptHasher),
 
+  //mailer
+  mailer: asClass(Mailer),
+
   //otp
   createOtpService: asClass(CreateOtpService).scoped(),
   verifyOtpService: asClass(VerifyOtpService).scoped(),
@@ -40,7 +53,22 @@ container.register({
   otpSenderStrategies: asFunction(({ otpMailSender }) => [
     otpMailSender,
   ]).scoped(),
-  otpHandler: asClass(OtpHandler),
+  otpForgetPasswordService: asFunction(
+    ({ createOtpService, verifyOtpService, tokenService }) =>
+      new OtpHandler<OtpType, { identifier: string; newPassword: string }>(
+        createOtpService,
+        verifyOtpService,
+        tokenService,
+        OtpType.FORGET_PASSWORD,
+        async ({ newPassword }) => {
+          // ✅ directly use another registered service
+
+          console.log("✅ SMS OTP verified for", newPassword);
+          return { status: "sms success" };
+        },
+        "10m"
+      )
+  ).scoped(),
 
   // values
   jwtSecret: asValue(config.JWT_SECRET),
@@ -49,6 +77,17 @@ container.register({
   otpConfig: asValue({
     min: 201101,
     max: 909989,
+  }),
+  mailerConfig: asValue({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: config.MAIL_USER,
+      pass: config.MAIL_PASS,
+    },
+    templateDir: "templates",
   }),
   expiresAt: asFunction(() => {
     const expiresAt = new Date();
