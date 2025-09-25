@@ -4,7 +4,7 @@ import {
   IUserService,
   LocalAuthService,
 } from "@khaled/auth";
-import { UserService } from "./LocalUserService.js";
+import { UserService } from "./UserService.js";
 import { UserCreateInput, UserType } from "../types.js";
 import { RefreshTokenRepository } from "../repositories/RefreshTokenRepository.js";
 import { UserRepository } from "../repositories/UserRepository.js";

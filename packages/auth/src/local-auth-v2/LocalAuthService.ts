@@ -17,8 +17,8 @@ export class LocalAuthService<
     >
 {
   constructor(
-    private localAuthStrategy: S,
-    private hasher: IHasher = new BcryptHasher()
+    private userService: S,
+    private hasher: IHasher
   ) {}
 
   private handleAuthError(
@@ -39,7 +39,7 @@ export class LocalAuthService<
   }): Promise<Awaited<ReturnType<S["create"]>>> => {
     try {
       // check if identifier already used
-      let user = await this.localAuthStrategy.findByIdentifier({
+      let user = await this.userService.findByIdentifier({
         identifier: data.identifier,
       });
 
@@ -50,7 +50,7 @@ export class LocalAuthService<
       // hash password before creating
       const hashedPassword = await this.hasher.hash(data.password);
 
-      user = await this.localAuthStrategy.create({
+      user = await this.userService.create({
         ...data,
         password: hashedPassword,
       });
@@ -70,7 +70,7 @@ export class LocalAuthService<
     };
   }): Promise<UserType> => {
     try {
-      let user = await this.localAuthStrategy.findByIdentifier({
+      let user = await this.userService.findByIdentifier({
         identifier: data.identifier,
       });
       if (!user) {
@@ -104,17 +104,17 @@ export class LocalAuthService<
     }
   };
 
-  async resetPassword({
+  resetPassword = async ({
     data,
   }: {
     data: {
       newPassword: string;
       identifier: string;
     };
-  }): Promise<Awaited<ReturnType<S["update"]>>> {
+  }): Promise<Awaited<ReturnType<S["update"]>>> => {
     try {
       const hashedPassword = await this.hasher.hash(data.newPassword);
-      const user = await this.localAuthStrategy.update({
+      const user = await this.userService.update({
         data: {
           password: hashedPassword,
         },
@@ -122,15 +122,16 @@ export class LocalAuthService<
       });
       return user;
     } catch (error) {
+      console.log("error in reset password", error);
       this.handleAuthError(error, "PASSWORD_RESET_FAILED");
     }
-  }
+  };
 
   findUserByIdentifier = async (
     identifier: string
   ): Promise<Awaited<ReturnType<S["findByIdentifier"]>>> => {
     try {
-      let user = await this.localAuthStrategy.findByIdentifier({
+      let user = await this.userService.findByIdentifier({
         identifier,
       });
 

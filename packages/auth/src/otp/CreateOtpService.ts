@@ -14,13 +14,10 @@ export class CreateOtpService<OtpType> implements ICreateOtpService<OtpType> {
 
     private otpExpiresIn: number, //in seconds
     private otpSenderContext: IOtpSenderContext,
-    private otpConfig: { min: number; max: number } = {
-      min: 101101,
-      max: 989989,
-    },
+    private otpConfig: { min: number; max: number },
     private hasher: IHasher = new BcryptHasher()
   ) {
-    if (this.otpConfig.min > otpConfig.max) {
+    if (this.otpConfig.min > this.otpConfig.max) {
       throw new Error("Min value cannot be greater than max value");
     }
   }

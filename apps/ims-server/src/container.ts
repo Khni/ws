@@ -9,6 +9,7 @@ import {
   BcryptHasher,
   otpHandler,
   OtpHandler,
+  LocalAuthService,
 } from "@khaled/auth";
 import {
   createContainer,
@@ -25,6 +26,8 @@ import { config } from "./config/envSchema.js";
 import { OtpMailSender } from "./core/otp/OtpMailSender.js";
 import { OtpType } from "../generated/prisma/index.js";
 import { Mailer } from "@khaled/mailer";
+import { UserService } from "./user/services/UserService.js";
+import { UserType } from "./user/types.js";
 
 const container = createContainer({
   injectionMode: InjectionMode.CLASSIC,
@@ -40,32 +43,36 @@ container.register({
   tokenService: asClass(Jwt).singleton(),
 
   //hasher
-  hasher: asClass(BcryptHasher),
+  hasher: asClass(BcryptHasher).scoped(),
 
   //mailer
-  mailer: asClass(Mailer),
+  mailer: asClass(Mailer).scoped(),
+
+  //services
+  userService: asClass(UserService).scoped(),
+  localAuthService: asClass(LocalAuthService).scoped(),
 
   //otp
   createOtpService: asClass(CreateOtpService).scoped(),
+
   verifyOtpService: asClass(VerifyOtpService).scoped(),
   otpSenderContext: asClass(OtpSenderContext).scoped(),
   otpMailSender: asClass(OtpMailSender).scoped(),
-  otpSenderStrategies: asFunction(({ otpMailSender }) => [
-    otpMailSender,
-  ]).scoped(),
+  otpSenderStrategies: asFunction((otpMailSender) => [otpMailSender]).scoped(),
+
   otpForgetPasswordService: asFunction(
-    ({ createOtpService, verifyOtpService, tokenService }) =>
-      new OtpHandler<OtpType, { identifier: string; newPassword: string }>(
+    (
+      createOtpService,
+      verifyOtpService,
+      tokenService,
+      localAuthService: LocalAuthService<UserType, UserService>
+    ) =>
+      new OtpHandler(
         createOtpService,
         verifyOtpService,
         tokenService,
         OtpType.FORGET_PASSWORD,
-        async ({ newPassword }) => {
-          // ✅ directly use another registered service
-
-          console.log("✅ SMS OTP verified for", newPassword);
-          return { status: "sms success" };
-        },
+        localAuthService.resetPassword,
         "10m"
       )
   ).scoped(),

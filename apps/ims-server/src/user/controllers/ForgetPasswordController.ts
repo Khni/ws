@@ -69,6 +69,7 @@ export class ForgetPasswordController extends Controller {
       });
       return token;
     } catch (error) {
+      console.log("error", error);
       if (error instanceof AuthError) {
         throw errorMapper(error, authErrorMapping);
       }

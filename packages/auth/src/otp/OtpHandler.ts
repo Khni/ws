@@ -16,19 +16,21 @@ export class OtpHandler<OtpType, ExecuteFnTData> {
       verified: boolean;
     }>,
     private otpType: OtpType,
-    private executeFn: (
-      data: ExecuteFnTData & { identifier: string }
-    ) => Promise<unknown>,
+    private executeFn: ({
+      data,
+    }: {
+      data: ExecuteFnTData & { identifier: string };
+    }) => Promise<unknown>,
     private otpTokenExpiresIn: ValidTimeString = "10m"
   ) {}
 
-  async request({
+  request = async ({
     identifier,
     senderType,
   }: {
     identifier: string;
     senderType: OtpSenderType;
-  }) {
+  }) => {
     const otp = await this.createOtpService.execute({
       data: {
         otpType: this.otpType,
@@ -46,7 +48,7 @@ export class OtpHandler<OtpType, ExecuteFnTData> {
       { expiresIn: this.otpTokenExpiresIn }
     );
     return token;
-  }
+  };
 
   async verify({ otp, token }: { otp: string; token: string }) {
     const payload = this.tokenService.verify(token);
@@ -69,13 +71,13 @@ export class OtpHandler<OtpType, ExecuteFnTData> {
   private verifyToken = (token: string) => {
     const payload = this.tokenService.verify(token);
     if (payload.otpType !== this.otpType) {
-      throw new Error("OTP token Payload does not match wtih");
+      throw new Error("OTP token Payload type does not match");
     }
     return payload;
   };
 
   async execute({ data, token }: { data: ExecuteFnTData; token: string }) {
     const { identifier } = this.verifyToken(token);
-    return await this.executeFn({ ...data, identifier });
+    return await this.executeFn({ data: { ...data, identifier } });
   }
 }
