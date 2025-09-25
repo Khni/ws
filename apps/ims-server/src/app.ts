@@ -1,3 +1,7 @@
+import dotenv from "dotenv";
+
+dotenv.config();
+
 import express, { Request, Response, Express } from "express";
 import expressWinston from "express-winston";
 import bodyParser from "body-parser";

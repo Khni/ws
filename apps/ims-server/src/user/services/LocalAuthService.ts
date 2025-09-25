@@ -1,6 +1,7 @@
 import {
   AuthTokensService,
   createAuthTokenService,
+  IAuthTokensService,
   IUserService,
   LocalAuthService,
 } from "@khaled/auth";
@@ -16,15 +17,13 @@ import {
 } from "@khaled/ims-shared";
 
 export class LocalAuth {
-  authTokenService: AuthTokensService;
   constructor(
     private localAuthService: LocalAuthService<
       UserType,
       IUserService<UserType, UserCreateInput>
-    > = new LocalAuthService(new UserService())
-  ) {
-    this.authTokenService = authTokenService();
-  }
+    >,
+    private authTokenService: IAuthTokensService
+  ) {}
 
   register = async (data: RegisterBodySchemaType) => {
     const { identifier, ...restData } = data;

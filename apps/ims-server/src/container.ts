@@ -1,15 +1,16 @@
 // container.ts
 import {
   AuthTokensService,
-  createAuthTokenService,
   CreateOtpService,
   VerifyOtpService,
   Jwt,
   OtpSenderContext,
   BcryptHasher,
-  otpHandler,
   OtpHandler,
   LocalAuthService,
+  RefreshTokenService,
+  AccessTokenService,
+  RefreshTokenCookie,
 } from "@khaled/auth";
 import {
   createContainer,
@@ -28,6 +29,7 @@ import { OtpType } from "../generated/prisma/index.js";
 import { Mailer } from "@khaled/mailer";
 import { UserService } from "./user/services/UserService.js";
 import { UserType } from "./user/types.js";
+import { LocalLoginService } from "./user/services/LocalLoginService.js";
 
 const container = createContainer({
   injectionMode: InjectionMode.CLASSIC,
@@ -47,10 +49,15 @@ container.register({
 
   //mailer
   mailer: asClass(Mailer).scoped(),
-
+  refreshTokenCookie: asClass(RefreshTokenCookie).scoped(),
   //services
   userService: asClass(UserService).scoped(),
   localAuthService: asClass(LocalAuthService).scoped(),
+  localLoginService: asClass(LocalLoginService).scoped(),
+  // auth tokens
+  refreshTokenService: asClass(RefreshTokenService).scoped(),
+  accessTokenService: asClass(AccessTokenService).scoped(),
+  authTokenService: asClass(AuthTokensService).scoped(),
 
   //otp
   createOtpService: asClass(CreateOtpService).scoped(),
@@ -78,6 +85,15 @@ container.register({
   ).scoped(),
 
   // values
+  isProduction: asValue(config.NODE_ENV === "production"),
+  refreshTokenCookieOpts: asValue({
+    cookieName: "refreshToken",
+    path: "/",
+    httpOnly: true,
+    secure: config.NODE_ENV === "production",
+    sameSite: config.NODE_ENV === "production" ? "lax" : "strict",
+    maxAge: 60 * 60 * 24 * 15, // 15 days
+  }),
   jwtSecret: asValue(config.JWT_SECRET),
   otpExpiresIn: asValue(60 * 10), //10 minutes
   otpTokenExpiresIn: asValue("10m"),
@@ -103,21 +119,21 @@ container.register({
   }).scoped(),
 
   // services
-  authTokenService: asFunction(
-    ({
-      refreshTokenRepository,
-      userRepository,
-      expiresAt,
-      config,
-    }): AuthTokensService =>
-      createAuthTokenService(
-        refreshTokenRepository,
-        userRepository,
-        expiresAt,
-        config.JWT_SECRET,
-        `${config.ACCSESS_TOKEN_EXPIRES_IN_MINUTES}m`
-      )
-  ).scoped(),
+  // authTokenService: asFunction(
+  //   ({
+  //     refreshTokenRepository,
+  //     userRepository,
+  //     expiresAt,
+  //     config,
+  //   }): AuthTokensService =>
+  //     createAuthTokenService(
+  //       refreshTokenRepository,
+  //       userRepository,
+  //       expiresAt,
+  //       config.JWT_SECRET,
+  //       `${config.ACCSESS_TOKEN_EXPIRES_IN_MINUTES}m`
+  //     )
+  // ).scoped(),
 });
 
 export default container;

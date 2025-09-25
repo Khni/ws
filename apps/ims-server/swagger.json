@@ -66,6 +66,78 @@
 		"contact": {}
 	},
 	"paths": {
+		"/login": {
+			"post": {
+				"operationId": "LocalLogin",
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"user": {
+											"$ref": "#/components/schemas/UserType"
+										},
+										"accessToken": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"user",
+										"accessToken"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Authentication"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"identifier": {
+										"properties": {
+											"value": {
+												"type": "string"
+											},
+											"type": {
+												"type": "string",
+												"enum": [
+													"email",
+													"phone"
+												]
+											}
+										},
+										"required": [
+											"value",
+											"type"
+										],
+										"type": "object"
+									},
+									"password": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"identifier",
+									"password"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/auth/register": {
 			"post": {
 				"operationId": "Register",

@@ -1,4 +1,3 @@
-// config.ts
 import { z } from "zod";
 
 // Define schema for required environment variables
