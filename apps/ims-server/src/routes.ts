@@ -4,7 +4,7 @@
 import type { TsoaRoute } from '@tsoa/runtime';
 import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { AuthController } from './user/controllers/LocalLoginController.js';
+import { LocalLoginController } from './user/controllers/LocalLoginController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AuthController } from './user/controllers/LocalAuthController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -45,23 +45,23 @@ export function RegisterRoutes(app: Router) {
 
 
     
-        const argsAuthController_localLogin: Record<string, TsoaRoute.ParameterSchema> = {
+        const argsLocalLoginController_localLogin: Record<string, TsoaRoute.ParameterSchema> = {
                 body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"identifier":{"dataType":"nestedObjectLiteral","nestedProperties":{"value":{"dataType":"string","required":true},"type":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["email"]},{"dataType":"enum","enums":["phone"]}],"required":true}},"required":true},"password":{"dataType":"string","required":true}}},
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
         app.post('/login',
-            ...(fetchMiddlewares<RequestHandler>(AuthController)),
-            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.localLogin)),
+            ...(fetchMiddlewares<RequestHandler>(LocalLoginController)),
+            ...(fetchMiddlewares<RequestHandler>(LocalLoginController.prototype.localLogin)),
 
-            async function AuthController_localLogin(request: ExRequest, response: ExResponse, next: any) {
+            async function LocalLoginController_localLogin(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsAuthController_localLogin, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsLocalLoginController_localLogin, request, response });
 
-                const controller = new AuthController();
+                const controller = new LocalLoginController();
 
               await templateService.apiHandler({
                 methodName: 'localLogin',

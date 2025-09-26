@@ -3,16 +3,18 @@
 export * from "./auth-tokens/AuthTokensService.js";
 export * from "./repositories/interfaces/IRefreshTokenRepository.js";
 
-// refreshtoken interface
+// auth tokens
 export * from "./auth-tokens/interfaces/IRefreshTokenService.js";
-
-// refreshtoken service
 export * from "./auth-tokens/RefreshTokenService.js";
-// RefreshTokenCookie
 export * from "./auth-tokens/RefreshTokenCookie.js";
-// types
+export * from "./auth-tokens/interfaces/IAccessTokenService.js";
+export * from "./auth-tokens/AccessTokenService.js";
+export * from "./auth-tokens/interfaces/IAuthTokenService.js";
 export * from "./local-auth/types/index.js";
 
+//crypto
+export * from "./crypto/ICrypto.js";
+export * from "./crypto/Crypto.js";
 // otp
 export * from "./otp/OtpHandler.js";
 export * from "./otp/CreateOtpService.js";

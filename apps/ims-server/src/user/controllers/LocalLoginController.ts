@@ -10,7 +10,7 @@ import {
 } from "tsoa";
 
 import type { Request as ExpressRequestType } from "express";
-import { AuthError, authErrorMapping } from "@khaled/auth";
+import { AuthError, authErrorMapping, LocalAuthService } from "@khaled/auth";
 import { errorMapper } from "@khaled/error-handler";
 
 import { validateZodSchemaMiddleware } from "../../core/schema/validateZodErrorMiddleware.js";
@@ -18,16 +18,22 @@ import { validateZodSchemaMiddleware } from "../../core/schema/validateZodErrorM
 import { loginBodySchema } from "@khaled/ims-shared";
 import { type ILocalLoginService } from "../interfaces/IlocalLoginService.js";
 import { refreshTokenCookieOpts } from "../../config/constants.js";
+import container from "../../container.js";
+import { LocalLoginService } from "../services/LocalLoginService.js";
 
 @Tags("Authentication")
-@Route("login")
-export class AuthController extends Controller {
-  constructor(private localLoginService: ILocalLoginService) {
+@Route("auth")
+export class LocalLoginController extends Controller {
+  constructor(
+    private localLoginService: ILocalLoginService = container.resolve<LocalLoginService>(
+      "localLoginService"
+    )
+  ) {
     super();
   }
 
   @Middlewares([validateZodSchemaMiddleware(loginBodySchema)])
-  @Post()
+  @Post("login")
   @SuccessResponse("200", "Success")
   public async localLogin(
     @Body()

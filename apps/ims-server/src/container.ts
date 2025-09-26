@@ -11,6 +11,7 @@ import {
   RefreshTokenService,
   AccessTokenService,
   RefreshTokenCookie,
+  CryptoTokenGenerator,
 } from "@khaled/auth";
 import {
   createContainer,
@@ -47,6 +48,8 @@ container.register({
   //hasher
   hasher: asClass(BcryptHasher).scoped(),
 
+  //crypto
+  crypto: asClass(CryptoTokenGenerator).scoped(),
   //mailer
   mailer: asClass(Mailer).scoped(),
   refreshTokenCookie: asClass(RefreshTokenCookie).scoped(),
@@ -86,14 +89,14 @@ container.register({
 
   // values
   isProduction: asValue(config.NODE_ENV === "production"),
-  refreshTokenCookieOpts: asValue({
-    cookieName: "refreshToken",
-    path: "/",
-    httpOnly: true,
-    secure: config.NODE_ENV === "production",
-    sameSite: config.NODE_ENV === "production" ? "lax" : "strict",
-    maxAge: 60 * 60 * 24 * 15, // 15 days
-  }),
+  // refreshTokenCookieOpts: asValue({
+  //   cookieName: "refreshToken",
+  //   path: "/",
+  //   httpOnly: true,
+  //   secure: config.NODE_ENV === "production",
+  //   sameSite: config.NODE_ENV === "production" ? "lax" : "strict",
+  //   maxAge: 60 * 60 * 24 * 15, // 15 days
+  // }),
   jwtSecret: asValue(config.JWT_SECRET),
   otpExpiresIn: asValue(60 * 10), //10 minutes
   otpTokenExpiresIn: asValue("10m"),
