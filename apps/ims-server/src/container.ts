@@ -31,6 +31,7 @@ import { Mailer } from "@khaled/mailer";
 import { UserService } from "./user/services/UserService.js";
 import { UserType } from "./user/types.js";
 import { LocalLoginService } from "./user/services/LocalLoginService.js";
+import { LocalRegistrationService } from "./user/services/LocalRegistrationService.js";
 
 const container = createContainer({
   injectionMode: InjectionMode.CLASSIC,
@@ -57,6 +58,7 @@ container.register({
   userService: asClass(UserService).scoped(),
   localAuthService: asClass(LocalAuthService).scoped(),
   localLoginService: asClass(LocalLoginService).scoped(),
+  localRegistrationService: asClass(LocalRegistrationService).scoped(),
   // auth tokens
   refreshTokenService: asClass(RefreshTokenService).scoped(),
   accessTokenService: asClass(AccessTokenService).scoped(),
@@ -83,6 +85,23 @@ container.register({
         tokenService,
         OtpType.FORGET_PASSWORD,
         localAuthService.resetPassword,
+        "10m"
+      )
+  ).scoped(),
+
+  otpRegistrationService: asFunction(
+    (
+      createOtpService,
+      verifyOtpService,
+      tokenService,
+      localRegistrationService: LocalRegistrationService
+    ) =>
+      new OtpHandler(
+        createOtpService,
+        verifyOtpService,
+        tokenService,
+        OtpType.VERIFY_IDENTIFIER,
+        localRegistrationService.register,
         "10m"
       )
   ).scoped(),
