@@ -21,7 +21,10 @@ export class OtpHandler<OtpType, ExecuteFnTData> {
     }: {
       data: ExecuteFnTData & { identifier: string };
     }) => Promise<unknown>,
-    private otpTokenExpiresIn: ValidTimeString = "10m"
+    private otpTokenExpiresIn: ValidTimeString = "10m",
+    private indetifierTypeToSenderTypeMapping: {
+      [key in "email" | "phone"]: OtpSenderType;
+    }
   ) {}
 
   request = async ({
@@ -29,7 +32,7 @@ export class OtpHandler<OtpType, ExecuteFnTData> {
     senderType,
   }: {
     identifier: string;
-    senderType: OtpSenderType;
+    senderType?: OtpSenderType;
   }) => {
     const otp = await this.createOtpService.execute({
       data: {
