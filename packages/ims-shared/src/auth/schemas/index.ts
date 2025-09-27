@@ -7,6 +7,7 @@ import {
   ForgetPasswordRequestOtpInput,
   ForgetPasswordVerifyOtpInput,
   ResetForgettenPasswordInput,
+  OtpSignUpInput,
 } from "../types/index.js";
 import { R } from "vitest/dist/chunks/environment.d.cL3nLXbE.js";
 const identifier = z.union([
@@ -35,6 +36,22 @@ export const registerBodySchema: z.ZodType<
     .min(2, { message: "Last name must be at least 2 characters" }),
 });
 
+export const otpSignUpBodySchema: z.ZodType<OtpSignUpInput, OtpSignUpInput> =
+  z.object({
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" })
+      .max(20, { message: "Password must be at most 20 characters" }),
+
+    firstName: z
+      .string()
+      .min(2, { message: "First name must be at least 2 characters" }),
+
+    lastName: z
+      .string()
+      .min(2, { message: "Last name must be at least 2 characters" }),
+  });
+
 export type RegisterBodySchemaType = z.infer<typeof registerBodySchema>;
 
 export const loginBodySchema: z.ZodType<
@@ -50,6 +67,17 @@ export const loginBodySchema: z.ZodType<
     .max(20, { message: "Password must be at most 20 characters" }),
 });
 export type LoginBodySchemaType = z.infer<typeof loginBodySchema>;
+
+export const requestOtpBodySchema: z.ZodType<
+  { identifier: string },
+  { identifier: string }
+> = z.object({
+  identifier: z.union([z.e164(), z.email()]),
+});
+export const verifyOtpBodySchema: z.ZodType<{ otp: string }, { otp: string }> =
+  z.object({
+    otp: z.string().min(6, "OTP must be at least 6 characters"),
+  });
 
 //forget password
 export const forgetPasswordRequestOtpSchema: z.ZodType<

@@ -10,6 +10,11 @@ export type LocalRegisterInput = {
   firstName: string;
   lastName: string;
 };
+export type OtpSignUpInput = {
+  password: string;
+  firstName: string;
+  lastName: string;
+};
 export type LocalLoginInput = {
   identifier: string;
   password: string;

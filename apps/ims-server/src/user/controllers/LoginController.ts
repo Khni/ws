@@ -21,9 +21,9 @@ import { refreshTokenCookieOpts } from "../../config/constants.js";
 import container from "../../container.js";
 import { LocalLoginService } from "../services/LocalLoginService.js";
 
-@Tags("Authentication")
-@Route("auth")
-export class LocalLoginController extends Controller {
+@Tags("login")
+@Route("login")
+export class LoginController extends Controller {
   constructor(
     private localLoginService: ILocalLoginService = container.resolve<LocalLoginService>(
       "localLoginService"
@@ -33,9 +33,9 @@ export class LocalLoginController extends Controller {
   }
 
   @Middlewares([validateZodSchemaMiddleware(loginBodySchema)])
-  @Post("login")
+  @Post()
   @SuccessResponse("200", "Success")
-  public async localLogin(
+  public async login(
     @Body()
     body: {
       password: string;

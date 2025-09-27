@@ -71,13 +71,17 @@ container.register({
   otpSenderContext: asClass(OtpSenderContext).scoped(),
   otpMailSender: asClass(OtpMailSender).scoped(),
   otpSenderStrategies: asFunction((otpMailSender) => [otpMailSender]).scoped(),
-
+  indetifierTypeToSenderTypeMapping: asValue({
+    email: "email" as const,
+    phone: "sms" as const,
+  }),
   otpForgetPasswordService: asFunction(
     (
       createOtpService,
       verifyOtpService,
       tokenService,
-      localAuthService: LocalAuthService<UserType, UserService>
+      localAuthService: LocalAuthService<UserType, UserService>,
+      indetifierTypeToSenderTypeMapping
     ) =>
       new OtpHandler(
         createOtpService,
@@ -85,7 +89,8 @@ container.register({
         tokenService,
         OtpType.FORGET_PASSWORD,
         localAuthService.resetPassword,
-        "10m"
+        "10m",
+        indetifierTypeToSenderTypeMapping
       )
   ).scoped(),
 
@@ -94,7 +99,8 @@ container.register({
       createOtpService,
       verifyOtpService,
       tokenService,
-      localRegistrationService: LocalRegistrationService
+      localRegistrationService: LocalRegistrationService,
+      indetifierTypeToSenderTypeMapping
     ) =>
       new OtpHandler(
         createOtpService,
@@ -102,7 +108,8 @@ container.register({
         tokenService,
         OtpType.VERIFY_IDENTIFIER,
         localRegistrationService.register,
-        "10m"
+        "10m",
+        indetifierTypeToSenderTypeMapping
       )
   ).scoped(),
 

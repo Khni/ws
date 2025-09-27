@@ -3,6 +3,7 @@ import { AuthUnexpectedError } from "../errors/AuthUnexpectedError.js";
 import { AuthUnexpectedErrorCodesType } from "../errors/errors.js";
 import { BcryptHasher } from "../hasher/BcryptHasher.js";
 import { IHasher } from "../hasher/IHasher.js";
+import { identifierSchema } from "../schemas/index.js";
 import { ILocalAuthService } from "./interfaces/ILocalAuthService.js";
 import { IUserService } from "./interfaces/IUserRepository.js";
 import { BaseCreateUserData, UserIdentifierType } from "./types.js";
@@ -38,9 +39,11 @@ export class LocalAuthService<
     data: Parameters<S["create"]>[0]; // inferred from strategy
   }): Promise<Awaited<ReturnType<S["create"]>>> => {
     try {
+      const { value: identifier, type: identifierType } =
+        identifierSchema.parse(data.identifier);
       // check if identifier already used
       let user = await this.userService.findByIdentifier({
-        identifier: data.identifier,
+        identifier,
       });
 
       if (user) {
@@ -52,6 +55,8 @@ export class LocalAuthService<
 
       user = await this.userService.create({
         ...data,
+        identifier,
+        identifierType,
         password: hashedPassword,
       });
 

@@ -4,41 +4,35 @@ import {
   Middlewares,
   Post,
   Route,
-  SuccessResponse,
   Tags,
   Request,
 } from "tsoa";
 
-import type { Request as ExpressRequestType, Response } from "express";
+import type { Request as ExpressRequestType } from "express";
 import {
   AuthError,
   authErrorMapping,
   OtpHandler,
   RefreshTokenCookie,
 } from "@khaled/auth";
-import { errorMapper, InputValidationError } from "@khaled/error-handler";
+import { errorMapper } from "@khaled/error-handler";
 
-import { config } from "../../config/envSchema.js";
-import { validateBodySchema } from "../../utils/schema/validateBodySchemaMiddleware.js";
-import { ZodError } from "zod";
 import { validateZodSchemaMiddleware } from "../../core/schema/validateZodErrorMiddleware.js";
-import { zodErrorSerializer } from "../../core/schema/ZodErrorSerializer.js";
+
 import {
-  localRegistrationRequestOtpSchema,
-  localRegistrationVerifyOtpSchema,
-  loginBodySchema,
-  registerBodySchema,
-  resetForgettenPasswordBodySchema,
-  type ResetForgettenPasswordInput,
+  otpSignUpBodySchema,
+  type OtpSignUpInput,
+  requestOtpBodySchema,
+  verifyOtpBodySchema,
 } from "@khaled/ims-shared";
-import { localRegistrationWithOtp } from "../services/localRegistrationWithOtp.js";
+
 import { OtpType } from "../../../generated/prisma/index.js";
 import container from "../../container.js";
 
-@Tags("forget-password")
-@Route("forget-password")
-export class LocalRegistrationController extends Controller {
-  private localRegistrationService: OtpHandler<
+@Tags("sign-up")
+@Route("sign-up")
+export class SignUpController extends Controller {
+  private signUpService: OtpHandler<
     OtpType,
     {
       firstName: string;
@@ -48,7 +42,7 @@ export class LocalRegistrationController extends Controller {
   >;
   constructor() {
     super();
-    this.localRegistrationService = container.resolve<
+    this.signUpService = container.resolve<
       OtpHandler<
         OtpType,
         {
@@ -60,21 +54,20 @@ export class LocalRegistrationController extends Controller {
     >("otpRegistrationService");
   }
 
-  @Middlewares([validateZodSchemaMiddleware(localRegistrationRequestOtpSchema)])
+  @Middlewares([validateZodSchemaMiddleware(requestOtpBodySchema)])
   @Post("request-otp")
-  public async requestOtpForLocalRegistration(
+  public async requestOtpForSignUp(
     @Body()
     {
       identifier,
     }: {
-      identifier: { type: "email" | "phone"; value: string }; //this will be added by zod
+      identifier: string;
     },
     @Request() req: ExpressRequestType
   ) {
     try {
-      const token = await this.localRegistrationService.request({
-        identifier: identifier.value,
-        senderType: identifier.type === "email" ? "email" : "sms",
+      const token = await this.signUpService.request({
+        identifier,
       });
       return token;
     } catch (error) {
@@ -87,9 +80,9 @@ export class LocalRegistrationController extends Controller {
     }
   }
 
-  @Middlewares([validateZodSchemaMiddleware(localRegistrationVerifyOtpSchema)])
+  @Middlewares([validateZodSchemaMiddleware(verifyOtpBodySchema)])
   @Post("verify-otp")
-  public async verifyOtpForLocalRegistration(
+  public async verifyOtpForLocalSignUp(
     @Body()
     {
       otp,
@@ -100,7 +93,7 @@ export class LocalRegistrationController extends Controller {
   ) {
     const token = req.headers["authorization"]?.replace("Bearer ", "") || "";
     try {
-      return await this.localRegistrationService.verify({ otp, token });
+      return await this.signUpService.verify({ otp, token });
     } catch (error) {
       if (error instanceof AuthError) {
         throw errorMapper(error, authErrorMapping);
@@ -110,19 +103,21 @@ export class LocalRegistrationController extends Controller {
     }
   }
 
-  @Middlewares([validateZodSchemaMiddleware(resetForgettenPasswordBodySchema)])
-  @Post("reset")
-  public async resetForgettenPassword(
+  @Middlewares([validateZodSchemaMiddleware(otpSignUpBodySchema)])
+  @Post()
+  public async signUp(
     @Body()
-    { newPassword }: ResetForgettenPasswordInput,
+    { firstName, lastName, password }: OtpSignUpInput,
     @Request() req: ExpressRequestType
   ) {
     const token = req.headers["authorization"]?.replace("Bearer ", "") || "";
     try {
-      return await this.localRegistrationService.execute({
-        data: { newPassword },
+      const result = await this.signUpService.execute({
+        data: { firstName, lastName, password },
         token,
       });
+
+      return result;
     } catch (error) {
       if (error instanceof AuthError) {
         throw errorMapper(error, authErrorMapping);

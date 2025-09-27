@@ -1,3 +1,4 @@
+import { identifierSchema } from "../schemas/index.js";
 import { IToken, ValidTimeString } from "../token/IToken.js";
 import { Jwt } from "../token/Jwt.js";
 import { CreateOtpService } from "./CreateOtpService.js";
@@ -34,11 +35,14 @@ export class OtpHandler<OtpType, ExecuteFnTData> {
     identifier: string;
     senderType?: OtpSenderType;
   }) => {
+    const { type, value } = identifierSchema.parse(identifier);
+    const resolvedSenderType =
+      senderType ?? this.indetifierTypeToSenderTypeMapping[type];
     const otp = await this.createOtpService.execute({
       data: {
         otpType: this.otpType,
         recipient: identifier,
-        senderType,
+        senderType: resolvedSenderType,
       },
     });
     const token = this.tokenService.sign(
@@ -79,7 +83,13 @@ export class OtpHandler<OtpType, ExecuteFnTData> {
     return payload;
   };
 
-  async execute({ data, token }: { data: ExecuteFnTData; token: string }) {
+  async execute({
+    data,
+    token,
+  }: {
+    data: ExecuteFnTData;
+    token: string;
+  }): Promise<ReturnType<typeof this.executeFn>> {
     const { identifier } = this.verifyToken(token);
     return await this.executeFn({ data: { ...data, identifier } });
   }

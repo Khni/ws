@@ -7,6 +7,25 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"OtpSignUpInput": {
+				"properties": {
+					"lastName": {
+						"type": "string"
+					},
+					"firstName": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"lastName",
+					"firstName",
+					"password"
+				],
+				"type": "object"
+			},
 			"UserType": {
 				"properties": {
 					"identifierType": {
@@ -66,9 +85,119 @@
 		"contact": {}
 	},
 	"paths": {
+		"/sign-up/request-otp": {
+			"post": {
+				"operationId": "RequestOtpForSignUp",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"sign-up"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"identifier": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"identifier"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/sign-up/verify-otp": {
+			"post": {
+				"operationId": "VerifyOtpForLocalSignUp",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"sign-up"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"otp": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"otp"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/sign-up": {
+			"post": {
+				"operationId": "SignUp",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"sign-up"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/OtpSignUpInput"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/login": {
 			"post": {
-				"operationId": "LocalLogin",
+				"operationId": "Login",
 				"responses": {
 					"200": {
 						"description": "Success",
@@ -94,7 +223,7 @@
 					}
 				},
 				"tags": [
-					"Authentication"
+					"login"
 				],
 				"security": [],
 				"parameters": [],

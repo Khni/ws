@@ -27,21 +27,8 @@ export class LocalRegistrationService {
       password: string;
     };
   }) => {
-    const identifierSchema = z.union([
-      z.e164().transform((val) => ({ type: "phone" as const, value: val })),
-      z.email().transform((val) => ({ type: "email" as const, value: val })),
-    ]);
-    const { value: identifier, type: identifierType } = identifierSchema.parse(
-      data.identifier
-    );
     const { password, ...user } = await this.localAuthService.createUser({
-      data: {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        password: data.password,
-        identifier,
-        identifierType,
-      },
+      data,
     });
     const tokens = await this.authTokenService.generate(user.id);
 
