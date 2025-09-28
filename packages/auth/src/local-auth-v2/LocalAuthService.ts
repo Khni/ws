@@ -127,7 +127,6 @@ export class LocalAuthService<
       });
       return user;
     } catch (error) {
-      console.log("error in reset password", error);
       this.handleAuthError(error, "PASSWORD_RESET_FAILED");
     }
   };

@@ -7,7 +7,11 @@ import { IVerifyOtpService } from "./interfaces/IVerifyOtpService.js";
 import { OtpSenderType } from "./types.js";
 import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken";
 
-export class OtpHandler<OtpType, ExecuteFnTData> {
+export class OtpHandler<
+  OtpType,
+  ExecuteFnTData extends { identifier: string },
+  ExecuteFnReturnType,
+> {
   constructor(
     private createOtpService: ICreateOtpService<OtpType>,
     private verifyOtpService: IVerifyOtpService<OtpType>,
@@ -21,7 +25,7 @@ export class OtpHandler<OtpType, ExecuteFnTData> {
       data,
     }: {
       data: ExecuteFnTData & { identifier: string };
-    }) => Promise<unknown>,
+    }) => Promise<ExecuteFnReturnType>,
     private otpTokenExpiresIn: ValidTimeString = "10m",
     private indetifierTypeToSenderTypeMapping: {
       [key in "email" | "phone"]: OtpSenderType;
@@ -78,7 +82,7 @@ export class OtpHandler<OtpType, ExecuteFnTData> {
   private verifyToken = (token: string) => {
     const payload = this.tokenService.verify(token);
     if (payload.otpType !== this.otpType) {
-      throw new Error("OTP token Payload type does not match");
+      throw new Error("Invalid OtpType for Token");
     }
     return payload;
   };
@@ -87,10 +91,15 @@ export class OtpHandler<OtpType, ExecuteFnTData> {
     data,
     token,
   }: {
-    data: ExecuteFnTData;
+    data: Omit<ExecuteFnTData, "identifier">;
     token: string;
-  }): Promise<ReturnType<typeof this.executeFn>> {
-    const { identifier } = this.verifyToken(token);
-    return await this.executeFn({ data: { ...data, identifier } });
+  }) {
+    const { identifier, verified } = this.verifyToken(token);
+    if (!verified) {
+      throw new Error("OTP is not verified");
+    }
+    return await this.executeFn({
+      data: { ...data, identifier } as ExecuteFnTData,
+    });
   }
 }

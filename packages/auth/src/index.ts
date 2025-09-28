@@ -30,7 +30,6 @@ export * from "./local-auth-v2/interfaces/IUserRepository.js";
 export * from "./local-auth-v2/interfaces/ILocalAuthService.js";
 export * from "./local-auth-v2/LocalAuthService.js";
 export * from "./repositories/interfaces/IBaseRepository.js";
-export * from "./factory.js";
 
 //token
 export * from "./token/IToken.js";

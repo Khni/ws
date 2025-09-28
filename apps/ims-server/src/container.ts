@@ -19,6 +19,8 @@ import {
   asValue,
   asFunction,
   InjectionMode,
+  AwilixContainer,
+  Resolver,
 } from "awilix";
 
 import { RefreshTokenRepository } from "./user/repositories/RefreshTokenRepository.js";
@@ -33,11 +35,7 @@ import { UserType } from "./user/types.js";
 import { LocalLoginService } from "./user/services/LocalLoginService.js";
 import { LocalRegistrationService } from "./user/services/LocalRegistrationService.js";
 
-const container = createContainer({
-  injectionMode: InjectionMode.CLASSIC,
-});
-
-container.register({
+const appDeps = {
   // repositories
   refreshTokenRepository: asClass(RefreshTokenRepository).scoped(),
   userRepository: asClass(UserRepository).scoped(),
@@ -115,14 +113,7 @@ container.register({
 
   // values
   isProduction: asValue(config.NODE_ENV === "production"),
-  // refreshTokenCookieOpts: asValue({
-  //   cookieName: "refreshToken",
-  //   path: "/",
-  //   httpOnly: true,
-  //   secure: config.NODE_ENV === "production",
-  //   sameSite: config.NODE_ENV === "production" ? "lax" : "strict",
-  //   maxAge: 60 * 60 * 24 * 15, // 15 days
-  // }),
+
   jwtSecret: asValue(config.JWT_SECRET),
   otpExpiresIn: asValue(60 * 10), //10 minutes
   otpTokenExpiresIn: asValue("10m"),
@@ -146,23 +137,18 @@ container.register({
     expiresAt.setDate(expiresAt.getDate() + 15);
     return expiresAt;
   }).scoped(),
+};
+type AppDeps = {
+  [K in keyof typeof appDeps]: (typeof appDeps)[K] extends Resolver<infer T>
+    ? T
+    : never;
+};
 
-  // services
-  // authTokenService: asFunction(
-  //   ({
-  //     refreshTokenRepository,
-  //     userRepository,
-  //     expiresAt,
-  //     config,
-  //   }): AuthTokensService =>
-  //     createAuthTokenService(
-  //       refreshTokenRepository,
-  //       userRepository,
-  //       expiresAt,
-  //       config.JWT_SECRET,
-  //       `${config.ACCSESS_TOKEN_EXPIRES_IN_MINUTES}m`
-  //     )
-  // ).scoped(),
+export type AppContainer = AwilixContainer<AppDeps>;
+
+const container: AppContainer = createContainer({
+  injectionMode: InjectionMode.CLASSIC,
 });
+container.register(appDeps);
 
 export default container;

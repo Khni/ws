@@ -31,6 +31,7 @@ export class Jwt<T extends object> implements IToken<T> {
     } catch (error) {
       //expired token is an expected error but other errors like if secret is wrong ..etc
       //should be unexpected errors
+
       if (error instanceof TokenExpiredError) {
         throw new AuthDomainError("TOKEN_EXPIRED");
       }

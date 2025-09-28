@@ -35,7 +35,7 @@ export class CreateOtpService<OtpType> implements ICreateOtpService<OtpType> {
       const generatedOtp = this.generate();
       const hashedOtp = await this.hasher.hash(generatedOtp.toString());
       const expiresAt = this.getExpiresAt();
-      console.log("data", data);
+
       const otpRecord = await this.otpRepository.create({
         data: {
           expiresAt,

@@ -32,26 +32,9 @@ import container from "../../container.js";
 @Tags("sign-up")
 @Route("sign-up")
 export class SignUpController extends Controller {
-  private signUpService: OtpHandler<
-    OtpType,
-    {
-      firstName: string;
-      lastName: string;
-      password: string;
-    }
-  >;
+  private signUpService = container.resolve("otpRegistrationService");
   constructor() {
     super();
-    this.signUpService = container.resolve<
-      OtpHandler<
-        OtpType,
-        {
-          firstName: string;
-          lastName: string;
-          password: string;
-        }
-      >
-    >("otpRegistrationService");
   }
 
   @Middlewares([validateZodSchemaMiddleware(requestOtpBodySchema)])
@@ -71,7 +54,6 @@ export class SignUpController extends Controller {
       });
       return token;
     } catch (error) {
-      console.log("error", error);
       if (error instanceof AuthError) {
         throw errorMapper(error, authErrorMapping);
       }

@@ -3,16 +3,14 @@ import {
   IUserService,
   LocalAuthService,
 } from "@khaled/auth";
-import { RegisterBodySchemaType } from "@khaled/ims-shared";
+
 import { UserType, UserCreateInput } from "../types.js";
-import z from "zod";
-import { IdentifierTypeSchema } from "../../../prisma/generated/zod/index.js";
 
 export class LocalRegistrationService {
   constructor(
     private localAuthService: LocalAuthService<
       UserType,
-      IUserService<UserType, UserCreateInput>
+      IUserService<UserType, Omit<UserCreateInput, "identifierType">> // the identifier type will be passed by localAuthService
     >,
     private authTokenService: IAuthTokensService
   ) {}

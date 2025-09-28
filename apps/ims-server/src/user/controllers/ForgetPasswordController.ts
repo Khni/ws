@@ -4,72 +4,50 @@ import {
   Middlewares,
   Post,
   Route,
-  SuccessResponse,
   Tags,
   Request,
 } from "tsoa";
 
-import type { Request as ExpressRequestType, Response } from "express";
-import {
-  AuthError,
-  authErrorMapping,
-  OtpHandler,
-  RefreshTokenCookie,
-} from "@khaled/auth";
-import { errorMapper, InputValidationError } from "@khaled/error-handler";
+import type { Request as ExpressRequestType } from "express";
+import { AuthError, authErrorMapping } from "@khaled/auth";
+import { errorMapper } from "@khaled/error-handler";
 
-import { config } from "../../config/envSchema.js";
-import { validateBodySchema } from "../../utils/schema/validateBodySchemaMiddleware.js";
-import { ZodError } from "zod";
 import { validateZodSchemaMiddleware } from "../../core/schema/validateZodErrorMiddleware.js";
-import { zodErrorSerializer } from "../../core/schema/ZodErrorSerializer.js";
+
 import {
-  forgetPasswordRequestOtpSchema,
-  forgetPasswordVerifyOtpSchema,
-  loginBodySchema,
-  registerBodySchema,
+  requestOtpBodySchema,
   resetForgettenPasswordBodySchema,
+  verifyOtpBodySchema,
   type ResetForgettenPasswordInput,
 } from "@khaled/ims-shared";
-import { forgetPasswordWithOtp } from "../services/forgetPasswordWithOtp.js";
-import { OtpType } from "../../../generated/prisma/index.js";
+
 import container from "../../container.js";
 
 @Tags("forget-password")
 @Route("forget-password")
 export class ForgetPasswordController extends Controller {
-  private forgetPasswordService: OtpHandler<
-    OtpType,
-    {
-      newPassword: string;
-    }
-  >;
+  private forgetPasswordService = container.resolve("otpForgetPasswordService");
   constructor() {
     super();
-    this.forgetPasswordService = container.resolve<
-      OtpHandler<OtpType, { newPassword: string }>
-    >("otpForgetPasswordService");
   }
 
-  @Middlewares([validateZodSchemaMiddleware(forgetPasswordRequestOtpSchema)])
+  @Middlewares([validateZodSchemaMiddleware(requestOtpBodySchema)])
   @Post("request-otp")
   public async requestOtpForForgetPassword(
     @Body()
     {
       identifier,
     }: {
-      identifier: { type: "email" | "phone"; value: string }; //this will be added by zod
+      identifier: string; //this will be added by zod
     },
     @Request() req: ExpressRequestType
   ) {
     try {
       const token = await this.forgetPasswordService.request({
-        identifier: identifier.value,
-        senderType: identifier.type === "email" ? "email" : "sms",
+        identifier,
       });
       return token;
     } catch (error) {
-      console.log("error", error);
       if (error instanceof AuthError) {
         throw errorMapper(error, authErrorMapping);
       }
@@ -78,7 +56,7 @@ export class ForgetPasswordController extends Controller {
     }
   }
 
-  @Middlewares([validateZodSchemaMiddleware(forgetPasswordVerifyOtpSchema)])
+  @Middlewares([validateZodSchemaMiddleware(verifyOtpBodySchema)])
   @Post("verify-otp")
   public async verifyOtpForForgetPassword(
     @Body()
@@ -102,7 +80,7 @@ export class ForgetPasswordController extends Controller {
   }
 
   @Middlewares([validateZodSchemaMiddleware(resetForgettenPasswordBodySchema)])
-  @Post("reset")
+  @Post()
   public async resetForgettenPassword(
     @Body()
     { newPassword }: ResetForgettenPasswordInput,

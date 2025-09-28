@@ -10,7 +10,7 @@ import {
 } from "tsoa";
 
 import type { Request as ExpressRequestType } from "express";
-import { AuthError, authErrorMapping, LocalAuthService } from "@khaled/auth";
+import { AuthError, authErrorMapping } from "@khaled/auth";
 import { errorMapper } from "@khaled/error-handler";
 
 import { validateZodSchemaMiddleware } from "../../core/schema/validateZodErrorMiddleware.js";
