@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@khaled/error-handler": "workspace:*",
+    "@khaled/utils": "workspace:*",
     "bcrypt": "^6.0.0",
     "jsonwebtoken": "^9.0.2"
   }

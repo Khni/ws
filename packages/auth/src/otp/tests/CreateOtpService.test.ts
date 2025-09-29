@@ -5,20 +5,21 @@ import { mockOtpRepository } from "../../repositories/interfaces/mocks.js";
 import { mockHasher } from "../../hasher/mocks.js";
 import { mockOtpSenderStrategy } from "../interfaces/mocks.js";
 import { fakeOtpRecord } from "./data.js";
+import { generateExpiredDate, ValidTimeString } from "@khaled/utils";
 
 describe("CreateOtpService", () => {
   let createOtpService: CreateOtpService<
     "FORGET_PASSWORD" | "VERIFY_EMAIL" | "VERIFY_PHONE"
   >;
-
+  const validTimeString: ValidTimeString = "10m";
   beforeEach(() => {
     vi.clearAllMocks();
     createOtpService = new CreateOtpService(
       mockOtpRepository,
-
-      60 * 5,
+      generateExpiredDate,
+      { FORGET_PASSWORD: "10m" },
       mockOtpSenderStrategy,
-      { min: 200, max: 100 },
+      { min: 100, max: 200 },
       mockHasher
     );
   });
@@ -28,8 +29,8 @@ describe("CreateOtpService", () => {
       () =>
         new CreateOtpService(
           mockOtpRepository,
-
-          60,
+          generateExpiredDate,
+          { FORGET_PASSWORD: "10m" },
           mockOtpSenderStrategy,
           { min: 200, max: 100 },
           mockHasher
@@ -109,7 +110,8 @@ describe("CreateOtpService", () => {
   it("should still work when min === max (always generate same OTP)", async () => {
     const service = new CreateOtpService(
       mockOtpRepository,
-      60,
+      generateExpiredDate,
+      { FORGET_PASSWORD: "10m" },
       mockOtpSenderStrategy,
       { min: 123456, max: 123456 },
       mockHasher
