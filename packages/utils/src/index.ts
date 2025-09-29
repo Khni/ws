@@ -7,3 +7,5 @@ export * from "./generate-random-integer.js";
 export * from "./parse-safe-env-number.js";
 export * from "./generate-expired-date.js";
 export * from "./create-config.js";
+export * from "./parseTimeString.js";
+export * from "./types.js";

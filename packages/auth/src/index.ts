@@ -25,6 +25,7 @@ export * from "./otp/interfaces/IVerifyOtpService.js";
 export * from "./otp/interfaces/IOtpSenderContext.js";
 export * from "./otp/interfaces/IOtpSenderStrategy.js";
 export * from "./otp/types.js";
+export * from "./otp/OtpGuardedExecutor.js";
 // local auth
 export * from "./local-auth-v2/interfaces/IUserRepository.js";
 export * from "./local-auth-v2/interfaces/ILocalAuthService.js";

@@ -12,6 +12,7 @@ import {
   AccessTokenService,
   RefreshTokenCookie,
   CryptoTokenGenerator,
+  OtpGuardedExecutor,
 } from "@khaled/auth";
 import {
   createContainer,
@@ -34,12 +35,46 @@ import { UserService } from "./user/services/UserService.js";
 import { UserType } from "./user/types.js";
 import { LocalLoginService } from "./user/services/LocalLoginService.js";
 import { LocalRegistrationService } from "./user/services/LocalRegistrationService.js";
+import { generateExpiredDate, parseTimeString } from "@khaled/utils";
 
-const appDeps = {
+export const appDeps = {
   // repositories
   refreshTokenRepository: asClass(RefreshTokenRepository).scoped(),
   userRepository: asClass(UserRepository).scoped(),
   otpRepository: asClass(OtpRepository).scoped(),
+  refreshTokenExpiresIn: asValue("15d"),
+  accessTokenExpiresIn: asValue("10m"),
+  //values
+  otpTypeToOtpTokenExpiresInMapping: asValue({
+    [OtpType.SIGN_UP]: "10m",
+    [OtpType.FORGET_PASSWORD]: "10m",
+  }),
+  otpTypeToOtpExpiresInMapping: asValue({
+    [OtpType.SIGN_UP]: "1d",
+    [OtpType.FORGET_PASSWORD]: "10m",
+  }),
+
+  otpSignUpService: asFunction(
+    (tokenService, localRegistrationService: LocalRegistrationService) =>
+      new OtpGuardedExecutor(
+        OtpType.SIGN_UP,
+        tokenService,
+        localRegistrationService.register
+      )
+  ).scoped(),
+  otpForgetPasswordService: asFunction(
+    (tokenService, localAuthService: LocalAuthService<UserType, UserService>) =>
+      new OtpGuardedExecutor(
+        OtpType.FORGET_PASSWORD,
+        tokenService,
+        localAuthService.resetPassword
+      )
+  ).scoped(),
+
+  parseTimeString: asValue(parseTimeString),
+
+  generateExpiredDate: asValue(generateExpiredDate),
+  // utils
 
   //token
   tokenService: asClass(Jwt).singleton(),
@@ -73,44 +108,9 @@ const appDeps = {
     email: "email" as const,
     phone: "sms" as const,
   }),
-  otpForgetPasswordService: asFunction(
-    (
-      createOtpService,
-      verifyOtpService,
-      tokenService,
-      localAuthService: LocalAuthService<UserType, UserService>,
-      indetifierTypeToSenderTypeMapping
-    ) =>
-      new OtpHandler(
-        createOtpService,
-        verifyOtpService,
-        tokenService,
-        OtpType.FORGET_PASSWORD,
-        localAuthService.resetPassword,
-        "10m",
-        indetifierTypeToSenderTypeMapping
-      )
-  ).scoped(),
+  otpHandler: asClass(OtpHandler<OtpType>).scoped(),
 
-  otpRegistrationService: asFunction(
-    (
-      createOtpService,
-      verifyOtpService,
-      tokenService,
-      localRegistrationService: LocalRegistrationService,
-      indetifierTypeToSenderTypeMapping
-    ) =>
-      new OtpHandler(
-        createOtpService,
-        verifyOtpService,
-        tokenService,
-        OtpType.VERIFY_IDENTIFIER,
-        localRegistrationService.register,
-        "10m",
-        indetifierTypeToSenderTypeMapping
-      )
-  ).scoped(),
-
+  // config
   // values
   isProduction: asValue(config.NODE_ENV === "production"),
 

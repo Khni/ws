@@ -21,7 +21,7 @@ generator zod {
 // ========= ENUMS =========
 
 enum OtpType {
-  VERIFY_IDENTIFIER
+  SIGN_UP
   LOGIN
   FORGET_PASSWORD
 }

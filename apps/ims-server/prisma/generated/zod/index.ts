@@ -28,7 +28,7 @@ export const QueryModeSchema = z.enum(['default','insensitive']);
 
 export const NullsOrderSchema = z.enum(['first','last']);
 
-export const OtpTypeSchema = z.enum(['VERIFY_IDENTIFIER','LOGIN','FORGET_PASSWORD']);
+export const OtpTypeSchema = z.enum(['SIGN_UP','LOGIN','FORGET_PASSWORD']);
 
 export type OtpTypeType = `${z.infer<typeof OtpTypeSchema>}`
 

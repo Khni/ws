@@ -5,17 +5,16 @@ import { CreateOtpService } from "./CreateOtpService.js";
 import { ICreateOtpService } from "./interfaces/ICreateOtpService.js";
 import { IOtpToken } from "./interfaces/IOtpToken.js";
 import { IVerifyOtpService } from "./interfaces/IVerifyOtpService.js";
-import { OtpSenderType } from "./types.js";
+import { OtpSenderType, OtpTypeToOtpTokenExpiresInMapping } from "./types.js";
 import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken";
 
-export class OtpHandler<OtpType> {
+export class OtpHandler<OtpType extends string> {
   constructor(
     private createOtpService: ICreateOtpService<OtpType>,
     private verifyOtpService: IVerifyOtpService<OtpType>,
-
+    private otpTypeToOtpTokenExpiresInMapping: OtpTypeToOtpTokenExpiresInMapping<OtpType>,
     private tokenService: IOtpToken<OtpType>,
 
-    private otpTokenExpiresIn: ValidTimeString = "10m",
     private indetifierTypeToSenderTypeMapping: {
       [key in "email" | "phone"]: OtpSenderType;
     }
@@ -47,7 +46,7 @@ export class OtpHandler<OtpType> {
         verified: false,
       },
 
-      { expiresIn: this.otpTokenExpiresIn }
+      { expiresIn: this.otpTypeToOtpTokenExpiresInMapping[otpType] }
     );
     return token;
   };
@@ -75,7 +74,7 @@ export class OtpHandler<OtpType> {
         otpType: payload.otpType,
         verified: true,
       },
-      { expiresIn: this.otpTokenExpiresIn }
+      { expiresIn: this.otpTypeToOtpTokenExpiresInMapping[otpType] }
     );
   }
   private verifyToken = ({

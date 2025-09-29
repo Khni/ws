@@ -9,7 +9,7 @@ import {
   ResetForgettenPasswordInput,
   OtpSignUpInput,
 } from "../types/index.js";
-import { R } from "vitest/dist/chunks/environment.d.cL3nLXbE.js";
+
 const identifier = z.union([
   z.e164().transform((val) => ({ type: "phone" as const, value: val })),
   z.email().transform((val) => ({ type: "email" as const, value: val })),
@@ -68,17 +68,6 @@ export const loginBodySchema: z.ZodType<
 });
 export type LoginBodySchemaType = z.infer<typeof loginBodySchema>;
 
-export const requestOtpBodySchema: z.ZodType<
-  { identifier: string },
-  { identifier: string }
-> = z.object({
-  identifier: z.union([z.e164(), z.email()]),
-});
-export const verifyOtpBodySchema: z.ZodType<{ otp: string }, { otp: string }> =
-  z.object({
-    otp: z.string().min(6, "OTP must be at least 6 characters"),
-  });
-
 //forget password
 export const forgetPasswordRequestOtpSchema: z.ZodType<
   ForgetPasswordRequestOtpInput,
@@ -122,14 +111,13 @@ export const resetForgettenPasswordBodySchema: z.ZodType<
 /**
  * OTP
  */
-export const CreateOtpSchema = z.object({
-  email: z.email(),
-  type: z.enum(OtpEnum),
+export const requestOtpBodySchema = z.object({
+  identifier: z.union([z.e164(), z.email()]),
+  otpType: z.enum(OtpEnum),
 });
 
-export const VerifyOtpSchema = z.object({
-  email: z.email(),
-  type: z.enum(OtpEnum),
+export const verifyOtpBodySchema = z.object({
+  otpType: z.enum(OtpEnum),
   otp: z.string().min(6),
 });
 

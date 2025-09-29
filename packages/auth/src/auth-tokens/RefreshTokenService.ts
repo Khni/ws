@@ -1,3 +1,4 @@
+import { ValidTimeString } from "@khaled/utils";
 import { ICrypto } from "../crypto/ICrypto.js";
 import { AuthDomainError } from "../errors/AuthDomainError.js";
 import { AuthUnexpectedError } from "../errors/AuthUnexpectedError.js";
@@ -12,12 +13,16 @@ export interface FindUniqueUserById {
   findUnique(params: { where: { id: string } }): Promise<any>;
 }
 export class RefreshTokenService implements IRefreshTokenService {
+  private expiresAt: Date;
   constructor(
     private refreshTokenRepository: IRefreshTokenRepository,
     private crypto: ICrypto,
-    private expiresAt: Date,
+    private generateExpiredDate: (timeString: ValidTimeString) => Date,
+    private refreshTokenExpiresIn: ValidTimeString,
     private userRepository: FindUniqueUserById
-  ) {}
+  ) {
+    this.expiresAt = this.generateExpiredDate(this.refreshTokenExpiresIn);
+  }
   verify = async ({ token }: RefreshTokenVerifyInput) => {
     try {
       const refreshToken = await this.refreshTokenRepository.findUnique({

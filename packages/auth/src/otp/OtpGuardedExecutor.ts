@@ -6,6 +6,7 @@ export class OtpGuardedExecutor<
   ExecuteFnReturnType,
 > {
   constructor(
+    private otpType: OtpType,
     private tokenService: IOtpToken<OtpType>,
 
     private executeFn: ({
@@ -26,13 +27,11 @@ export class OtpGuardedExecutor<
   async execute({
     data,
     token,
-    otpType,
   }: {
     data: Omit<ExecuteFnTData, "identifier">;
     token: string;
-    otpType: OtpType;
   }) {
-    const identifier = this.verifyToken({ token, otpType });
+    const identifier = this.verifyToken({ token, otpType: this.otpType });
 
     return await this.executeFn({
       data: { ...data, identifier } as ExecuteFnTData,

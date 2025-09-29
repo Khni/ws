@@ -4,11 +4,9 @@
 import type { TsoaRoute } from '@tsoa/runtime';
 import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { SignUpController } from './user/controllers/SignUpController.js';
+import { OtpController } from './user/controllers/OtpController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { LoginController } from './user/controllers/LoginController.js';
-// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { ForgetPasswordController } from './user/controllers/ForgetPasswordController.js';
+import { LoginController } from './user/controllers/LocalAuthController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { HealthController } from './health-check/HealthController.js';
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
@@ -18,14 +16,24 @@ import type { Request as ExRequest, Response as ExResponse, RequestHandler, Rout
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
-    "OtpSignUpInput": {
+    "_36_Enums.OtpType": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"lastName":{"dataType":"string","required":true},"firstName":{"dataType":"string","required":true},"password":{"dataType":"string","required":true}},"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["SIGN_UP"]},{"dataType":"enum","enums":["FORGET_PASSWORD"]},{"dataType":"enum","enums":["LOGIN"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OtpType": {
+        "dataType": "refAlias",
+        "type": {"ref":"_36_Enums.OtpType","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UserType": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"identifierType":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["email"]},{"dataType":"enum","enums":["phone"]}],"required":true},"identifier":{"dataType":"string","required":true},"password":{"dataType":"string","required":true},"lastName":{"dataType":"string","required":true},"firstName":{"dataType":"string","required":true},"id":{"dataType":"string","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OtpSignUpInput": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"lastName":{"dataType":"string","required":true},"firstName":{"dataType":"string","required":true},"password":{"dataType":"string","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ResetForgettenPasswordInput": {
@@ -50,26 +58,26 @@ export function RegisterRoutes(app: Router) {
 
 
     
-        const argsSignUpController_requestOtpForSignUp: Record<string, TsoaRoute.ParameterSchema> = {
-                undefined: {"in":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"identifier":{"dataType":"string","required":true}}},
+        const argsOtpController_requestOtp: Record<string, TsoaRoute.ParameterSchema> = {
+                undefined: {"in":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"otpType":{"ref":"OtpType","required":true},"identifier":{"dataType":"string","required":true}}},
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
-        app.post('/sign-up/request-otp',
-            ...(fetchMiddlewares<RequestHandler>(SignUpController)),
-            ...(fetchMiddlewares<RequestHandler>(SignUpController.prototype.requestOtpForSignUp)),
+        app.post('/otp/request',
+            ...(fetchMiddlewares<RequestHandler>(OtpController)),
+            ...(fetchMiddlewares<RequestHandler>(OtpController.prototype.requestOtp)),
 
-            async function SignUpController_requestOtpForSignUp(request: ExRequest, response: ExResponse, next: any) {
+            async function OtpController_requestOtp(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsSignUpController_requestOtpForSignUp, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsOtpController_requestOtp, request, response });
 
-                const controller = new SignUpController();
+                const controller = new OtpController();
 
               await templateService.apiHandler({
-                methodName: 'requestOtpForSignUp',
+                methodName: 'requestOtp',
                 controller,
                 response,
                 next,
@@ -81,57 +89,26 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsSignUpController_verifyOtpForLocalSignUp: Record<string, TsoaRoute.ParameterSchema> = {
-                undefined: {"in":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"otp":{"dataType":"string","required":true}}},
+        const argsOtpController_verifyOtp: Record<string, TsoaRoute.ParameterSchema> = {
+                undefined: {"in":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"otpType":{"ref":"OtpType","required":true},"otp":{"dataType":"string","required":true}}},
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
-        app.post('/sign-up/verify-otp',
-            ...(fetchMiddlewares<RequestHandler>(SignUpController)),
-            ...(fetchMiddlewares<RequestHandler>(SignUpController.prototype.verifyOtpForLocalSignUp)),
+        app.post('/otp/verify',
+            ...(fetchMiddlewares<RequestHandler>(OtpController)),
+            ...(fetchMiddlewares<RequestHandler>(OtpController.prototype.verifyOtp)),
 
-            async function SignUpController_verifyOtpForLocalSignUp(request: ExRequest, response: ExResponse, next: any) {
+            async function OtpController_verifyOtp(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsSignUpController_verifyOtpForLocalSignUp, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsOtpController_verifyOtp, request, response });
 
-                const controller = new SignUpController();
-
-              await templateService.apiHandler({
-                methodName: 'verifyOtpForLocalSignUp',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsSignUpController_signUp: Record<string, TsoaRoute.ParameterSchema> = {
-                undefined: {"in":"body","required":true,"ref":"OtpSignUpInput"},
-                req: {"in":"request","name":"req","required":true,"dataType":"object"},
-        };
-        app.post('/sign-up',
-            ...(fetchMiddlewares<RequestHandler>(SignUpController)),
-            ...(fetchMiddlewares<RequestHandler>(SignUpController.prototype.signUp)),
-
-            async function SignUpController_signUp(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsSignUpController_signUp, request, response });
-
-                const controller = new SignUpController();
+                const controller = new OtpController();
 
               await templateService.apiHandler({
-                methodName: 'signUp',
+                methodName: 'verifyOtp',
                 controller,
                 response,
                 next,
@@ -147,7 +124,7 @@ export function RegisterRoutes(app: Router) {
                 body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"identifier":{"dataType":"nestedObjectLiteral","nestedProperties":{"value":{"dataType":"string","required":true},"type":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["email"]},{"dataType":"enum","enums":["phone"]}],"required":true}},"required":true},"password":{"dataType":"string","required":true}}},
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
-        app.post('/login',
+        app.post('/auth/login',
             ...(fetchMiddlewares<RequestHandler>(LoginController)),
             ...(fetchMiddlewares<RequestHandler>(LoginController.prototype.login)),
 
@@ -174,26 +151,26 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsForgetPasswordController_requestOtpForForgetPassword: Record<string, TsoaRoute.ParameterSchema> = {
-                undefined: {"in":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"identifier":{"dataType":"string","required":true}}},
+        const argsLoginController_signUp: Record<string, TsoaRoute.ParameterSchema> = {
+                undefined: {"in":"body","required":true,"ref":"OtpSignUpInput"},
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
-        app.post('/forget-password/request-otp',
-            ...(fetchMiddlewares<RequestHandler>(ForgetPasswordController)),
-            ...(fetchMiddlewares<RequestHandler>(ForgetPasswordController.prototype.requestOtpForForgetPassword)),
+        app.post('/auth/sign-up',
+            ...(fetchMiddlewares<RequestHandler>(LoginController)),
+            ...(fetchMiddlewares<RequestHandler>(LoginController.prototype.signUp)),
 
-            async function ForgetPasswordController_requestOtpForForgetPassword(request: ExRequest, response: ExResponse, next: any) {
+            async function LoginController_signUp(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsForgetPasswordController_requestOtpForForgetPassword, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsLoginController_signUp, request, response });
 
-                const controller = new ForgetPasswordController();
+                const controller = new LoginController();
 
               await templateService.apiHandler({
-                methodName: 'requestOtpForForgetPassword',
+                methodName: 'signUp',
                 controller,
                 response,
                 next,
@@ -205,54 +182,23 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsForgetPasswordController_verifyOtpForForgetPassword: Record<string, TsoaRoute.ParameterSchema> = {
-                undefined: {"in":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"otp":{"dataType":"string","required":true}}},
-                req: {"in":"request","name":"req","required":true,"dataType":"object"},
-        };
-        app.post('/forget-password/verify-otp',
-            ...(fetchMiddlewares<RequestHandler>(ForgetPasswordController)),
-            ...(fetchMiddlewares<RequestHandler>(ForgetPasswordController.prototype.verifyOtpForForgetPassword)),
-
-            async function ForgetPasswordController_verifyOtpForForgetPassword(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsForgetPasswordController_verifyOtpForForgetPassword, request, response });
-
-                const controller = new ForgetPasswordController();
-
-              await templateService.apiHandler({
-                methodName: 'verifyOtpForForgetPassword',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsForgetPasswordController_resetForgettenPassword: Record<string, TsoaRoute.ParameterSchema> = {
+        const argsLoginController_resetForgettenPassword: Record<string, TsoaRoute.ParameterSchema> = {
                 undefined: {"in":"body","required":true,"ref":"ResetForgettenPasswordInput"},
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
-        app.post('/forget-password',
-            ...(fetchMiddlewares<RequestHandler>(ForgetPasswordController)),
-            ...(fetchMiddlewares<RequestHandler>(ForgetPasswordController.prototype.resetForgettenPassword)),
+        app.post('/auth/forget-password',
+            ...(fetchMiddlewares<RequestHandler>(LoginController)),
+            ...(fetchMiddlewares<RequestHandler>(LoginController.prototype.resetForgettenPassword)),
 
-            async function ForgetPasswordController_resetForgettenPassword(request: ExRequest, response: ExResponse, next: any) {
+            async function LoginController_resetForgettenPassword(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsForgetPasswordController_resetForgettenPassword, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsLoginController_resetForgettenPassword, request, response });
 
-                const controller = new ForgetPasswordController();
+                const controller = new LoginController();
 
               await templateService.apiHandler({
                 methodName: 'resetForgettenPassword',

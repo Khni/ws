@@ -29,27 +29,30 @@ import {
 import { OtpType } from "../../../generated/prisma/index.js";
 import container from "../../container.js";
 
-@Tags("sign-up")
-@Route("sign-up")
-export class SignUpController extends Controller {
-  private signUpService = container.resolve("otpRegistrationService");
+@Tags("otp")
+@Route("otp")
+export class OtpController extends Controller {
+  private otpService = container.resolve("otpHandler");
   constructor() {
     super();
   }
 
   @Middlewares([validateZodSchemaMiddleware(requestOtpBodySchema)])
-  @Post("request-otp")
-  public async requestOtpForSignUp(
+  @Post("request")
+  public async requestOtp(
     @Body()
     {
+      otpType,
       identifier,
     }: {
       identifier: string;
+      otpType: OtpType;
     },
     @Request() req: ExpressRequestType
   ) {
     try {
-      const token = await this.signUpService.request({
+      const token = await this.otpService.request({
+        otpType,
         identifier,
       });
       return token;
@@ -63,43 +66,21 @@ export class SignUpController extends Controller {
   }
 
   @Middlewares([validateZodSchemaMiddleware(verifyOtpBodySchema)])
-  @Post("verify-otp")
-  public async verifyOtpForLocalSignUp(
+  @Post("verify")
+  public async verifyOtp(
     @Body()
     {
+      otpType,
       otp,
     }: {
       otp: string;
+      otpType: OtpType;
     },
     @Request() req: ExpressRequestType
   ) {
     const token = req.headers["authorization"]?.replace("Bearer ", "") || "";
     try {
-      return await this.signUpService.verify({ otp, token });
-    } catch (error) {
-      if (error instanceof AuthError) {
-        throw errorMapper(error, authErrorMapping);
-      }
-
-      throw error;
-    }
-  }
-
-  @Middlewares([validateZodSchemaMiddleware(otpSignUpBodySchema)])
-  @Post()
-  public async signUp(
-    @Body()
-    { firstName, lastName, password }: OtpSignUpInput,
-    @Request() req: ExpressRequestType
-  ) {
-    const token = req.headers["authorization"]?.replace("Bearer ", "") || "";
-    try {
-      const result = await this.signUpService.execute({
-        data: { firstName, lastName, password },
-        token,
-      });
-
-      return result;
+      return await this.otpService.verify({ otp, token, otpType });
     } catch (error) {
       if (error instanceof AuthError) {
         throw errorMapper(error, authErrorMapping);

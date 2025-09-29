@@ -10,7 +10,7 @@ export class OtpSenderContext implements IOtpSenderContext {
     private otpSenderStrategies: IOtpSenderStrategy[],
     private parseTimeString: (input: ValidTimeString) => {
       timeValue: number;
-      humanReadable: string;
+      timeUnit: string;
     }
   ) {}
 
@@ -19,12 +19,10 @@ export class OtpSenderContext implements IOtpSenderContext {
       (s) => s.name === params.senderType
     );
     if (strategy) {
-      const { timeValue, humanReadable } = this.parseTimeString(
-        params.timeString
-      );
+      const { timeValue, timeUnit } = this.parseTimeString(params.timeString);
       return await strategy.send({
-        timeUnit: humanReadable,
-        timeValue: timeValue,
+        timeUnit,
+        timeValue,
         otpType: params.otpType,
         recipient: params.recipient,
         generatedOtp: params.generatedOtp,

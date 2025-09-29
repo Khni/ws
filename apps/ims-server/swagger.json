@@ -7,24 +7,16 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"OtpSignUpInput": {
-				"properties": {
-					"lastName": {
-						"type": "string"
-					},
-					"firstName": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"lastName",
-					"firstName",
-					"password"
-				],
-				"type": "object"
+			"_36_Enums.OtpType": {
+				"type": "string",
+				"enum": [
+					"SIGN_UP",
+					"FORGET_PASSWORD",
+					"LOGIN"
+				]
+			},
+			"OtpType": {
+				"$ref": "#/components/schemas/_36_Enums.OtpType"
 			},
 			"UserType": {
 				"properties": {
@@ -61,6 +53,25 @@
 				],
 				"type": "object"
 			},
+			"OtpSignUpInput": {
+				"properties": {
+					"lastName": {
+						"type": "string"
+					},
+					"firstName": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"lastName",
+					"firstName",
+					"password"
+				],
+				"type": "object"
+			},
 			"ResetForgettenPasswordInput": {
 				"properties": {
 					"confirmNewPassword": {
@@ -85,9 +96,9 @@
 		"contact": {}
 	},
 	"paths": {
-		"/sign-up/request-otp": {
+		"/otp/request": {
 			"post": {
-				"operationId": "RequestOtpForSignUp",
+				"operationId": "RequestOtp",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -101,7 +112,107 @@
 					}
 				},
 				"tags": [
-					"sign-up"
+					"otp"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"otpType": {
+										"$ref": "#/components/schemas/OtpType"
+									},
+									"identifier": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"otpType",
+									"identifier"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/otp/verify": {
+			"post": {
+				"operationId": "VerifyOtp",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"otp"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"otpType": {
+										"$ref": "#/components/schemas/OtpType"
+									},
+									"otp": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"otpType",
+									"otp"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"user": {
+											"$ref": "#/components/schemas/UserType"
+										},
+										"accessToken": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"user",
+										"accessToken"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"auth"
 				],
 				"security": [],
 				"parameters": [],
@@ -112,11 +223,31 @@
 							"schema": {
 								"properties": {
 									"identifier": {
+										"properties": {
+											"value": {
+												"type": "string"
+											},
+											"type": {
+												"type": "string",
+												"enum": [
+													"email",
+													"phone"
+												]
+											}
+										},
+										"required": [
+											"value",
+											"type"
+										],
+										"type": "object"
+									},
+									"password": {
 										"type": "string"
 									}
 								},
 								"required": [
-									"identifier"
+									"identifier",
+									"password"
 								],
 								"type": "object"
 							}
@@ -125,47 +256,7 @@
 				}
 			}
 		},
-		"/sign-up/verify-otp": {
-			"post": {
-				"operationId": "VerifyOtpForLocalSignUp",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "string"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"sign-up"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"properties": {
-									"otp": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"otp"
-								],
-								"type": "object"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/sign-up": {
+		"/auth/sign-up": {
 			"post": {
 				"operationId": "SignUp",
 				"responses": {
@@ -233,7 +324,7 @@
 					}
 				},
 				"tags": [
-					"sign-up"
+					"auth"
 				],
 				"security": [],
 				"parameters": [],
@@ -249,159 +340,7 @@
 				}
 			}
 		},
-		"/login": {
-			"post": {
-				"operationId": "Login",
-				"responses": {
-					"200": {
-						"description": "Success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"user": {
-											"$ref": "#/components/schemas/UserType"
-										},
-										"accessToken": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"user",
-										"accessToken"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"login"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"properties": {
-									"identifier": {
-										"properties": {
-											"value": {
-												"type": "string"
-											},
-											"type": {
-												"type": "string",
-												"enum": [
-													"email",
-													"phone"
-												]
-											}
-										},
-										"required": [
-											"value",
-											"type"
-										],
-										"type": "object"
-									},
-									"password": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"identifier",
-									"password"
-								],
-								"type": "object"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/forget-password/request-otp": {
-			"post": {
-				"operationId": "RequestOtpForForgetPassword",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "string"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"forget-password"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"properties": {
-									"identifier": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"identifier"
-								],
-								"type": "object"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/forget-password/verify-otp": {
-			"post": {
-				"operationId": "VerifyOtpForForgetPassword",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "string"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"forget-password"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"properties": {
-									"otp": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"otp"
-								],
-								"type": "object"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/forget-password": {
+		"/auth/forget-password": {
 			"post": {
 				"operationId": "ResetForgettenPassword",
 				"responses": {
@@ -449,7 +388,7 @@
 					}
 				},
 				"tags": [
-					"forget-password"
+					"auth"
 				],
 				"security": [],
 				"parameters": [],
