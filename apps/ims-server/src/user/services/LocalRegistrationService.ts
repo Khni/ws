@@ -20,8 +20,7 @@ export class LocalRegistrationService {
   }: {
     data: {
       identifier: string;
-      firstName: string;
-      lastName: string;
+      name: string;
       password: string;
     };
   }) => {

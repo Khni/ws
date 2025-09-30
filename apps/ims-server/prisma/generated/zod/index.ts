@@ -18,7 +18,7 @@ export const UserScalarFieldEnumSchema = z.enum(['id','password','isActive','cre
 
 export const UserIdentifierScalarFieldEnumSchema = z.enum(['id','userId','type','value','isVerified','isPrimary','isActive','createdAt','updatedAt']);
 
-export const UserProfileScalarFieldEnumSchema = z.enum(['id','userId','firstName','lastName','avatarUrl','contactEmail','isActive','createdAt','updatedAt']);
+export const UserProfileScalarFieldEnumSchema = z.enum(['id','userId','name','avatarUrl','contactEmail','isActive','createdAt','updatedAt']);
 
 export const RefreshTokenScalarFieldEnumSchema = z.enum(['id','token','userId','userAgent','ipAddress','expiresAt','revokedAt','createdAt','updatedAt']);
 
@@ -100,8 +100,7 @@ export type UserIdentifier = z.infer<typeof UserIdentifierSchema>
 export const UserProfileSchema = z.object({
   id: z.string().uuid(),
   userId: z.string(),
-  firstName: z.string(),
-  lastName: z.string().nullable(),
+  name: z.string(),
   avatarUrl: z.string().nullable(),
   contactEmail: z.string().nullable(),
   isActive: z.boolean(),
@@ -223,8 +222,7 @@ export const UserProfileArgsSchema: z.ZodType<Prisma.UserProfileDefaultArgs> = z
 export const UserProfileSelectSchema: z.ZodType<Prisma.UserProfileSelect> = z.object({
   id: z.boolean().optional(),
   userId: z.boolean().optional(),
-  firstName: z.boolean().optional(),
-  lastName: z.boolean().optional(),
+  name: z.boolean().optional(),
   avatarUrl: z.boolean().optional(),
   contactEmail: z.boolean().optional(),
   isActive: z.boolean().optional(),
@@ -491,8 +489,7 @@ export const UserProfileWhereInputSchema: z.ZodType<Prisma.UserProfileWhereInput
   NOT: z.union([ z.lazy(() => UserProfileWhereInputSchema),z.lazy(() => UserProfileWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  firstName: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  lastName: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   avatarUrl: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   contactEmail: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   isActive: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
@@ -504,8 +501,7 @@ export const UserProfileWhereInputSchema: z.ZodType<Prisma.UserProfileWhereInput
 export const UserProfileOrderByWithRelationInputSchema: z.ZodType<Prisma.UserProfileOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
-  firstName: z.lazy(() => SortOrderSchema).optional(),
-  lastName: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   avatarUrl: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   contactEmail: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   isActive: z.lazy(() => SortOrderSchema).optional(),
@@ -532,8 +528,7 @@ export const UserProfileWhereUniqueInputSchema: z.ZodType<Prisma.UserProfileWher
   AND: z.union([ z.lazy(() => UserProfileWhereInputSchema),z.lazy(() => UserProfileWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => UserProfileWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => UserProfileWhereInputSchema),z.lazy(() => UserProfileWhereInputSchema).array() ]).optional(),
-  firstName: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  lastName: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   avatarUrl: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   contactEmail: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   isActive: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
@@ -545,8 +540,7 @@ export const UserProfileWhereUniqueInputSchema: z.ZodType<Prisma.UserProfileWher
 export const UserProfileOrderByWithAggregationInputSchema: z.ZodType<Prisma.UserProfileOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
-  firstName: z.lazy(() => SortOrderSchema).optional(),
-  lastName: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   avatarUrl: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   contactEmail: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   isActive: z.lazy(() => SortOrderSchema).optional(),
@@ -563,8 +557,7 @@ export const UserProfileScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.U
   NOT: z.union([ z.lazy(() => UserProfileScalarWhereWithAggregatesInputSchema),z.lazy(() => UserProfileScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   userId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  firstName: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  lastName: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   avatarUrl: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   contactEmail: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   isActive: z.union([ z.lazy(() => BoolWithAggregatesFilterSchema),z.boolean() ]).optional(),
@@ -889,8 +882,7 @@ export const UserIdentifierUncheckedUpdateManyInputSchema: z.ZodType<Prisma.User
 
 export const UserProfileCreateInputSchema: z.ZodType<Prisma.UserProfileCreateInput> = z.object({
   id: z.string().uuid().optional(),
-  firstName: z.string(),
-  lastName: z.string().optional().nullable(),
+  name: z.string(),
   avatarUrl: z.string().optional().nullable(),
   contactEmail: z.string().optional().nullable(),
   isActive: z.boolean().optional(),
@@ -902,8 +894,7 @@ export const UserProfileCreateInputSchema: z.ZodType<Prisma.UserProfileCreateInp
 export const UserProfileUncheckedCreateInputSchema: z.ZodType<Prisma.UserProfileUncheckedCreateInput> = z.object({
   id: z.string().uuid().optional(),
   userId: z.string(),
-  firstName: z.string(),
-  lastName: z.string().optional().nullable(),
+  name: z.string(),
   avatarUrl: z.string().optional().nullable(),
   contactEmail: z.string().optional().nullable(),
   isActive: z.boolean().optional(),
@@ -913,8 +904,7 @@ export const UserProfileUncheckedCreateInputSchema: z.ZodType<Prisma.UserProfile
 
 export const UserProfileUpdateInputSchema: z.ZodType<Prisma.UserProfileUpdateInput> = z.object({
   id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  firstName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  lastName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   avatarUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   contactEmail: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   isActive: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -926,8 +916,7 @@ export const UserProfileUpdateInputSchema: z.ZodType<Prisma.UserProfileUpdateInp
 export const UserProfileUncheckedUpdateInputSchema: z.ZodType<Prisma.UserProfileUncheckedUpdateInput> = z.object({
   id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  firstName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  lastName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   avatarUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   contactEmail: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   isActive: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -938,8 +927,7 @@ export const UserProfileUncheckedUpdateInputSchema: z.ZodType<Prisma.UserProfile
 export const UserProfileCreateManyInputSchema: z.ZodType<Prisma.UserProfileCreateManyInput> = z.object({
   id: z.string().uuid().optional(),
   userId: z.string(),
-  firstName: z.string(),
-  lastName: z.string().optional().nullable(),
+  name: z.string(),
   avatarUrl: z.string().optional().nullable(),
   contactEmail: z.string().optional().nullable(),
   isActive: z.boolean().optional(),
@@ -949,8 +937,7 @@ export const UserProfileCreateManyInputSchema: z.ZodType<Prisma.UserProfileCreat
 
 export const UserProfileUpdateManyMutationInputSchema: z.ZodType<Prisma.UserProfileUpdateManyMutationInput> = z.object({
   id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  firstName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  lastName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   avatarUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   contactEmail: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   isActive: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -961,8 +948,7 @@ export const UserProfileUpdateManyMutationInputSchema: z.ZodType<Prisma.UserProf
 export const UserProfileUncheckedUpdateManyInputSchema: z.ZodType<Prisma.UserProfileUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  firstName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  lastName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   avatarUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   contactEmail: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   isActive: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1327,8 +1313,7 @@ export const EnumIdentifierTypeWithAggregatesFilterSchema: z.ZodType<Prisma.Enum
 export const UserProfileCountOrderByAggregateInputSchema: z.ZodType<Prisma.UserProfileCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
-  firstName: z.lazy(() => SortOrderSchema).optional(),
-  lastName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   avatarUrl: z.lazy(() => SortOrderSchema).optional(),
   contactEmail: z.lazy(() => SortOrderSchema).optional(),
   isActive: z.lazy(() => SortOrderSchema).optional(),
@@ -1339,8 +1324,7 @@ export const UserProfileCountOrderByAggregateInputSchema: z.ZodType<Prisma.UserP
 export const UserProfileMaxOrderByAggregateInputSchema: z.ZodType<Prisma.UserProfileMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
-  firstName: z.lazy(() => SortOrderSchema).optional(),
-  lastName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   avatarUrl: z.lazy(() => SortOrderSchema).optional(),
   contactEmail: z.lazy(() => SortOrderSchema).optional(),
   isActive: z.lazy(() => SortOrderSchema).optional(),
@@ -1351,8 +1335,7 @@ export const UserProfileMaxOrderByAggregateInputSchema: z.ZodType<Prisma.UserPro
 export const UserProfileMinOrderByAggregateInputSchema: z.ZodType<Prisma.UserProfileMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
-  firstName: z.lazy(() => SortOrderSchema).optional(),
-  lastName: z.lazy(() => SortOrderSchema).optional(),
+  name: z.lazy(() => SortOrderSchema).optional(),
   avatarUrl: z.lazy(() => SortOrderSchema).optional(),
   contactEmail: z.lazy(() => SortOrderSchema).optional(),
   isActive: z.lazy(() => SortOrderSchema).optional(),
@@ -1822,8 +1805,7 @@ export const UserIdentifierCreateManyUserInputEnvelopeSchema: z.ZodType<Prisma.U
 
 export const UserProfileCreateWithoutUserInputSchema: z.ZodType<Prisma.UserProfileCreateWithoutUserInput> = z.object({
   id: z.string().uuid().optional(),
-  firstName: z.string(),
-  lastName: z.string().optional().nullable(),
+  name: z.string(),
   avatarUrl: z.string().optional().nullable(),
   contactEmail: z.string().optional().nullable(),
   isActive: z.boolean().optional(),
@@ -1833,8 +1815,7 @@ export const UserProfileCreateWithoutUserInputSchema: z.ZodType<Prisma.UserProfi
 
 export const UserProfileUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.UserProfileUncheckedCreateWithoutUserInput> = z.object({
   id: z.string().uuid().optional(),
-  firstName: z.string(),
-  lastName: z.string().optional().nullable(),
+  name: z.string(),
   avatarUrl: z.string().optional().nullable(),
   contactEmail: z.string().optional().nullable(),
   isActive: z.boolean().optional(),
@@ -1923,8 +1904,7 @@ export const UserProfileUpdateToOneWithWhereWithoutUserInputSchema: z.ZodType<Pr
 
 export const UserProfileUpdateWithoutUserInputSchema: z.ZodType<Prisma.UserProfileUpdateWithoutUserInput> = z.object({
   id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  firstName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  lastName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   avatarUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   contactEmail: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   isActive: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1934,8 +1914,7 @@ export const UserProfileUpdateWithoutUserInputSchema: z.ZodType<Prisma.UserProfi
 
 export const UserProfileUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.UserProfileUncheckedUpdateWithoutUserInput> = z.object({
   id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  firstName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  lastName: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   avatarUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   contactEmail: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   isActive: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),

@@ -1,34 +1,17 @@
-export type UserReturnType = {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-};
 export type LocalRegisterInput = {
   identifier: string;
   password: string;
-  firstName: string;
-  lastName: string;
+  name: string;
 };
 export type OtpSignUpInput = {
   password: string;
-  firstName: string;
-  lastName: string;
+  name: string;
 };
 export type LocalLoginInput = {
   identifier: string;
   password: string;
 };
 
-export type ForgetPasswordRequestOtpInput = {
-  identifier: {
-    type: "email" | "phone";
-    value: string;
-  };
-};
-export type ForgetPasswordVerifyOtpInput = {
-  otp: string;
-};
 export type ResetForgettenPasswordInput = {
   newPassword: string;
   confirmNewPassword: string;
@@ -50,7 +33,7 @@ export const OtpEnum = {
   LOGIN: "LOGIN",
   FORGET_PASSWORD: "FORGET_PASSWORD",
 };
-export type OtpType = "VERIFY_EMAIL" | "LOGIN" | "FORGET_PASSWORD";
+export type OtpType = keyof typeof OtpEnum;
 export type CreateOtpBodyType = {
   email: string;
   type: OtpType;

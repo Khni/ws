@@ -21,7 +21,10 @@ import {
   resetForgettenPasswordBodySchema,
   type OtpSignUpInput,
 } from "@khaled/ims-shared";
-import type { ResetForgettenPasswordInput } from "@khaled/ims-shared";
+import type {
+  LocalLoginInput,
+  ResetForgettenPasswordInput,
+} from "@khaled/ims-shared";
 import { type ILocalLoginService } from "../interfaces/IlocalLoginService.js";
 import { refreshTokenCookieOpts } from "../../config/constants.js";
 import container from "../../container.js";
@@ -47,10 +50,7 @@ export class LoginController extends Controller {
   @SuccessResponse("200", "Success")
   public async login(
     @Body()
-    body: {
-      password: string;
-      identifier: { type: "email" | "phone"; value: string }; //this will be added by zod
-    },
+    body: LocalLoginInput,
     @Request() req: ExpressRequestType
   ) {
     try {
@@ -72,13 +72,13 @@ export class LoginController extends Controller {
   @Post("sign-up")
   public async signUp(
     @Body()
-    { firstName, lastName, password }: OtpSignUpInput,
+    { name, password }: OtpSignUpInput,
     @Request() req: ExpressRequestType
   ) {
     const token = req.headers["authorization"]?.replace("Bearer ", "") || "";
     try {
       const result = await this.otpSignUpService.execute({
-        data: { firstName, lastName, password },
+        data: { name, password },
         token,
       });
 

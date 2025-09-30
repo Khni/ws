@@ -9,6 +9,7 @@ import { mockedUser } from "../../local-auth/tests/data.js";
 import { mockedRefreshToken } from "./data.js";
 import { AuthDomainError } from "../../errors/AuthDomainError.js";
 import { AuthUnexpectedError } from "../../errors/AuthUnexpectedError.js";
+import { generateExpiredDate } from "@khaled/utils";
 
 describe("RefreshTokenService", () => {
   let refreshTokenService: RefreshTokenService;
@@ -20,7 +21,8 @@ describe("RefreshTokenService", () => {
     refreshTokenService = new RefreshTokenService(
       mockRefreshTokenRepository,
       mockCrypto,
-      validFutureDate,
+      vi.fn(),
+      "1h",
       mockUserRepository
     );
   });

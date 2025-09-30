@@ -84,8 +84,7 @@ model UserIdentifier {
 model UserProfile {
   id          String   @id @default(uuid())
   userId      String   @unique
-  firstName      String
-  lastName       String?
+  name        String
   avatarUrl   String?
   contactEmail String? // for notifications, can differ from login email
   

@@ -1,14 +1,12 @@
 export type UserType = {
   id: string;
-  firstName: string;
-  lastName: string;
+  name: string;
   password: string;
   identifier: string;
   identifierType: "email" | "phone";
 };
 export type UserCreateInput = {
-  firstName: string;
-  lastName: string;
+  name: string;
   identifier: string;
   identifierType: "email" | "phone";
   password: string;

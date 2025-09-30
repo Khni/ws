@@ -4,10 +4,9 @@ import prisma from "../../database/prisma.js";
 
 export class UserService implements IUserService<UserType, UserCreateInput> {
   create = async ({
-    firstName,
+    name,
     identifier,
     identifierType,
-    lastName,
     password,
   }: UserCreateInput) => {
     try {
@@ -16,8 +15,7 @@ export class UserService implements IUserService<UserType, UserCreateInput> {
           password: password,
           profile: {
             create: {
-              firstName,
-              lastName,
+              name,
             },
           },
           identifiers: {
@@ -27,8 +25,7 @@ export class UserService implements IUserService<UserType, UserCreateInput> {
       });
       return {
         ...user,
-        firstName,
-        lastName,
+        name,
         password,
         identifier,
         identifierType,
@@ -63,8 +60,8 @@ export class UserService implements IUserService<UserType, UserCreateInput> {
 
       return {
         id,
-        firstName: profile?.firstName ?? "",
-        lastName: profile?.lastName ?? "",
+        name: profile?.name ?? "",
+
         password: password ?? "",
         identifier: value,
         identifierType: type as "email" | "phone",
