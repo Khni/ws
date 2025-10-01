@@ -40,7 +40,8 @@ export class LoginController extends Controller {
     private otpSignUpService = container.resolve("otpSignUpService"),
     private otpForgetPasswordService = container.resolve(
       "otpForgetPasswordService"
-    )
+    ),
+    private tokenService = container.resolve("authTokenService")
   ) {
     super();
   }
@@ -116,6 +117,28 @@ export class LoginController extends Controller {
         throw errorMapper(error, authErrorMapping);
       }
 
+      throw error;
+    }
+  }
+
+  @Post("logout")
+  public async logout(
+    @Request()
+    req: ExpressRequestType,
+    @Body() body: { refreshToken?: string }
+  ): Promise<Promise<string>> {
+    try {
+      const token = req.cookies.refreshToken || body?.refreshToken;
+
+      await this.tokenService.logout(token);
+      const { cookieName, ...rest } = refreshTokenCookieOpts;
+      req.res?.clearCookie(cookieName, rest);
+
+      return "success";
+    } catch (error) {
+      if (error instanceof AuthError) {
+        throw errorMapper(error, authErrorMapping);
+      }
       throw error;
     }
   }
