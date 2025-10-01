@@ -37,7 +37,7 @@ const envSchema = z.object({
   FACEBOOK_APP_ID: z.string().min(1),
   FACEBOOK_SECRET: z.string().min(1),
   FACEBOOK_REDIRECT_URI: z.url(),
-  FRONTEND_OAUTH_REDIRECT: z.url(),
+  FRONTEND_SOCIAL_REDIRECT: z.url(),
 });
 
 // Parse and validate process.env

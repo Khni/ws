@@ -45,7 +45,7 @@ export class LoginController extends Controller {
     super();
   }
 
-  @Middlewares([validateZodSchemaMiddleware(loginBodySchema)])
+  @Middlewares([validateZodSchemaMiddleware({ bodySchema: loginBodySchema })])
   @Post("login")
   @SuccessResponse("200", "Success")
   public async login(
@@ -68,7 +68,9 @@ export class LoginController extends Controller {
     }
   }
 
-  @Middlewares([validateZodSchemaMiddleware(otpSignUpBodySchema)])
+  @Middlewares([
+    validateZodSchemaMiddleware({ bodySchema: otpSignUpBodySchema }),
+  ])
   @Post("sign-up")
   public async signUp(
     @Body()
@@ -92,7 +94,11 @@ export class LoginController extends Controller {
     }
   }
 
-  @Middlewares([validateZodSchemaMiddleware(resetForgettenPasswordBodySchema)])
+  @Middlewares([
+    validateZodSchemaMiddleware({
+      bodySchema: resetForgettenPasswordBodySchema,
+    }),
+  ])
   @Post("forget-password")
   public async resetForgettenPassword(
     @Body()

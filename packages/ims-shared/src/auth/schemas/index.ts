@@ -5,6 +5,7 @@ import {
   ResetForgettenPasswordInput,
   OtpSignUpInput,
   LocalLoginInput,
+  SocialLoginParamsType,
 } from "../types/index.js";
 
 export const otpSignUpBodySchema: z.ZodType<OtpSignUpInput, OtpSignUpInput> =
@@ -63,8 +64,9 @@ export const verifyOtpBodySchema = z.object({
  * OAuth
  */
 
-export const OAuthParamsCodeSchema = z.object({
-  query: z.object({
-    code: z.string(),
-  }),
+export const SocialLoginParamsSchema: z.ZodType<
+  SocialLoginParamsType,
+  SocialLoginParamsType
+> = z.object({
+  code: z.string(),
 });

@@ -48,6 +48,6 @@ export type VerifyOtpBodyType = {
  * OAUTH
  */
 
-export type OAuthParamsCode = {
+export type SocialLoginParamsType = {
   code: string;
 };

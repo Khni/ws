@@ -1,10 +1,25 @@
-import { Controller, Post, Route, Tags, Request, Query } from "tsoa";
+import {
+  Controller,
+  Post,
+  Route,
+  Tags,
+  Request,
+  Query,
+  Middlewares,
+  SuccessResponse,
+} from "tsoa";
 
 import type { Request as ExpressRequestType } from "express";
 import { AuthError, authErrorMapping } from "@khaled/auth";
 import { errorMapper } from "@khaled/error-handler";
 
 import container from "../../container.js";
+import { M } from "vitest/dist/chunks/reporters.d.BFLkQcL6.js";
+import { validateBodySchema } from "@khaled/utils";
+import { validateZodSchemaMiddleware } from "../../core/schema/validateZodErrorMiddleware.js";
+import { SocialLoginParamsSchema } from "@khaled/ims-shared";
+import { config } from "../../config/envSchema.js";
+import { refreshTokenCookieOpts } from "../../config/constants.js";
 
 @Tags("social-auth")
 @Route("social-auth")
@@ -13,15 +28,21 @@ export class SocialAuthController extends Controller {
   constructor() {
     super();
   }
-
+  @Middlewares([
+    validateZodSchemaMiddleware({ querySchema: SocialLoginParamsSchema }),
+  ])
   @Post("google")
+  @SuccessResponse(302, "Redirect")
   public async googleLogin(
     @Query() code: string,
     @Request() req: ExpressRequestType
   ) {
     try {
+      console.log("code", code);
       const result = await this.socialLogin.execute(code, "google");
-      return result;
+      const { cookieName, ...rest } = refreshTokenCookieOpts;
+      req.res?.cookie(cookieName, result.refreshToken, rest);
+      req.res?.redirect(config.FRONTEND_SOCIAL_REDIRECT);
     } catch (error) {
       if (error instanceof AuthError) {
         throw errorMapper(error, authErrorMapping);
@@ -30,15 +51,21 @@ export class SocialAuthController extends Controller {
       throw error;
     }
   }
-
+  @Middlewares([
+    validateZodSchemaMiddleware({ querySchema: SocialLoginParamsSchema }),
+  ])
   @Post("facebook")
+  @SuccessResponse(302, "Redirect")
   public async facebookLogin(
     @Query() code: string,
     @Request() req: ExpressRequestType
   ) {
     try {
       const result = await this.socialLogin.execute(code, "facebook");
-      return result;
+
+      const { cookieName, ...rest } = refreshTokenCookieOpts;
+      req.res?.cookie(cookieName, result.refreshToken, rest);
+      req.res?.redirect(config.FRONTEND_SOCIAL_REDIRECT);
     } catch (error) {
       if (error instanceof AuthError) {
         throw errorMapper(error, authErrorMapping);

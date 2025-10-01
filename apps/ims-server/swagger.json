@@ -459,9 +459,7 @@
 										"identifier": {
 											"type": "string"
 										},
-										"name": {
-											"type": "string"
-										},
+										"name": {},
 										"id": {
 											"type": "string"
 										},

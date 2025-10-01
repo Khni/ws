@@ -37,7 +37,9 @@ export class OtpController extends Controller {
     super();
   }
 
-  @Middlewares([validateZodSchemaMiddleware(requestOtpBodySchema)])
+  @Middlewares([
+    validateZodSchemaMiddleware({ bodySchema: requestOtpBodySchema }),
+  ])
   @Post("request")
   public async requestOtp(
     @Body()
@@ -65,7 +67,9 @@ export class OtpController extends Controller {
     }
   }
 
-  @Middlewares([validateZodSchemaMiddleware(verifyOtpBodySchema)])
+  @Middlewares([
+    validateZodSchemaMiddleware({ bodySchema: verifyOtpBodySchema }),
+  ])
   @Post("verify")
   public async verifyOtp(
     @Body()
