@@ -4,6 +4,8 @@
 import type { TsoaRoute } from '@tsoa/runtime';
 import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { SocialAuthController } from './user/controllers/SocialAuthController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { OtpController } from './user/controllers/OtpController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { LoginController } from './user/controllers/LocalAuthController.js';
@@ -16,6 +18,19 @@ import type { Request as ExRequest, Response as ExResponse, RequestHandler, Rout
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
+    "SocialUserResult": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "email": {"dataType":"string"},
+            "verified_email": {"dataType":"boolean","required":true},
+            "name": {"dataType":"string","required":true},
+            "pictureUrl": {"dataType":"string","required":true},
+            "locale": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "_36_Enums.OtpType": {
         "dataType": "refAlias",
         "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["SIGN_UP"]},{"dataType":"enum","enums":["FORGET_PASSWORD"]},{"dataType":"enum","enums":["LOGIN"]}],"validators":{}},
@@ -28,12 +43,17 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UserType": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"identifierType":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["email"]},{"dataType":"enum","enums":["phone"]}],"required":true},"identifier":{"dataType":"string","required":true},"password":{"dataType":"string","required":true},"lastName":{"dataType":"string","required":true},"firstName":{"dataType":"string","required":true},"id":{"dataType":"string","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"identifierType":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["email"]},{"dataType":"enum","enums":["phone"]}],"required":true},"identifier":{"dataType":"string","required":true},"password":{"dataType":"string","required":true},"name":{"dataType":"string","required":true},"id":{"dataType":"string","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "LocalLoginInput": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"password":{"dataType":"string","required":true},"identifier":{"dataType":"string","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "OtpSignUpInput": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"lastName":{"dataType":"string","required":true},"firstName":{"dataType":"string","required":true},"password":{"dataType":"string","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"name":{"dataType":"string","required":true},"password":{"dataType":"string","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ResetForgettenPasswordInput": {
@@ -58,6 +78,68 @@ export function RegisterRoutes(app: Router) {
 
 
     
+        const argsSocialAuthController_googleLogin: Record<string, TsoaRoute.ParameterSchema> = {
+                code: {"in":"query","name":"code","required":true,"dataType":"string"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+        };
+        app.post('/social-auth/google',
+            ...(fetchMiddlewares<RequestHandler>(SocialAuthController)),
+            ...(fetchMiddlewares<RequestHandler>(SocialAuthController.prototype.googleLogin)),
+
+            async function SocialAuthController_googleLogin(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsSocialAuthController_googleLogin, request, response });
+
+                const controller = new SocialAuthController();
+
+              await templateService.apiHandler({
+                methodName: 'googleLogin',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsSocialAuthController_facebookLogin: Record<string, TsoaRoute.ParameterSchema> = {
+                code: {"in":"query","name":"code","required":true,"dataType":"string"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+        };
+        app.post('/social-auth/facebook',
+            ...(fetchMiddlewares<RequestHandler>(SocialAuthController)),
+            ...(fetchMiddlewares<RequestHandler>(SocialAuthController.prototype.facebookLogin)),
+
+            async function SocialAuthController_facebookLogin(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsSocialAuthController_facebookLogin, request, response });
+
+                const controller = new SocialAuthController();
+
+              await templateService.apiHandler({
+                methodName: 'facebookLogin',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsOtpController_requestOtp: Record<string, TsoaRoute.ParameterSchema> = {
                 undefined: {"in":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"otpType":{"ref":"OtpType","required":true},"identifier":{"dataType":"string","required":true}}},
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
@@ -121,7 +203,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsLoginController_login: Record<string, TsoaRoute.ParameterSchema> = {
-                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"identifier":{"dataType":"nestedObjectLiteral","nestedProperties":{"value":{"dataType":"string","required":true},"type":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["email"]},{"dataType":"enum","enums":["phone"]}],"required":true}},"required":true},"password":{"dataType":"string","required":true}}},
+                body: {"in":"body","name":"body","required":true,"ref":"LocalLoginInput"},
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
         app.post('/auth/login',

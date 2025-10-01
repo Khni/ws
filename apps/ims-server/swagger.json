@@ -7,6 +7,36 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"SocialUserResult": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"verified_email": {
+						"type": "boolean"
+					},
+					"name": {
+						"type": "string"
+					},
+					"pictureUrl": {
+						"type": "string"
+					},
+					"locale": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"verified_email",
+					"name",
+					"pictureUrl"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"_36_Enums.OtpType": {
 				"type": "string",
 				"enum": [
@@ -33,10 +63,7 @@
 					"password": {
 						"type": "string"
 					},
-					"lastName": {
-						"type": "string"
-					},
-					"firstName": {
+					"name": {
 						"type": "string"
 					},
 					"id": {
@@ -47,18 +74,29 @@
 					"identifierType",
 					"identifier",
 					"password",
-					"lastName",
-					"firstName",
+					"name",
 					"id"
+				],
+				"type": "object"
+			},
+			"LocalLoginInput": {
+				"properties": {
+					"password": {
+						"type": "string"
+					},
+					"identifier": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"password",
+					"identifier"
 				],
 				"type": "object"
 			},
 			"OtpSignUpInput": {
 				"properties": {
-					"lastName": {
-						"type": "string"
-					},
-					"firstName": {
+					"name": {
 						"type": "string"
 					},
 					"password": {
@@ -66,8 +104,7 @@
 					}
 				},
 				"required": [
-					"lastName",
-					"firstName",
+					"name",
 					"password"
 				],
 				"type": "object"
@@ -96,6 +133,100 @@
 		"contact": {}
 	},
 	"paths": {
+		"/social-auth/google": {
+			"post": {
+				"operationId": "GoogleLogin",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"user": {
+											"$ref": "#/components/schemas/SocialUserResult"
+										},
+										"refreshToken": {
+											"type": "string"
+										},
+										"accessToken": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"user",
+										"refreshToken",
+										"accessToken"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"social-auth"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "code",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/social-auth/facebook": {
+			"post": {
+				"operationId": "FacebookLogin",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"user": {
+											"$ref": "#/components/schemas/SocialUserResult"
+										},
+										"refreshToken": {
+											"type": "string"
+										},
+										"accessToken": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"user",
+										"refreshToken",
+										"accessToken"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"social-auth"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "code",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/otp/request": {
 			"post": {
 				"operationId": "RequestOtp",
@@ -221,35 +352,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"properties": {
-									"identifier": {
-										"properties": {
-											"value": {
-												"type": "string"
-											},
-											"type": {
-												"type": "string",
-												"enum": [
-													"email",
-													"phone"
-												]
-											}
-										},
-										"required": [
-											"value",
-											"type"
-										],
-										"type": "object"
-									},
-									"password": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"identifier",
-									"password"
-								],
-								"type": "object"
+								"$ref": "#/components/schemas/LocalLoginInput"
 							}
 						}
 					}
@@ -293,10 +396,7 @@
 												"identifier": {
 													"type": "string"
 												},
-												"lastName": {
-													"type": "string"
-												},
-												"firstName": {
+												"name": {
 													"type": "string"
 												},
 												"id": {
@@ -306,8 +406,7 @@
 											"required": [
 												"identifierType",
 												"identifier",
-												"lastName",
-												"firstName",
+												"name",
 												"id"
 											],
 											"type": "object"
@@ -360,10 +459,7 @@
 										"identifier": {
 											"type": "string"
 										},
-										"lastName": {
-											"type": "string"
-										},
-										"firstName": {
+										"name": {
 											"type": "string"
 										},
 										"id": {
@@ -376,8 +472,7 @@
 									"required": [
 										"identifierType",
 										"identifier",
-										"lastName",
-										"firstName",
+										"name",
 										"id",
 										"password"
 									],

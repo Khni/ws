@@ -46,3 +46,10 @@ export * from "./errors/AuthError.js";
 export * from "./errors/AuthDomainError.js";
 export * from "./errors/AuthUnexpectedError.js";
 export * from "./errors/errors.js";
+
+//social auth
+export * from "./social-auth/interfaces/ISocialAuthProvider.js";
+export * from "./social-auth/services/FacebookAuthStrategy.js";
+export * from "./social-auth/services/GoogleAuthStrategy.js";
+export * from "./social-auth/services/SocialAuthContext.js";
+export * from "./social-auth/services/SocialLogin.js";

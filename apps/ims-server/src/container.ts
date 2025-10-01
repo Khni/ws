@@ -13,6 +13,10 @@ import {
   RefreshTokenCookie,
   CryptoTokenGenerator,
   OtpGuardedExecutor,
+  SocialAuthContext,
+  FacebookSocialAuthStrategy,
+  GoogleSocialAuthStrategy,
+  SocialAuthLogin,
 } from "@khaled/auth";
 import {
   createContainer,
@@ -36,6 +40,7 @@ import { UserType } from "./user/types.js";
 import { LocalLoginService } from "./user/services/LocalLoginService.js";
 import { LocalRegistrationService } from "./user/services/LocalRegistrationService.js";
 import { generateExpiredDate, parseTimeString } from "@khaled/utils";
+import { handleSocialUser } from "./user/services/handleSocialUser.js";
 
 export const appDeps = {
   // repositories
@@ -96,6 +101,31 @@ export const appDeps = {
   refreshTokenService: asClass(RefreshTokenService).scoped(),
   accessTokenService: asClass(AccessTokenService).scoped(),
   authTokenService: asClass(AuthTokensService).scoped(),
+
+  //social login
+  googleAuthConfig: asValue({
+    clientId: config.GOOGLE_CLIENT_ID,
+    clientSecret: config.GOOGLE_SECRET,
+    redirectUri: config.GOOGLE_SECRET,
+  }),
+  facebookAuthConfig: asValue({
+    appId: config.FACEBOOK_APP_ID,
+    appSecret: config.FACEBOOK_SECRET,
+    redirectUri: config.FACEBOOK_REDIRECT_URI,
+  }),
+  socialAuthContext: asClass(SocialAuthContext).scoped(),
+  handleSocialUser: asValue(handleSocialUser),
+  facebookSocialAuthStrategy: asClass(FacebookSocialAuthStrategy),
+  googleSocialAuthStrategy: asClass(GoogleSocialAuthStrategy),
+  socialAuthProviders: asFunction(
+    (facebookSocialAuthStrategy, googleSocialAuthStrategy) => [
+      facebookSocialAuthStrategy,
+      googleSocialAuthStrategy,
+    ]
+  ).scoped(),
+  socialAuthLogin: asClass(
+    SocialAuthLogin<Awaited<ReturnType<typeof handleSocialUser>>>
+  ),
 
   //otp
   createOtpService: asClass(CreateOtpService).scoped(),

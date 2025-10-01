@@ -34,6 +34,9 @@ const envSchema = z.object({
   GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_SECRET: z.string().min(1),
   GOOGLE_REDIRECT_URI: z.url(),
+  FACEBOOK_APP_ID: z.string().min(1),
+  FACEBOOK_SECRET: z.string().min(1),
+  FACEBOOK_REDIRECT_URI: z.url(),
   FRONTEND_OAUTH_REDIRECT: z.url(),
 });
 
