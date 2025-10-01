@@ -6,6 +6,8 @@ import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { SocialAuthController } from './user/controllers/SocialAuthController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { RefreshTokenController } from './user/controllers/RefreshTokenController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { OtpController } from './user/controllers/OtpController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { LoginController } from './user/controllers/LocalAuthController.js';
@@ -18,17 +20,9 @@ import type { Request as ExRequest, Response as ExResponse, RequestHandler, Rout
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
-    "SocialUserResult": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"string","required":true},
-            "email": {"dataType":"string"},
-            "verified_email": {"dataType":"boolean","required":true},
-            "name": {"dataType":"string","required":true},
-            "pictureUrl": {"dataType":"string","required":true},
-            "locale": {"dataType":"string"},
-        },
-        "additionalProperties": false,
+    "RefreshTokenInput": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"refreshToken":{"dataType":"string"}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "_36_Enums.OtpType": {
@@ -102,7 +96,7 @@ export function RegisterRoutes(app: Router) {
                 response,
                 next,
                 validatedArgs,
-                successStatus: undefined,
+                successStatus: 302,
               });
             } catch (err) {
                 return next(err);
@@ -129,6 +123,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'facebookLogin',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 302,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsRefreshTokenController_refreshToken: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"RefreshTokenInput"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+        };
+        app.post('/token/refresh',
+            ...(fetchMiddlewares<RequestHandler>(RefreshTokenController)),
+            ...(fetchMiddlewares<RequestHandler>(RefreshTokenController.prototype.refreshToken)),
+
+            async function RefreshTokenController_refreshToken(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsRefreshTokenController_refreshToken, request, response });
+
+                const controller = new RefreshTokenController();
+
+              await templateService.apiHandler({
+                methodName: 'refreshToken',
                 controller,
                 response,
                 next,

@@ -7,35 +7,13 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"SocialUserResult": {
+			"RefreshTokenInput": {
 				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"verified_email": {
-						"type": "boolean"
-					},
-					"name": {
-						"type": "string"
-					},
-					"pictureUrl": {
-						"type": "string"
-					},
-					"locale": {
+					"refreshToken": {
 						"type": "string"
 					}
 				},
-				"required": [
-					"id",
-					"verified_email",
-					"name",
-					"pictureUrl"
-				],
-				"type": "object",
-				"additionalProperties": false
+				"type": "object"
 			},
 			"_36_Enums.OtpType": {
 				"type": "string",
@@ -137,31 +115,8 @@
 			"post": {
 				"operationId": "GoogleLogin",
 				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"user": {
-											"$ref": "#/components/schemas/SocialUserResult"
-										},
-										"refreshToken": {
-											"type": "string"
-										},
-										"accessToken": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"user",
-										"refreshToken",
-										"accessToken"
-									],
-									"type": "object"
-								}
-							}
-						}
+					"302": {
+						"description": "Redirect"
 					}
 				},
 				"tags": [
@@ -184,31 +139,8 @@
 			"post": {
 				"operationId": "FacebookLogin",
 				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"user": {
-											"$ref": "#/components/schemas/SocialUserResult"
-										},
-										"refreshToken": {
-											"type": "string"
-										},
-										"accessToken": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"user",
-										"refreshToken",
-										"accessToken"
-									],
-									"type": "object"
-								}
-							}
-						}
+					"302": {
+						"description": "Redirect"
 					}
 				},
 				"tags": [
@@ -225,6 +157,46 @@
 						}
 					}
 				]
+			}
+		},
+		"/token/refresh": {
+			"post": {
+				"operationId": "RefreshToken",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"accessToken": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"accessToken"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"token"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RefreshTokenInput"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/otp/request": {
