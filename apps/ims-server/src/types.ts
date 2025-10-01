@@ -6,7 +6,7 @@ declare global {
     interface Request {
       meta?: { identifierType: "email" | "phone" };
       t?: any;
-      user?: { id: string; email: string };
+      user?: { id: string };
 
       requestContext: {
         ipAddress?: string;

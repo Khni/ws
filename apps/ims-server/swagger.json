@@ -111,6 +111,56 @@
 		"contact": {}
 	},
 	"paths": {
+		"/user": {
+			"get": {
+				"operationId": "GetProfile",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"identifierType": {
+											"type": "string",
+											"enum": [
+												"email",
+												"phone"
+											]
+										},
+										"identifier": {
+											"type": "string"
+										},
+										"password": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										},
+										"id": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"identifierType",
+										"identifier",
+										"password",
+										"name",
+										"id"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"user"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
 		"/social-auth/google": {
 			"post": {
 				"operationId": "GoogleLogin",
@@ -431,7 +481,9 @@
 										"identifier": {
 											"type": "string"
 										},
-										"name": {},
+										"name": {
+											"type": "string"
+										},
 										"id": {
 											"type": "string"
 										},

@@ -11,9 +11,7 @@
     "lint": "eslint .",
     "build": "pnpm tsoa:generate && orval && npx prisma generate &&  tsc -p tsconfig.build.json",
     "dev": "tsx --watch --watch-preserve-output src/index.ts",
-    "tsoa:generate": "tsoa spec-and-routes",
-    "orval": "orval && node scripts/fix-orval-exports.mjs",
-    "fix-orval-imports": "tsx scripts/fix-orval-imports.ts"
+    "tsoa:generate": "tsoa spec-and-routes"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.6",

@@ -1,3 +1,4 @@
+import { th } from "zod/v4/locales";
 import { AuthDomainError } from "../errors/AuthDomainError.js";
 import { IAccessTokenService } from "./interfaces/IAccessTokenService.js";
 import { IAuthTokensService } from "./interfaces/IAuthTokenService.js";
@@ -14,6 +15,9 @@ export class AuthTokensService implements IAuthTokensService {
     return { refreshToken: refreshToken.token, accessToken };
   };
   refresh = async (token: string) => {
+    if (!token) {
+      throw new AuthDomainError("REFRESH_TOKEN_INVALID");
+    }
     const { userId } = await this.refreshTokenService.verify({
       token,
     });

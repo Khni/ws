@@ -76,6 +76,33 @@ export class UserService implements IUserService<UserType, UserCreateInput> {
     }
   };
 
+  findById = async ({ id }: { id: string }) => {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id },
+        include: {
+          profile: true,
+          identifiers: true,
+        },
+      });
+      if (!user) return null;
+
+      const primaryIdentifier = user.identifiers[0];
+
+      return {
+        id: user.id,
+        name: user.profile?.name ?? "",
+        password: user.password ?? "",
+        identifier: primaryIdentifier?.value ?? "",
+        identifierType: primaryIdentifier?.type as "email" | "phone",
+      };
+    } catch (error) {
+      throw new Error(`Database Error while finding user where: ${id} `, {
+        cause: error,
+      });
+    }
+  };
+
   update = async ({
     identifier,
     data,
