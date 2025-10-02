@@ -51,3 +51,21 @@ export type VerifyOtpBodyType = {
 export type SocialLoginParamsType = {
   code: string;
 };
+
+// response types
+export type UserResponseType = {
+  id: string;
+  name: string;
+  identifier: string;
+  identifierType: "email" | "phone";
+};
+
+export type AuthTokensResponseType = {
+  accessToken: string;
+  refreshToken: string;
+};
+
+export type AuthResponseType = {
+  user: UserResponseType;
+  tokens: AuthTokensResponseType;
+};

@@ -3,7 +3,7 @@ import { UserType } from "../types.js";
 
 export interface ILocalLoginService {
   login: (data: LocalLoginInput) => Promise<{
-    user: UserType;
+    user: Omit<UserType, "password">;
     tokens: { accessToken: string; refreshToken: string };
   }>;
 }

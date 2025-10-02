@@ -1,6 +1,7 @@
 import axios from "axios";
 import qs from "qs";
 import {
+  GoogleAuthConfig,
   Provider,
   SocialAuthProvider,
   SocialTokensResult,
@@ -8,13 +9,7 @@ import {
 } from "../interfaces/ISocialAuthProvider.js";
 
 export class GoogleSocialAuthStrategy implements SocialAuthProvider {
-  constructor(
-    private googleAuthConfig: {
-      clientId: string;
-      clientSecret: string;
-      redirectUri: string;
-    }
-  ) {}
+  constructor(private googleAuthConfig: GoogleAuthConfig) {}
   provider: Provider = "google";
 
   async getTokens(code: string): Promise<SocialTokensResult> {

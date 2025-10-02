@@ -22,6 +22,7 @@ import {
   type OtpSignUpInput,
 } from "@khaled/ims-shared";
 import type {
+  AuthResponseType,
   LocalLoginInput,
   ResetForgettenPasswordInput,
 } from "@khaled/ims-shared";
@@ -29,6 +30,7 @@ import { type ILocalLoginService } from "../interfaces/IlocalLoginService.js";
 import { refreshTokenCookieOpts } from "../../config/constants.js";
 import container from "../../container.js";
 import { LocalLoginService } from "../services/LocalLoginService.js";
+import { A } from "vitest/dist/chunks/environment.d.cL3nLXbE.js";
 
 @Tags("auth")
 @Route("auth")
@@ -53,13 +55,13 @@ export class LoginController extends Controller {
     @Body()
     body: LocalLoginInput,
     @Request() req: ExpressRequestType
-  ) {
+  ): Promise<AuthResponseType> {
     try {
-      const { user, tokens } = await this.localLoginService.login(body);
+      const result = await this.localLoginService.login(body);
       const { cookieName, ...rest } = refreshTokenCookieOpts;
-      req.res?.cookie(cookieName, tokens.refreshToken, rest);
+      req.res?.cookie(cookieName, result.tokens.refreshToken, rest);
 
-      return { accessToken: tokens.accessToken, user };
+      return result;
     } catch (error) {
       if (error instanceof AuthError) {
         throw errorMapper(error, authErrorMapping);
@@ -77,7 +79,7 @@ export class LoginController extends Controller {
     @Body()
     { name, password }: OtpSignUpInput,
     @Request() req: ExpressRequestType
-  ) {
+  ): Promise<AuthResponseType> {
     const token = req.headers["authorization"]?.replace("Bearer ", "") || "";
     try {
       const result = await this.otpSignUpService.execute({
@@ -108,10 +110,12 @@ export class LoginController extends Controller {
   ) {
     const token = req.headers["authorization"]?.replace("Bearer ", "") || "";
     try {
-      return await this.otpForgetPasswordService.execute({
+      await this.otpForgetPasswordService.execute({
         data: { newPassword },
         token,
       });
+
+      return { message: "Password reset successful" };
     } catch (error) {
       if (error instanceof AuthError) {
         throw errorMapper(error, authErrorMapping);
@@ -126,7 +130,7 @@ export class LoginController extends Controller {
     @Request()
     req: ExpressRequestType,
     @Body() body: { refreshToken?: string }
-  ): Promise<Promise<string>> {
+  ) {
     try {
       const token = req.cookies.refreshToken || body?.refreshToken;
 
@@ -134,7 +138,7 @@ export class LoginController extends Controller {
       const { cookieName, ...rest } = refreshTokenCookieOpts;
       req.res?.clearCookie(cookieName, rest);
 
-      return "success";
+      return { message: "Logged out successfully" };
     } catch (error) {
       if (error instanceof AuthError) {
         throw errorMapper(error, authErrorMapping);

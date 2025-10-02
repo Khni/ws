@@ -7,6 +7,33 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"UserResponseType": {
+				"properties": {
+					"identifierType": {
+						"type": "string",
+						"enum": [
+							"email",
+							"phone"
+						]
+					},
+					"identifier": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"identifierType",
+					"identifier",
+					"name",
+					"id"
+				],
+				"type": "object"
+			},
 			"RefreshTokenInput": {
 				"properties": {
 					"refreshToken": {
@@ -26,34 +53,33 @@
 			"OtpType": {
 				"$ref": "#/components/schemas/_36_Enums.OtpType"
 			},
-			"UserType": {
+			"AuthTokensResponseType": {
 				"properties": {
-					"identifierType": {
-						"type": "string",
-						"enum": [
-							"email",
-							"phone"
-						]
-					},
-					"identifier": {
+					"refreshToken": {
 						"type": "string"
 					},
-					"password": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					},
-					"id": {
+					"accessToken": {
 						"type": "string"
 					}
 				},
 				"required": [
-					"identifierType",
-					"identifier",
-					"password",
-					"name",
-					"id"
+					"refreshToken",
+					"accessToken"
+				],
+				"type": "object"
+			},
+			"AuthResponseType": {
+				"properties": {
+					"tokens": {
+						"$ref": "#/components/schemas/AuthTokensResponseType"
+					},
+					"user": {
+						"$ref": "#/components/schemas/UserResponseType"
+					}
+				},
+				"required": [
+					"tokens",
+					"user"
 				],
 				"type": "object"
 			},
@@ -120,35 +146,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"properties": {
-										"identifierType": {
-											"type": "string",
-											"enum": [
-												"email",
-												"phone"
-											]
-										},
-										"identifier": {
-											"type": "string"
-										},
-										"password": {
-											"type": "string"
-										},
-										"name": {
-											"type": "string"
-										},
-										"id": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"identifierType",
-										"identifier",
-										"password",
-										"name",
-										"id"
-									],
-									"type": "object"
+									"$ref": "#/components/schemas/UserResponseType"
 								}
 							}
 						}
@@ -362,19 +360,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"properties": {
-										"user": {
-											"$ref": "#/components/schemas/UserType"
-										},
-										"accessToken": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"user",
-										"accessToken"
-									],
-									"type": "object"
+									"$ref": "#/components/schemas/AuthResponseType"
 								}
 							}
 						}
@@ -406,55 +392,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"properties": {
-										"tokens": {
-											"properties": {
-												"accessToken": {
-													"type": "string"
-												},
-												"refreshToken": {
-													"type": "string"
-												}
-											},
-											"required": [
-												"accessToken",
-												"refreshToken"
-											],
-											"type": "object"
-										},
-										"user": {
-											"properties": {
-												"identifierType": {
-													"type": "string",
-													"enum": [
-														"email",
-														"phone"
-													]
-												},
-												"identifier": {
-													"type": "string"
-												},
-												"name": {
-													"type": "string"
-												},
-												"id": {
-													"type": "string"
-												}
-											},
-											"required": [
-												"identifierType",
-												"identifier",
-												"name",
-												"id"
-											],
-											"type": "object"
-										}
-									},
-									"required": [
-										"tokens",
-										"user"
-									],
-									"type": "object"
+									"$ref": "#/components/schemas/AuthResponseType"
 								}
 							}
 						}
@@ -487,32 +425,12 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"identifierType": {
-											"type": "string",
-											"enum": [
-												"email",
-												"phone"
-											]
-										},
-										"identifier": {
-											"type": "string"
-										},
-										"name": {
-											"type": "string"
-										},
-										"id": {
-											"type": "string"
-										},
-										"password": {
+										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"identifierType",
-										"identifier",
-										"name",
-										"id",
-										"password"
+										"message"
 									],
 									"type": "object"
 								}
@@ -546,7 +464,15 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "string"
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
 								}
 							}
 						}

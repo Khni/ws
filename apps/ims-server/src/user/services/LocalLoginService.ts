@@ -17,7 +17,7 @@ export class LocalLoginService implements ILocalLoginService {
   ) {}
 
   login = async (data: LocalLoginInput) => {
-    const user = await this.localAuthService.verifyPassword({
+    const { password, ...user } = await this.localAuthService.verifyPassword({
       data: {
         password: data.password,
         identifier: data.identifier,

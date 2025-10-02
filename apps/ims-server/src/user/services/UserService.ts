@@ -92,7 +92,6 @@ export class UserService implements IUserService<UserType, UserCreateInput> {
       return {
         id: user.id,
         name: user.profile?.name ?? "",
-        password: user.password ?? "",
         identifier: primaryIdentifier?.value ?? "",
         identifierType: primaryIdentifier?.type as "email" | "phone",
       };

@@ -1,5 +1,6 @@
 import axios from "axios";
 import {
+  FacebookAuthConfig,
   Provider,
   SocialAuthProvider,
   SocialTokensResult,
@@ -7,13 +8,7 @@ import {
 } from "../interfaces/ISocialAuthProvider.js";
 
 export class FacebookSocialAuthStrategy implements SocialAuthProvider {
-  constructor(
-    private facebookAuthConfig: {
-      appId: string;
-      appSecret: string;
-      redirectUri: string;
-    }
-  ) {}
+  constructor(private facebookAuthConfig: FacebookAuthConfig) {}
   provider: Provider = "facebook";
 
   async getTokens(code: string): Promise<SocialTokensResult> {

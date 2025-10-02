@@ -21,3 +21,21 @@ export interface SocialAuthProvider {
   getTokens(code: string): Promise<SocialTokensResult>;
   getUser(tokens: SocialTokensResult): Promise<SocialUserResult>;
 }
+
+//google config
+export type GoogleAuthConfig = {
+  clientId: string;
+  clientSecret: string;
+  redirectUri: string;
+};
+
+//facebook config
+export type FacebookAuthConfig = {
+  appId: string;
+  appSecret: string;
+  redirectUri: string;
+};
+// Add more providers as needed
+// e.g., Twitter, LinkedIn, GitHub, etc.
+// Each provider will have its own config type
+// and implementation of the SocialAuthProvider interface
