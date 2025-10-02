@@ -1,0 +1,86 @@
+"use client";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import z from "zod";
+
+import { useTranslations } from "next-intl";
+import CustomForm from "@workspace/ui/core/form/custom-form";
+
+import OtpField from "@workspace/ui/core/form/otp-field";
+import { useVerifyOtpHandler } from "@/features/auth/hooks/useVerifyOtpHandler";
+import { OtpRequestStorage } from "@/features/auth/hooks/useRequestOtpHandler";
+
+//----changeable
+const schema = z.object({
+  otp: z.string().min(6),
+});
+
+const defaultValues = {
+  otp: "",
+};
+
+//----
+
+export type Props = {
+  onNext: () => void;
+  onBack: () => void;
+};
+const Form = ({ onBack, onNext }: Props) => {
+  const t = useTranslations();
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: defaultValues,
+  });
+
+  //---changeable
+
+  const formTitleFallback = t("verifyOtpFormCardTitle");
+
+  const submitButtonTextFallBack = t("submitButton");
+
+  const isLoadingTextFallBack = t("loading");
+  const fields = {
+    otp: {
+      label: t("verifyOtpFormCardTitle"),
+      name: "otp",
+      type: "otp",
+    },
+  } as const;
+  const { isPending, submit } = useVerifyOtpHandler({
+    onSuccess: () => onNext(),
+  });
+  const onSubmit = (data: { otp: string }) => {
+    try {
+      const otpRequest = localStorage.getItem("otpRequest");
+      if (!otpRequest) throw new Error("No OTP request found in localStorage");
+      const { identifier, otpType } = JSON.parse(
+        otpRequest
+      ) as OtpRequestStorage;
+      submit({ ...data, otpType });
+    } catch (error) {
+      console.error("Failed to parse OTP request from localStorage", error);
+    }
+  };
+
+  //---
+
+  return (
+    <CustomForm
+      cardTitle={formTitleFallback}
+      submitButtonText={submitButtonTextFallBack}
+      form={form}
+      onSubmit={onSubmit}
+      isLoadingText={isLoadingTextFallBack}
+      isLoading={isPending}
+    >
+      {Object.values(fields).map(
+        ({ label, name, type }) =>
+          type === "otp" && (
+            <OtpField key={name} form={form} label={label} name={name} />
+          )
+      )}
+    </CustomForm>
+  );
+};
+
+export default Form;

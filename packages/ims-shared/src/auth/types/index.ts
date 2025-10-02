@@ -1,5 +1,4 @@
 export type LocalRegisterInput = {
-  identifier: string;
   password: string;
   name: string;
 };

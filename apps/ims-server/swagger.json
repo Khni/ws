@@ -159,8 +159,8 @@
 				"parameters": []
 			}
 		},
-		"/social-auth/google": {
-			"post": {
+		"/oauth/google": {
+			"get": {
 				"operationId": "GoogleLogin",
 				"responses": {
 					"302": {
@@ -168,7 +168,7 @@
 					}
 				},
 				"tags": [
-					"social-auth"
+					"oauth"
 				],
 				"security": [],
 				"parameters": [
@@ -183,8 +183,8 @@
 				]
 			}
 		},
-		"/social-auth/facebook": {
-			"post": {
+		"/oauth/facebook": {
+			"get": {
 				"operationId": "FacebookLogin",
 				"responses": {
 					"302": {
@@ -192,7 +192,7 @@
 					}
 				},
 				"tags": [
-					"social-auth"
+					"oauth"
 				],
 				"security": [],
 				"parameters": [

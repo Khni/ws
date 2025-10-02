@@ -118,7 +118,7 @@ export function RegisterRoutes(app: Router) {
                 code: {"in":"query","name":"code","required":true,"dataType":"string"},
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
-        app.post('/social-auth/google',
+        app.get('/oauth/google',
             ...(fetchMiddlewares<RequestHandler>(SocialAuthController)),
             ...(fetchMiddlewares<RequestHandler>(SocialAuthController.prototype.googleLogin)),
 
@@ -149,7 +149,7 @@ export function RegisterRoutes(app: Router) {
                 code: {"in":"query","name":"code","required":true,"dataType":"string"},
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
-        app.post('/social-auth/facebook',
+        app.get('/oauth/facebook',
             ...(fetchMiddlewares<RequestHandler>(SocialAuthController)),
             ...(fetchMiddlewares<RequestHandler>(SocialAuthController.prototype.facebookLogin)),
 

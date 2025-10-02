@@ -7,6 +7,7 @@ import {
   Query,
   Middlewares,
   SuccessResponse,
+  Get,
 } from "tsoa";
 
 import type { Request as ExpressRequestType } from "express";
@@ -21,8 +22,8 @@ import { SocialLoginParamsSchema } from "@khaled/ims-shared";
 import { config } from "../../config/envSchema.js";
 import { refreshTokenCookieOpts } from "../../config/constants.js";
 
-@Tags("social-auth")
-@Route("social-auth")
+@Tags("oauth")
+@Route("oauth")
 export class SocialAuthController extends Controller {
   private socialLogin = container.resolve("socialAuthLogin");
   constructor() {
@@ -31,19 +32,19 @@ export class SocialAuthController extends Controller {
   @Middlewares([
     validateZodSchemaMiddleware({ querySchema: SocialLoginParamsSchema }),
   ])
-  @Post("google")
+  @Get("google")
   @SuccessResponse(302, "Redirect")
   public async googleLogin(
     @Query() code: string,
     @Request() req: ExpressRequestType
   ) {
     try {
-      console.log("code", code);
       const result = await this.socialLogin.execute(code, "google");
       const { cookieName, ...rest } = refreshTokenCookieOpts;
       req.res?.cookie(cookieName, result.refreshToken, rest);
       req.res?.redirect(config.FRONTEND_SOCIAL_REDIRECT);
-    } catch (error) {
+    } catch (error: any) {
+      console.log("error", error.messqage);
       if (error instanceof AuthError) {
         throw errorMapper(error, authErrorMapping);
       }
@@ -54,7 +55,7 @@ export class SocialAuthController extends Controller {
   @Middlewares([
     validateZodSchemaMiddleware({ querySchema: SocialLoginParamsSchema }),
   ])
-  @Post("facebook")
+  @Get("facebook")
   @SuccessResponse(302, "Redirect")
   public async facebookLogin(
     @Query() code: string,

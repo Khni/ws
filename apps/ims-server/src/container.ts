@@ -126,7 +126,7 @@ export const appDeps = {
     enforceValue<GoogleAuthConfig>({
       clientId: config.GOOGLE_CLIENT_ID,
       clientSecret: config.GOOGLE_SECRET,
-      redirectUri: config.GOOGLE_SECRET,
+      redirectUri: config.GOOGLE_REDIRECT_URI,
     })
   ),
   facebookAuthConfig: asValue(

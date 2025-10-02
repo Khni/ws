@@ -7,6 +7,7 @@ import {
   SocialTokensResult,
   SocialUserResult,
 } from "../interfaces/ISocialAuthProvider.js";
+import { S } from "vitest/dist/chunks/config.d.D2ROskhv.js";
 
 export class GoogleSocialAuthStrategy implements SocialAuthProvider {
   constructor(private googleAuthConfig: GoogleAuthConfig) {}
@@ -21,29 +22,38 @@ export class GoogleSocialAuthStrategy implements SocialAuthProvider {
       redirect_uri: this.googleAuthConfig.redirectUri,
       grant_type: "authorization_code",
     };
+    console.log("Fetching Google tokens with values:", values);
 
-    const res = await axios.post<SocialTokensResult>(
-      url,
-      qs.stringify(values),
-      {
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      }
-    );
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: qs.stringify(values),
+    });
+    const js = await res.json();
+    console.log(js, "google response");
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || "Failed to fetch Google tokens");
+    }
 
-    return res.data;
+    return await res.json();
   }
 
   async getUser(tokens: SocialTokensResult): Promise<SocialUserResult> {
-    const res = await axios.get(
-      "https://www.googleapis.com/oauth2/v1/userinfo",
-      {
-        headers: { Authorization: `Bearer ${tokens.access_token}` },
-        params: { alt: "json" },
-      }
-    );
+    const url = `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${tokens.access_token}`;
 
-    const user = res.data;
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${tokens.id_token}` },
+    });
 
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(
+        errorData.error?.message || "Failed to fetch Google user"
+      );
+    }
+    const user = await res.json();
+    console.log(user, "google userinfo");
     return {
       id: user.sub,
       email: user.email,

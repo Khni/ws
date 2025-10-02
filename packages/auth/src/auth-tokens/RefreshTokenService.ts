@@ -58,6 +58,7 @@ export class RefreshTokenService implements IRefreshTokenService {
 
   revoke = async ({ token }: { token: string }) => {
     try {
+      console.log("revoking token", token);
       return await this.refreshTokenRepository.update({
         where: { token },
         data: { revokedAt: new Date() },

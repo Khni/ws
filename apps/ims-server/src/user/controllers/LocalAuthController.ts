@@ -86,6 +86,8 @@ export class LoginController extends Controller {
         data: { name, password },
         token,
       });
+      const { cookieName, ...rest } = refreshTokenCookieOpts;
+      req.res?.cookie(cookieName, result.tokens.refreshToken, rest);
 
       return result;
     } catch (error) {
