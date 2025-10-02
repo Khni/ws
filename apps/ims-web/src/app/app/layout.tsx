@@ -23,7 +23,7 @@ import { useUserPreferencesContext } from "@workspace/ui/blocks/providers/UserPr
 import { useTheme } from "next-themes";
 import { Button } from "@workspace/ui/components/button";
 import { useRouter } from "next/navigation";
-import { useGetProfile } from "@/api";
+
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/constants";
 import LoadingPage from "@workspace/ui/core/loading/loading-page";

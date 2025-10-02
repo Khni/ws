@@ -43,15 +43,13 @@ export class OtpController extends Controller {
   @Post("request")
   public async requestOtp(
     @Body()
-    {
-      otpType,
-      identifier,
-    }: {
+    body: {
       identifier: string;
       otpType: OtpType;
     },
     @Request() req: ExpressRequestType
   ) {
+    const { identifier, otpType } = body;
     try {
       const token = await this.otpService.request({
         otpType,
@@ -73,15 +71,13 @@ export class OtpController extends Controller {
   @Post("verify")
   public async verifyOtp(
     @Body()
-    {
-      otpType,
-      otp,
-    }: {
+    body: {
       otp: string;
       otpType: OtpType;
     },
     @Request() req: ExpressRequestType
   ): Promise<{ token: string }> {
+    const { otp, otpType } = body;
     const authToken =
       req.headers["authorization"]?.replace("Bearer ", "") || "";
     try {

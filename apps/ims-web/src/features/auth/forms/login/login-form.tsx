@@ -14,11 +14,9 @@ import { GoogleOAuthURLStrategy } from "@workspace/ui/lib/oauth/url/GoogleOAuthU
 import { OAuthContext } from "@workspace/ui/lib/oauth/url/OAuthContext";
 import { loginBodySchema as schema } from "@khaled/ims-shared";
 import { useLoginHandler } from "@/features/auth/hooks/useLoginHandler";
-import { Label } from "@workspace/ui/components/label";
+
 import Link from "next/link";
 import { ROUTES } from "@/constants";
-
-import { useState } from "react";
 
 const defaultValues = {
   identifier: "",
@@ -55,8 +53,8 @@ const Form = () => {
   } as const;
 
   const { isPending, submit } = useLoginHandler();
-  console.log(process.env.NODE_ENV, "process.env.login");
-  const [mounted, setMounted] = useState(false);
+
+  // const [mounted, setMounted] = useState(false);
 
   // useEffect(() => {
   //   setMounted(true);

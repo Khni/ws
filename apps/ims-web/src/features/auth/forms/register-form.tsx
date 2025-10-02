@@ -22,7 +22,7 @@ export type Props = {
   onNext: () => void;
   onBack: () => void;
 };
-const Form = ({ onNext }: Props) => {
+const Form = ({}: Props) => {
   const t = useTranslations();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),

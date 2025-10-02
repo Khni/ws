@@ -1,15 +1,15 @@
 "use client";
 
-import { useGetProfile } from "@/api";
-import { GetUserProfileResponse } from "@/api/model";
+import { UserResponseType } from "@/api/model";
+
 import { ROUTES } from "@/constants";
 import { Button } from "@workspace/ui/components/button";
 import Loading from "@workspace/ui/core/loading/loading";
-import { BriefcaseBusinessIcon, HomeIcon } from "lucide-react";
+import { BriefcaseBusinessIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type DashboardButtonProps = {
-  user: GetUserProfileResponse | undefined;
+  user: UserResponseType | undefined;
   isLoading: boolean;
 };
 export default function DashboardButton({

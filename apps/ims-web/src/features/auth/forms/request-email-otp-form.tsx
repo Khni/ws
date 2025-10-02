@@ -6,10 +6,9 @@ import z from "zod";
 import { useTranslations } from "next-intl";
 import CustomForm from "@workspace/ui/core/form/custom-form";
 import InputField from "@workspace/ui/core/form/input-field";
-import { Button } from "@workspace/ui/components/button";
+
 import { useRequestEmailOtpHandler } from "@/features/auth/hooks/useRequestOtpHandler";
-import { OtpType, requestOtpBodySchema } from "@khaled/ims-shared";
-import { o } from "node_modules/framer-motion/dist/types.d-DsEeKk6G";
+import { OtpType } from "@khaled/ims-shared";
 
 //----changeable
 const schema = z.object({
@@ -23,7 +22,7 @@ export type Props = {
   onBack: () => void;
   otpType: OtpType;
 };
-const Form = ({ onNext, onBack, otpType }: Props) => {
+const Form = ({ onNext, otpType }: Props) => {
   const t = useTranslations();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),

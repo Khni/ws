@@ -3,11 +3,10 @@
 import { useSignUp } from "@/api";
 import { useAuthSuccessHandler } from "@/features/auth/hooks/helpers/useAuthSuccessHandler";
 import { LocalRegisterInput } from "@khaled/ims-shared";
-import { useCookies } from "react-cookie";
 
 export function useRegisterHandler() {
   const onAuthSuccess = useAuthSuccessHandler();
-  const [cookies, setCookie, removeCookie] = useCookies(["emailToRegister"]);
+
   const otpToken = localStorage.getItem("otpToken");
   const { mutate: registerMutate, isPending } = useSignUp({
     request: {

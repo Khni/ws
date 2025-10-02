@@ -1,6 +1,6 @@
 "use client";
 
-import { GetUserProfileResponse } from "@/api/model";
+import { UserResponseType } from "@/api/model";
 import { ROUTES } from "@/constants";
 import { useLogoutHandler } from "@/features/auth/hooks/useLogoutHandler";
 import { UserNav } from "@workspace/ui/blocks/layout/nav-user";
@@ -12,7 +12,7 @@ import { LogInIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export type UserButtonProps = {
-  user: GetUserProfileResponse | undefined;
+  user: UserResponseType | undefined;
   isLoading: boolean;
 };
 export default function UserButton({ user, isLoading }: UserButtonProps) {
@@ -34,7 +34,7 @@ export default function UserButton({ user, isLoading }: UserButtonProps) {
       </Button>
     );
   }
-  const { isPending, submit } = useLogoutHandler();
+  const { submit } = useLogoutHandler();
   return (
     <UserNav
       iconOnly

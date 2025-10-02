@@ -34,7 +34,7 @@ import { A } from "vitest/dist/chunks/environment.d.cL3nLXbE.js";
 
 @Tags("auth")
 @Route("auth")
-export class LoginController extends Controller {
+export class LocalAuthController extends Controller {
   constructor(
     private localLoginService: ILocalLoginService = container.resolve<LocalLoginService>(
       "localLoginService"
@@ -77,9 +77,10 @@ export class LoginController extends Controller {
   @Post("sign-up")
   public async signUp(
     @Body()
-    { name, password }: OtpSignUpInput,
+    body: OtpSignUpInput,
     @Request() req: ExpressRequestType
   ): Promise<AuthResponseType> {
+    const { name, password } = body;
     const token = req.headers["authorization"]?.replace("Bearer ", "") || "";
     try {
       const result = await this.otpSignUpService.execute({
@@ -107,9 +108,10 @@ export class LoginController extends Controller {
   @Post("forget-password")
   public async resetForgettenPassword(
     @Body()
-    { newPassword }: ResetForgettenPasswordInput,
+    body: ResetForgettenPasswordInput,
     @Request() req: ExpressRequestType
   ) {
+    const { newPassword } = body;
     const token = req.headers["authorization"]?.replace("Bearer ", "") || "";
     try {
       await this.otpForgetPasswordService.execute({

@@ -50,10 +50,7 @@ export function UserNav({ iconOnly, ...props }: NavUserProps) {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="inline-flex items-center justify-center rounded-md border h-10 w-10">
-                <AvatarImage
-                  src={props.user.avatar}
-                  alt={props.user.firstName}
-                />
+                <AvatarImage src={props.user.avatar} alt={props.user.name} />
                 <AvatarFallback className="rounded-lg">
                   <UserIcon />
                 </AvatarFallback>
@@ -61,9 +58,11 @@ export function UserNav({ iconOnly, ...props }: NavUserProps) {
 
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                  {props.user.firstName}
+                  {props.user.name}
                 </span>
-                <span className="truncate text-xs">{props.user.email}</span>
+                <span className="truncate text-xs">
+                  {props.user.identifier}
+                </span>
               </div>
 
               <ChevronsUpDown className="ml-auto size-4" />

@@ -1,9 +1,9 @@
 "use client";
 
 import { useResetForgettenPassword } from "@/api";
-import { ForgetPasswordInput } from "@/api/model/forgetPasswordInput";
 
 import { ROUTES } from "@/constants";
+import { ResetForgettenPasswordInput } from "@khaled/ims-shared";
 import { useRouter } from "next/navigation";
 
 export function useForgetPasswordHandler() {
@@ -17,7 +17,7 @@ export function useForgetPasswordHandler() {
         },
       },
       mutation: {
-        onSuccess: (data) => {
+        onSuccess: () => {
           router.replace(ROUTES.auth.index);
         },
         onError: (error) => {
@@ -27,7 +27,7 @@ export function useForgetPasswordHandler() {
     }
   );
 
-  const submit = (data: ForgetPasswordInput) => {
+  const submit = (data: ResetForgettenPasswordInput) => {
     forgetPasswordMutate({ data });
   };
 

@@ -14,7 +14,7 @@ import { redirect, useRouter } from "next/navigation";
 import { ReactNode } from "react";
 
 export default function LoginPage({ children }: { children: ReactNode }) {
-  const { locale, updateLocale, rtl } = useUserPreferencesContext();
+  const { locale, updateLocale } = useUserPreferencesContext();
   const { setTheme } = useTheme();
   const router = useRouter();
 

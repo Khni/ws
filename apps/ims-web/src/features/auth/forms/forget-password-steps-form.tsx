@@ -27,8 +27,7 @@ const steps = defineSteps([
   },
 ]);
 const ForgetPassword = () => {
-  const { currentStep, previousStep, delta, goNext, goBack, reset } =
-    useStepper(steps.length);
+  const { currentStep, delta, goNext, goBack } = useStepper(steps.length);
 
   return (
     <Stepper

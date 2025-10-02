@@ -1,4 +1,8 @@
-import { IOtpSenderStrategy, OtpSendParams } from "@khaled/auth";
+import {
+  IOtpSenderStrategy,
+  OtpSendParams,
+  OtpStrategySendParams,
+} from "@khaled/auth";
 import { Mailer, IMailer } from "@khaled/mailer";
 import { config } from "../../config/envSchema.js";
 
@@ -19,7 +23,7 @@ export class OtpMailSender implements IOtpSenderStrategy {
     })
   ) {}
 
-  async send(params: OtpSendParams): Promise<void> {
+  async send(params: OtpStrategySendParams): Promise<void> {
     const { recipient, generatedOtp, otpType } = params;
     const subject = `Your One-Time Password (OTP) for ${otpType.replace("_", "")}`;
     const body = `

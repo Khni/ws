@@ -4,7 +4,7 @@ import { useUserPreferencesContext } from "@workspace/ui/blocks/providers/UserPr
 import LanguageSwitcher from "@workspace/ui/core/settings/langauge-switcher";
 
 export default function LangaugeSwitcherBtn() {
-  const { locale, updateLocale, rtl } = useUserPreferencesContext();
+  const { locale, updateLocale } = useUserPreferencesContext();
 
   return <LanguageSwitcher locale={locale} updateLocale={updateLocale} />;
 }

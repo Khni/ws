@@ -12,7 +12,7 @@ if (!baseURL) {
 let isRefreshing = false;
 let failedQueue: {
   resolve: (token: string) => void;
-  reject: (err: any) => void;
+  reject: (err: Error) => void;
 }[] = [];
 
 const processQueue = (error: any, token: string | null = null) => {

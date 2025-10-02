@@ -25,7 +25,7 @@ export type Props = {
   onNext: () => void;
   onBack: () => void;
 };
-const Form = ({ onBack, onNext }: Props) => {
+const Form = ({ onNext }: Props) => {
   const t = useTranslations();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -53,9 +53,7 @@ const Form = ({ onBack, onNext }: Props) => {
     try {
       const otpRequest = localStorage.getItem("otpRequest");
       if (!otpRequest) throw new Error("No OTP request found in localStorage");
-      const { identifier, otpType } = JSON.parse(
-        otpRequest
-      ) as OtpRequestStorage;
+      const { otpType } = JSON.parse(otpRequest) as OtpRequestStorage;
       submit({ ...data, otpType });
     } catch (error) {
       console.error("Failed to parse OTP request from localStorage", error);
