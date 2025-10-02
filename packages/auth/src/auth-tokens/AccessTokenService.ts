@@ -1,6 +1,9 @@
 import { th } from "zod/v4/locales";
 import { IToken, ValidTimeString } from "../token/IToken.js";
 import { AuthDomainError } from "../errors/AuthDomainError.js";
+import jwt from "jsonwebtoken";
+
+const { TokenExpiredError } = jwt; //to fix 'jsonwebtoken' does not provide an export named 'TokenExpiredError'
 
 export class AccessTokenService {
   constructor(
@@ -19,6 +22,13 @@ export class AccessTokenService {
     if (!token) {
       throw new AuthDomainError("MISSING_ACCESS_TOKEN");
     }
-    return this.tokenService.verify(token);
+    try {
+      return this.tokenService.verify(token);
+    } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        throw new AuthDomainError("EXPIRED_ACCESS_TOKEN");
+      }
+      throw error;
+    }
   };
 }

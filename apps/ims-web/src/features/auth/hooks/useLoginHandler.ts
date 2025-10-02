@@ -16,8 +16,8 @@ export function useLoginHandler() {
             `You have logged in successfully with : ${user.identifier}`,
         });
       },
-      onError: (error) => {
-        console.error("Login failed", error);
+      onError: (error: any) => {
+        console.error("Login failed", error.response.data);
       },
     },
   });

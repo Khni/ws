@@ -67,7 +67,7 @@ export const appDeps = {
   userRepository: asClass(UserRepository).scoped(),
   otpRepository: asClass(enforceClass<IOtpRepository>(OtpRepository)).scoped(),
   refreshTokenExpiresIn: asValue("15d"),
-  accessTokenExpiresIn: asValue("10m"),
+  accessTokenExpiresIn: asValue("1m"),
   //values
   otpTypeToOtpTokenExpiresInMapping: asValue({
     [OtpType.SIGN_UP]: "10m",

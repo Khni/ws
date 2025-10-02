@@ -9,6 +9,7 @@ export const AuthDomainErrorCodes = {
   MISSING_OR_MALFORMED_AUTHORIZATION_HEADER:
     "MISSING_OR_MALFORMED_AUTHORIZATION_HEADER",
   INVALID_ACCESS_TOKEN: "INVALID_ACCESS_TOKEN",
+  EXPIRED_ACCESS_TOKEN: "EXPIRED_ACCESS_TOKEN",
   MISSING_ACCESS_TOKEN: "MISSING_ACCESS_TOKEN",
   MISSING_REFRESH_TOKEN: "MISSING_REFRESH_TOKEN",
   EMAIL_IS_NOT_EXIST: "USER_IS_NOT_EXIST",
@@ -81,6 +82,12 @@ export const authDomainErrorMapping = {
     responseMessage:
       "The provided access token is invalid or has expired. Please log in again.",
   },
+  [AuthDomainErrorCodes.EXPIRED_ACCESS_TOKEN]: {
+    statusCode: 401, // Unauthorized
+    responseMessage:
+      "The provided access token is expired. Please log in again.",
+  },
+
   [AuthDomainErrorCodes.MISSING_ACCESS_TOKEN]: {
     statusCode: 401, // Unauthorized
     responseMessage:

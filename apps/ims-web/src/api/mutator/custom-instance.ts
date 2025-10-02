@@ -48,55 +48,65 @@ AXIOS_INSTANCE.interceptors.response.use(
       _retry?: boolean;
     };
 
-    // Only run on 401 and prevent infinite loop
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      if (isRefreshing) {
-        // queue failed requests until refresh finishes
-        return new Promise((resolve, reject) => {
-          failedQueue.push({
-            resolve: (token: string) => {
-              originalRequest.headers = {
-                ...originalRequest.headers,
-                Authorization: `Bearer ${token}`,
-              };
-              resolve(AXIOS_INSTANCE(originalRequest));
-            },
-            reject,
+    if (error.response?.status === 401) {
+      const errData = error.response.data as any;
+      console.log(errData);
+
+      // 🔹 Case 1: Wrong login credentials — do not refresh
+      // if (errData?.code === "INCORRECT_CREDENTIALS") {
+      //   return Promise.reject(error);
+      // }
+
+      // 🔹 Case 2: Token expired or invalid — try refresh
+      if (
+        (errData?.code === "INVALID_ACCESS_TOKEN" ||
+          errData?.code === "EXPIRED_ACCESS_TOKEN") &&
+        !originalRequest._retry
+      ) {
+        if (isRefreshing) {
+          // queue failed requests until refresh finishes
+          return new Promise((resolve, reject) => {
+            failedQueue.push({
+              resolve: (token: string) => {
+                originalRequest.headers = {
+                  ...originalRequest.headers,
+                  Authorization: `Bearer ${token}`,
+                };
+                resolve(AXIOS_INSTANCE(originalRequest));
+              },
+              reject,
+            });
           });
-        });
-      }
+        }
 
-      originalRequest._retry = true;
-      isRefreshing = true;
+        originalRequest._retry = true;
+        isRefreshing = true;
 
-      try {
-        // refresh token API
-        // const { accessToken } = await refreshToken(
-        //   {},
-        //   { withCredentials: true  ,}
-        // );
-        const { data } = await Axios.post(
-          `${baseURL}/token/refresh`,
-          {},
-          { withCredentials: true }
-        );
-        console.log(data, "data");
-        const newToken = data.accessToken;
+        try {
+          // call refresh token API
+          const { data } = await Axios.post(
+            `${baseURL}/token/refresh`,
+            {},
+            { withCredentials: true }
+          );
 
-        localStorage.setItem("accessToken", newToken);
-        AXIOS_INSTANCE.defaults.headers.common["Authorization"] =
-          `Bearer ${newToken}`;
+          const newToken = data.accessToken;
+          localStorage.setItem("accessToken", newToken);
 
-        processQueue(null, newToken);
+          AXIOS_INSTANCE.defaults.headers.common["Authorization"] =
+            `Bearer ${newToken}`;
 
-        return AXIOS_INSTANCE(originalRequest);
-      } catch (err) {
-        processQueue(err, null);
-        // optionally logout user here
-        localStorage.removeItem("accessToken");
-        return Promise.reject(err);
-      } finally {
-        isRefreshing = false;
+          processQueue(null, newToken);
+
+          return AXIOS_INSTANCE(originalRequest);
+        } catch (err) {
+          processQueue(err, null);
+          localStorage.removeItem("accessToken");
+          // 🔹 Optionally redirect to login here
+          return Promise.reject(err);
+        } finally {
+          isRefreshing = false;
+        }
       }
     }
 
