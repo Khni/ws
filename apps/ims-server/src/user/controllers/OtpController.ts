@@ -57,7 +57,7 @@ export class OtpController extends Controller {
         otpType,
         identifier,
       });
-      return token;
+      return { token };
     } catch (error) {
       if (error instanceof AuthError) {
         throw errorMapper(error, authErrorMapping);
@@ -81,10 +81,16 @@ export class OtpController extends Controller {
       otpType: OtpType;
     },
     @Request() req: ExpressRequestType
-  ) {
-    const token = req.headers["authorization"]?.replace("Bearer ", "") || "";
+  ): Promise<{ token: string }> {
+    const authToken =
+      req.headers["authorization"]?.replace("Bearer ", "") || "";
     try {
-      return await this.otpService.verify({ otp, token, otpType });
+      const token = await this.otpService.verify({
+        otp,
+        token: authToken,
+        otpType,
+      });
+      return { token };
     } catch (error) {
       if (error instanceof AuthError) {
         throw errorMapper(error, authErrorMapping);

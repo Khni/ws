@@ -17,6 +17,9 @@ import {
   FacebookSocialAuthStrategy,
   GoogleSocialAuthStrategy,
   SocialAuthLogin,
+  IRefreshTokenRepository,
+  GoogleAuthConfig,
+  FacebookAuthConfig,
 } from "@khaled/auth";
 import {
   createContainer,
@@ -41,12 +44,28 @@ import { LocalLoginService } from "./user/services/LocalLoginService.js";
 import { LocalRegistrationService } from "./user/services/LocalRegistrationService.js";
 import { generateExpiredDate, parseTimeString } from "@khaled/utils";
 import { handleSocialUser } from "./user/services/handleSocialUser.js";
+import { IOtpRepository } from "./user/interfaces/IOtpRepository .js";
 
+function enforceClass<T>(
+  c: new (...args: any[]) => T
+): new (...args: any[]) => T {
+  return c;
+}
+
+function enforceValue<T>(v: T): T {
+  return v;
+}
+
+function enforceFunction<T extends (...args: any[]) => any>(f: T): T {
+  return f;
+}
 export const appDeps = {
   // repositories
-  refreshTokenRepository: asClass(RefreshTokenRepository).scoped(),
+  refreshTokenRepository: asClass(
+    enforceClass<IRefreshTokenRepository>(RefreshTokenRepository)
+  ).scoped(),
   userRepository: asClass(UserRepository).scoped(),
-  otpRepository: asClass(OtpRepository).scoped(),
+  otpRepository: asClass(enforceClass<IOtpRepository>(OtpRepository)).scoped(),
   refreshTokenExpiresIn: asValue("15d"),
   accessTokenExpiresIn: asValue("10m"),
   //values
@@ -103,16 +122,20 @@ export const appDeps = {
   authTokenService: asClass(AuthTokensService).scoped(),
 
   //social login
-  googleAuthConfig: asValue({
-    clientId: config.GOOGLE_CLIENT_ID,
-    clientSecret: config.GOOGLE_SECRET,
-    redirectUri: config.GOOGLE_SECRET,
-  }),
-  facebookAuthConfig: asValue({
-    appId: config.FACEBOOK_APP_ID,
-    appSecret: config.FACEBOOK_SECRET,
-    redirectUri: config.FACEBOOK_REDIRECT_URI,
-  }),
+  googleAuthConfig: asValue(
+    enforceValue<GoogleAuthConfig>({
+      clientId: config.GOOGLE_CLIENT_ID,
+      clientSecret: config.GOOGLE_SECRET,
+      redirectUri: config.GOOGLE_SECRET,
+    })
+  ),
+  facebookAuthConfig: asValue(
+    enforceValue<FacebookAuthConfig>({
+      appId: config.FACEBOOK_APP_ID,
+      appSecret: config.FACEBOOK_SECRET,
+      redirectUri: config.FACEBOOK_REDIRECT_URI,
+    })
+  ),
   socialAuthContext: asClass(SocialAuthContext).scoped(),
   handleSocialUser: asValue(handleSocialUser),
   facebookSocialAuthStrategy: asClass(FacebookSocialAuthStrategy),

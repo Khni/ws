@@ -29,7 +29,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "_36_Enums.OtpType": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["SIGN_UP"]},{"dataType":"enum","enums":["FORGET_PASSWORD"]},{"dataType":"enum","enums":["LOGIN"]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["SIGN_UP"]},{"dataType":"enum","enums":["LOGIN"]},{"dataType":"enum","enums":["FORGET_PASSWORD"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "OtpType": {

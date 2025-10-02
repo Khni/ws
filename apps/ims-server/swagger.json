@@ -19,8 +19,8 @@
 				"type": "string",
 				"enum": [
 					"SIGN_UP",
-					"FORGET_PASSWORD",
-					"LOGIN"
+					"LOGIN",
+					"FORGET_PASSWORD"
 				]
 			},
 			"OtpType": {
@@ -258,7 +258,15 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "string"
+									"properties": {
+										"token": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"token"
+									],
+									"type": "object"
 								}
 							}
 						}
@@ -302,7 +310,15 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "string"
+									"properties": {
+										"token": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"token"
+									],
+									"type": "object"
 								}
 							}
 						}
