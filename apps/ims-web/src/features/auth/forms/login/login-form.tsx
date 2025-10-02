@@ -21,7 +21,7 @@ import { ROUTES } from "@/constants";
 import { useState } from "react";
 
 const defaultValues = {
-  email: "",
+  identifier: "",
   password: "",
 };
 
@@ -44,7 +44,7 @@ const Form = () => {
   const fields = {
     email: {
       label: t("emailLabel"),
-      name: "email",
+      name: "identifier",
       type: "text",
     },
     password: {

@@ -8,7 +8,7 @@ import { SocialAuthContext } from "./SocialAuthContext.js";
 export class SocialAuthLogin<User extends { id: string }> {
   constructor(
     private socialAuthContext: SocialAuthContext,
-    private tokenService: AuthTokensService,
+    private authTokenService: AuthTokensService,
     private handleSocialUser: (
       user: SocialUserResult,
       provider: Provider
@@ -18,7 +18,7 @@ export class SocialAuthLogin<User extends { id: string }> {
   async execute(code: string, provider: Provider) {
     const { user } = await this.socialAuthContext.authenticate(code, provider);
     let _user = await this.handleSocialUser(user, provider);
-    const { accessToken, refreshToken } = await this.tokenService.generate(
+    const { accessToken, refreshToken } = await this.authTokenService.generate(
       _user.id
     );
 

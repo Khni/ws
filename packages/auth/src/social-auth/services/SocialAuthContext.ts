@@ -24,6 +24,7 @@ export class SocialAuthContext {
   ): Promise<{ tokens: SocialTokensResult; user: SocialUserResult }> {
     const strategy = this.getStrategy(provider);
     const tokens = await strategy.getTokens(code);
+    console.log(tokens, "tokens-socialauthcontext");
     const user = await strategy.getUser(tokens);
     return { tokens, user };
   }

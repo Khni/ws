@@ -22,15 +22,13 @@ export class GoogleSocialAuthStrategy implements SocialAuthProvider {
       redirect_uri: this.googleAuthConfig.redirectUri,
       grant_type: "authorization_code",
     };
-    console.log("Fetching Google tokens with values:", values);
 
     const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: qs.stringify(values),
     });
-    const js = await res.json();
-    console.log(js, "google response");
+
     if (!res.ok) {
       const errorData = await res.json();
       throw new Error(errorData.error || "Failed to fetch Google tokens");

@@ -13,7 +13,7 @@ export function isAuthentecated(
   const accessTokenService = container.resolve("accessTokenService");
 
   try {
-    const payload = accessTokenService.verify(token || "");
+    const payload = accessTokenService.verify(token);
 
     req.user = {
       ...(req.user || {}),
