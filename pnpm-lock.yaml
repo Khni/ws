@@ -156,6 +156,9 @@ importers:
       '@khaled/ims-shared':
         specifier: workspace:*
         version: link:../../packages/ims-shared
+      '@khaled/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@tanstack/react-query':
         specifier: ^5.83.0
         version: 5.89.0(react@19.1.1)
@@ -354,6 +357,9 @@ importers:
 
   packages/ims-shared:
     dependencies:
+      '@khaled/auth':
+        specifier: workspace:*
+        version: link:../auth
       '@tanstack/react-query':
         specifier: ^5.83.0
         version: 5.89.0(react@19.1.1)
@@ -635,6 +641,9 @@ importers:
 
   packages/utils:
     dependencies:
+      '@khaled/error-handler':
+        specifier: workspace:*
+        version: link:../error-handler
       zod:
         specifier: ^4.0.5
         version: 4.1.9

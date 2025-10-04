@@ -9,3 +9,4 @@ export * from "./generate-expired-date.js";
 export * from "./create-config.js";
 export * from "./parseTimeString.js";
 export * from "./types.js";
+export * from "./errors/serializeErrorResponse.js";

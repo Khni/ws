@@ -14,6 +14,7 @@
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
     "@khaled/ims-shared": "workspace:*",
+    "@khaled/utils": "workspace:*",
     "@tanstack/react-query": "^5.83.0",
     "@tanstack/react-query-devtools": "^5.84.1",
     "@workspace/ui": "workspace:*",

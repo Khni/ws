@@ -17,6 +17,8 @@ import { useLoginHandler } from "@/features/auth/hooks/useLoginHandler";
 
 import Link from "next/link";
 import { ROUTES } from "@/constants";
+import { useState } from "react";
+import { ErrorAlert, ErrorResponse } from "@/components/ErrorAlert";
 
 const defaultValues = {
   identifier: "",
@@ -33,8 +35,10 @@ const Form = () => {
   });
 
   //---changeable
+  const authErrors = useTranslations("auth.errors");
 
   const formTitleFallback = t("login");
+  const [errorResponse, setErrorResponse] = useState<ErrorResponse>();
 
   const submitButtonTextFallBack = t("submitButton");
 
@@ -52,7 +56,7 @@ const Form = () => {
     },
   } as const;
 
-  const { isPending, submit } = useLoginHandler();
+  const { isPending, submit } = useLoginHandler({ setErrorResponse });
 
   // const [mounted, setMounted] = useState(false);
 
@@ -115,6 +119,7 @@ const Form = () => {
       <SocialButtons
         providers={{ google: { url: googleUrl }, facebook: { url: fbUrl } }}
       />
+      <ErrorAlert error={errorResponse} />
     </CustomForm>
   );
 };
