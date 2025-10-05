@@ -3,6 +3,7 @@ import { describe, it, expect, vi } from "vitest";
 import type { Response } from "express";
 import { FallbackErrorStrategy } from "../FallBackErrorHandlerStrategy.js";
 import { mockLogger } from "../mocks.js";
+import { errorResponse } from "./data.js";
 
 describe("FallbackErrorStrategy", () => {
   it("should always return true for canHandle", () => {
@@ -52,10 +53,6 @@ describe("FallbackErrorStrategy", () => {
 
     expect(mockLogger.error).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.json).toHaveBeenCalledWith({
-      code: "UNKNOWN_ERROR",
-      message: "An Expected error occurred.",
-      name: "unknown",
-    });
+    expect(res.json).toHaveBeenCalledWith(errorResponse);
   });
 });

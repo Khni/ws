@@ -1,5 +1,4 @@
-import { AuthDomainError } from "../errors/AuthDomainError.js";
-import { AuthUnexpectedError } from "../errors/AuthUnexpectedError.js";
+import { AuthDomainError, AuthUnexpectedError } from "@khaled/auth-errors";
 import { BcryptHasher } from "../hasher/BcryptHasher.js";
 import { IHasher } from "../hasher/IHasher.js";
 import { IOtpRepository } from "../repositories/interfaces/IOtpRepository.js";

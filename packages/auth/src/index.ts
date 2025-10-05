@@ -42,10 +42,7 @@ export * from "./hasher/BcryptHasher.js";
 
 //errors
 
-export * from "./errors/AuthError.js";
-export * from "./errors/AuthDomainError.js";
-export * from "./errors/AuthUnexpectedError.js";
-export * from "./errors/errors.js";
+export * from "@khaled/auth-errors";
 
 //social auth
 export * from "./social-auth/interfaces/ISocialAuthProvider.js";

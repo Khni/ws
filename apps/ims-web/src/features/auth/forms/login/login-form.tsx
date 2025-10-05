@@ -12,13 +12,17 @@ import { SocialButtons } from "@workspace/ui/core/social-buttons";
 import { FacebookOAuthURLStrategy } from "@workspace/ui/lib/oauth/url/FacebookOAuthURLStrategy";
 import { GoogleOAuthURLStrategy } from "@workspace/ui/lib/oauth/url/GoogleOAuthURLStrategy";
 import { OAuthContext } from "@workspace/ui/lib/oauth/url/OAuthContext";
-import { loginBodySchema as schema } from "@khaled/ims-shared";
+import {
+  AuthErrorCodesType,
+  ErrorResponse,
+  loginBodySchema as schema,
+} from "@khaled/ims-shared";
 import { useLoginHandler } from "@/features/auth/hooks/useLoginHandler";
 
 import Link from "next/link";
 import { ROUTES } from "@/constants";
 import { useState } from "react";
-import { ErrorAlert, ErrorResponse } from "@/components/ErrorAlert";
+import { ErrorAlert } from "@workspace/ui/core/ErrorAlert";
 
 const defaultValues = {
   identifier: "",
@@ -38,7 +42,8 @@ const Form = () => {
   const authErrors = useTranslations("auth.errors");
 
   const formTitleFallback = t("login");
-  const [errorResponse, setErrorResponse] = useState<ErrorResponse>();
+  const [errorResponse, setErrorResponse] =
+    useState<ErrorResponse<AuthErrorCodesType>>();
 
   const submitButtonTextFallBack = t("submitButton");
 
@@ -119,7 +124,12 @@ const Form = () => {
       <SocialButtons
         providers={{ google: { url: googleUrl }, facebook: { url: fbUrl } }}
       />
-      <ErrorAlert error={errorResponse} />
+      <ErrorAlert
+        errorTitle={t("error")}
+        errorDescriptionFallback={t("unknownError")}
+        error={errorResponse}
+        codeTransform={(code) => authErrors(code)}
+      />
     </CustomForm>
   );
 };

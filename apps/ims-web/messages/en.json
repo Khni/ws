@@ -12,7 +12,7 @@
       "EXPIRED_ACCESS_TOKEN": "Access token has expired.",
       "MISSING_ACCESS_TOKEN": "Missing access token.",
       "MISSING_REFRESH_TOKEN": "Missing refresh token.",
-      "EMAIL_IS_NOT_EXIST": "This email does not exist.",
+      "USER_IS_NOT_EXIST": "This email does not exist.",
       "OTP_INVALID": "Invalid OTP.",
       "OTP_EXPIRED": "OTP has expired.",
       "TOKEN_EXPIRED": "Token has expired.",
@@ -28,6 +28,8 @@
       "OTP_VERIFICATION_FAILED": "Failed to verify OTP."
     }
   },
+  "error": "Error",
+  "unknownError": "Unknown error occurred.",
   "search": "Search...",
   "loading": "Loading...",
   "name": "Name",

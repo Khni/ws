@@ -1,4 +1,5 @@
 import { HttpError } from "../errors/HttpError.js";
+import { ErrorResponse } from "../errors/types.js";
 import { IHttpErrorSerializer } from "./interfaces/IHttpErrorSerializer.js";
 
 export class HttpErrorSerializer implements IHttpErrorSerializer {
@@ -48,10 +49,14 @@ export class HttpErrorSerializer implements IHttpErrorSerializer {
   };
 
   serializeResponse = (error: HttpError) => {
-    return {
-      message: error.responseMessage,
-      code: error.code,
-      name: error.name,
+    const err: ErrorResponse<unknown> = {
+      errorType: "Server",
+      error: {
+        message: error.responseMessage,
+        code: error.code,
+        name: error.name,
+      },
     };
+    return err;
   };
 }

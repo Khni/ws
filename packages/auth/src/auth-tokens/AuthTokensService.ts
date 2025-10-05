@@ -1,5 +1,5 @@
 import { th } from "zod/v4/locales";
-import { AuthDomainError } from "../errors/AuthDomainError.js";
+import { AuthDomainError } from "@khaled/auth-errors";
 import { IAccessTokenService } from "./interfaces/IAccessTokenService.js";
 import { IAuthTokensService } from "./interfaces/IAuthTokenService.js";
 import { IRefreshTokenService } from "./interfaces/IRefreshTokenService.js";

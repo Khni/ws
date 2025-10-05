@@ -7,8 +7,8 @@ import {
 import { mockCrypto } from "../../crypto/mocks.js";
 import { mockedUser } from "../../local-auth/tests/data.js";
 import { mockedRefreshToken } from "./data.js";
-import { AuthDomainError } from "../../errors/AuthDomainError.js";
-import { AuthUnexpectedError } from "../../errors/AuthUnexpectedError.js";
+import { AuthDomainError } from "@khaled/auth-errors";
+import { AuthUnexpectedError } from "@khaled/auth-errors";
 import { generateExpiredDate } from "@khaled/utils";
 
 describe("RefreshTokenService", () => {

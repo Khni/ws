@@ -48,3 +48,10 @@ export type InputValidationErrorType = {
     messages: string[];
   }[];
 };
+
+export type ErrorResponse<CodeType = unknown> =
+  | { errorType: "InputValidation"; error: InputValidationErrorType }
+  | {
+      errorType: "Server";
+      error: { name: string; message: string; code: CodeType };
+    };

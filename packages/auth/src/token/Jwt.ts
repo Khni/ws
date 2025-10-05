@@ -2,7 +2,7 @@ import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken";
 
 const { TokenExpiredError } = jwt; //to fix 'jsonwebtoken' does not provide an export named 'TokenExpiredError'
 import { IToken, SignTokenOptions } from "./IToken.js";
-import { AuthDomainError } from "../errors/AuthDomainError.js";
+
 export type SafeSignOptions = Omit<SignOptions, "expiresIn"> & {
   expiresIn?: `${number}${"s" | "m" | "h" | "d"}`;
 };

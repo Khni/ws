@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@khaled/auth": "workspace:*",
+    "@khaled/auth-errors": "workspace:*",
     "@khaled/error-handler": "workspace:*",
     "@khaled/ims-shared": "workspace:*",
     "@khaled/mailer": "workspace:*",

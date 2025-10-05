@@ -12,7 +12,7 @@ export const AuthDomainErrorCodes = {
   EXPIRED_ACCESS_TOKEN: "EXPIRED_ACCESS_TOKEN",
   MISSING_ACCESS_TOKEN: "MISSING_ACCESS_TOKEN",
   MISSING_REFRESH_TOKEN: "MISSING_REFRESH_TOKEN",
-  EMAIL_IS_NOT_EXIST: "USER_IS_NOT_EXIST",
+  USER_IS_NOT_EXIST: "USER_IS_NOT_EXIST",
   OTP_INVALID: "OTP_INVALID",
   OTP_EXPIRED: "OTP_EXPIRED",
   TOKEN_EXPIRED: "TOKEN_EXPIRED",
@@ -97,7 +97,7 @@ export const authDomainErrorMapping = {
     statusCode: 400,
     responseMessage: "You are already Logged out",
   },
-  [AuthDomainErrorCodes.EMAIL_IS_NOT_EXIST]: {
+  [AuthDomainErrorCodes.USER_IS_NOT_EXIST]: {
     statusCode: 400,
     responseMessage: "Email is not Exist in the Database",
   },

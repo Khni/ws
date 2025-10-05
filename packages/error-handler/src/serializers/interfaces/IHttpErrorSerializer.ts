@@ -1,5 +1,5 @@
 import { HttpError } from "../../errors/HttpError.js";
-import { LogLevel } from "../../errors/types.js";
+import { ErrorResponse, LogLevel } from "../../errors/types.js";
 
 export interface IHttpErrorSerializer {
   serializerError: (error: HttpError) => {
@@ -14,9 +14,5 @@ export interface IHttpErrorSerializer {
     };
     causeChain: Record<string, any>[];
   };
-  serializeResponse: (error: HttpError) => {
-    message: string;
-    code: unknown;
-    name: string;
-  };
+  serializeResponse: (error: HttpError) => ErrorResponse<unknown>;
 }

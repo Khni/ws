@@ -5,11 +5,14 @@ import { LocalLoginInput } from "@/api/model";
 import { useAuthSuccessHandler } from "@/features/auth/hooks/helpers/useAuthSuccessHandler";
 import { Dispatch, SetStateAction } from "react";
 import { parseServerError } from "@khaled/utils";
-import { ErrorResponse } from "@/components/ErrorAlert";
+
+import { AuthErrorCodesType, ErrorResponse } from "@khaled/ims-shared";
 export function useLoginHandler({
   setErrorResponse,
 }: {
-  setErrorResponse: Dispatch<unknown>;
+  setErrorResponse: Dispatch<
+    SetStateAction<ErrorResponse<AuthErrorCodesType> | undefined>
+  >;
 }) {
   const onAuthSuccess = useAuthSuccessHandler();
 
@@ -23,7 +26,7 @@ export function useLoginHandler({
         });
       },
       onError: (error: any) => {
-        const err = error.response.data as ErrorResponse;
+        const err = error.response.data as ErrorResponse<AuthErrorCodesType>;
         setErrorResponse(err);
         console.error("Login failed", error.response.data);
       },

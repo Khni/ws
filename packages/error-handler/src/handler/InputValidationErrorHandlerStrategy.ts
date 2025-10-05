@@ -2,7 +2,7 @@ import type { Response } from "express";
 
 import { IErrorHandlingStrategy } from "./interfaces/IErrorHandlingStrategy.js";
 import { InputValidationError } from "../errors/InputValidationError.js";
-import { ILogger } from "../errors/types.js";
+import { ErrorResponse, ILogger } from "../errors/types.js";
 
 export class InputValidationErrorHandlerStrategy
   implements IErrorHandlingStrategy
@@ -18,7 +18,11 @@ export class InputValidationErrorHandlerStrategy
     if (this.logger) {
       this.logger.warn("InputValidationError", error);
     }
+    const inputValidationError: ErrorResponse<unknown> = {
+      errorType: "InputValidation",
+      error,
+    };
 
-    res.status(400).json(error);
+    res.status(400).json(inputValidationError);
   }
 }

@@ -28,6 +28,8 @@
       "OTP_VERIFICATION_FAILED": "فشل في التحقق من رمز التحقق (OTP)."
     }
   },
+  "error": "خطأ",
+  "unknownError": "حدث خطأ غير معروف.",
   "search": "بحث...",
   "loading": "جاري التحميل...",
   "name": "الاسم",

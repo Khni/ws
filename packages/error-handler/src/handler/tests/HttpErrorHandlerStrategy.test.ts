@@ -3,9 +3,14 @@ import { IErrorHandlingStrategy } from "../interfaces/IErrorHandlingStrategy.js"
 import { HttpErrorHandlerStrategy } from "../HttpErrorHandlerStrategy.js";
 import { mockHttpErrorSerializer } from "../../serializers/interfaces/mocks.js";
 import { HttpError } from "../../errors/HttpError.js";
-import { httpErrorConstructor, serializeErrorReturnValue } from "./data.js";
+import {
+  errorResponse,
+  httpErrorConstructor,
+  serializeErrorReturnValue,
+} from "./data.js";
 import { mockLogger, mockResponse } from "../mocks.js";
 import type { Response } from "express";
+import { ErrorResponse } from "../../errors/types.js";
 describe("HttpErrorHandlerStrategy", () => {
   let httpErrorHandlerStrategy: IErrorHandlingStrategy;
   let res: Response;
@@ -33,22 +38,14 @@ describe("HttpErrorHandlerStrategy", () => {
   });
 
   it("call res.status and res.json and not call httpErrorSerializer.serializerError and log[logLevel] when logger is not passed when creating HttpErrorStrategyHandler instance ", () => {
-    mockHttpErrorSerializer.serializeResponse.mockReturnValue({
-      message: "message",
-      code: "code",
-      name: "name",
-    });
+    mockHttpErrorSerializer.serializeResponse.mockReturnValue(errorResponse);
     httpErrorHandlerStrategy.handle(
       new HttpErrorInstance(httpErrorConstructor),
       res
     );
 
     expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.json).toHaveBeenCalledWith({
-      message: "message",
-      code: "code",
-      name: "name",
-    });
+    expect(res.json).toHaveBeenCalledWith(errorResponse);
     expect(mockHttpErrorSerializer.serializerError).not.toHaveBeenCalled();
     expect(mockLogger.warn).not.toHaveBeenCalled();
   });
@@ -57,11 +54,7 @@ describe("HttpErrorHandlerStrategy", () => {
       mockHttpErrorSerializer,
       mockLogger
     );
-    mockHttpErrorSerializer.serializeResponse.mockReturnValue({
-      message: "message",
-      code: "code",
-      name: "name",
-    });
+    mockHttpErrorSerializer.serializeResponse.mockReturnValue(errorResponse);
     mockHttpErrorSerializer.serializerError.mockReturnValue(
       serializeErrorReturnValue
     );

@@ -1,6 +1,6 @@
 import { th } from "zod/v4/locales";
 import { IToken, ValidTimeString } from "../token/IToken.js";
-import { AuthDomainError } from "../errors/AuthDomainError.js";
+import { AuthDomainError } from "@khaled/auth-errors";
 import jwt from "jsonwebtoken";
 
 const { TokenExpiredError } = jwt; //to fix 'jsonwebtoken' does not provide an export named 'TokenExpiredError'

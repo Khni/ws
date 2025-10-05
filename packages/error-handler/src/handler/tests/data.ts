@@ -1,4 +1,4 @@
-import { HttpErrorConstructor } from "../../errors/types.js";
+import { ErrorResponse, HttpErrorConstructor } from "../../errors/types.js";
 
 export const httpErrorConstructor: HttpErrorConstructor = {
   message: "Failed to fetch resource from API.",
@@ -32,4 +32,13 @@ export const serializeErrorReturnValue = {
       message: "Database connection timeout",
     },
   ],
+};
+
+export const errorResponse: ErrorResponse = {
+  errorType: "Server",
+  error: {
+    message: "message",
+    code: "code",
+    name: "name",
+  },
 };

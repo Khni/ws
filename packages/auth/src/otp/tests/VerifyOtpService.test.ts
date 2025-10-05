@@ -1,7 +1,7 @@
 import { describe, beforeEach, it, expect, vi } from "vitest";
 import { VerifyOtpService } from "../VerifyOtpService.js";
-import { AuthDomainError } from "../../errors/AuthDomainError.js";
-import { AuthUnexpectedError } from "../../errors/AuthUnexpectedError.js";
+import { AuthDomainError } from "@khaled/auth-errors";
+import { AuthUnexpectedError } from "@khaled/auth-errors";
 import { mockOtpRepository } from "../../repositories/interfaces/mocks.js";
 import { mockHasher } from "../../hasher/mocks.js";
 import { fakeOtpRecord } from "./data.js";

@@ -1,6 +1,6 @@
 import { describe, beforeEach, it, expect, vi, Mocked } from "vitest";
 import { CreateOtpService } from "../CreateOtpService.js";
-import { AuthUnexpectedError } from "../../errors/AuthUnexpectedError.js";
+import { AuthUnexpectedError } from "@khaled/auth-errors";
 import { mockOtpRepository } from "../../repositories/interfaces/mocks.js";
 import { mockHasher } from "../../hasher/mocks.js";
 import { mockOtpSenderStrategy } from "../interfaces/mocks.js";

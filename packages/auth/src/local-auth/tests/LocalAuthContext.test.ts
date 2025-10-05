@@ -3,8 +3,8 @@ import { mockHasher } from "../../hasher/mocks.js";
 import { mockedUser } from "./data.js";
 import { LocalAuthContext } from "../LocalAuthContext.js";
 import { ILocalUserStrategy } from "../interfaces/ILocalUserStrategy.js";
-import { AuthDomainError } from "../../errors/AuthDomainError.js";
-import { AuthUnexpectedError } from "../../errors/AuthUnexpectedError.js";
+import { AuthDomainError } from "@khaled/auth-errors";
+import { AuthUnexpectedError } from "@khaled/auth-errors";
 import {
   mockUserEmailStrategy,
   mockUserPhoneStrategy,

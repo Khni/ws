@@ -2,7 +2,7 @@ import { Response } from "express";
 
 import { IErrorHandlingStrategy } from "./interfaces/IErrorHandlingStrategy.js";
 
-import { ILogger } from "../errors/types.js";
+import { ErrorResponse, ILogger } from "../errors/types.js";
 
 export class FallbackErrorStrategy implements IErrorHandlingStrategy {
   constructor(private logger?: ILogger) {}
@@ -27,13 +27,14 @@ export class FallbackErrorStrategy implements IErrorHandlingStrategy {
 
   handle(err: Error, res: Response): void {
     this.log(err);
-
-    res
-      .status(500)
-      .json({
+    const error: ErrorResponse<unknown> = {
+      errorType: "Server",
+      error: {
         code: "UNKNOWN_ERROR",
         message: "An Expected error occurred.",
         name: "unknown",
-      });
+      },
+    };
+    res.status(500).json(error);
   }
 }

@@ -1,5 +1,5 @@
 import { ValidTimeString } from "@khaled/utils";
-import { AuthUnexpectedError } from "../errors/AuthUnexpectedError.js";
+import { AuthUnexpectedError } from "@khaled/auth-errors";
 import { BcryptHasher } from "../hasher/BcryptHasher.js";
 import { IHasher } from "../hasher/IHasher.js";
 import { IOtpRepository } from "../repositories/interfaces/IOtpRepository.js";
