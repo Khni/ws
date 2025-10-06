@@ -2,11 +2,17 @@
 
 import { useVerifyOtp } from "@/api";
 import { VerifyOtp200, VerifyOtpBody } from "@/api/model";
+import { ErrorResponse, AuthErrorCodesType } from "@khaled/ims-shared";
+import { Dispatch, SetStateAction } from "react";
 
 export function useVerifyOtpHandler({
   onSuccess,
+  setErrorResponse,
 }: {
   onSuccess?: (data: VerifyOtp200) => void;
+  setErrorResponse: Dispatch<
+    SetStateAction<ErrorResponse<AuthErrorCodesType> | undefined>
+  >;
 }) {
   const { mutate: verifyOtpMutate, isPending } = useVerifyOtp({
     request: {
@@ -24,7 +30,10 @@ export function useVerifyOtpHandler({
         onSuccess?.(data);
       },
       onError: (error) => {
-        console.error("VerifyOtp failed", error);
+        setErrorResponse(
+          error.response?.data as ErrorResponse<AuthErrorCodesType>
+        );
+        console.error("OTP verification failed", error);
       },
     },
   });

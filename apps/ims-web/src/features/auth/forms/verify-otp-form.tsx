@@ -9,6 +9,9 @@ import CustomForm from "@workspace/ui/core/form/custom-form";
 import OtpField from "@workspace/ui/core/form/otp-field";
 import { useVerifyOtpHandler } from "@/features/auth/hooks/useVerifyOtpHandler";
 import { OtpRequestStorage } from "@/features/auth/hooks/useRequestOtpHandler";
+import { ErrorAlert } from "@workspace/ui/core/ErrorAlert";
+import { useState } from "react";
+import { AuthErrorCodesType, ErrorResponse } from "@khaled/ims-shared";
 
 //----changeable
 const schema = z.object({
@@ -31,8 +34,11 @@ const Form = ({ onNext }: Props) => {
     resolver: zodResolver(schema),
     defaultValues: defaultValues,
   });
+  const [errorResponse, setErrorResponse] =
+    useState<ErrorResponse<AuthErrorCodesType>>();
 
   //---changeable
+  const authErrors = useTranslations("auth.errors");
 
   const formTitleFallback = t("verifyOtpFormCardTitle");
 
@@ -48,6 +54,7 @@ const Form = ({ onNext }: Props) => {
   } as const;
   const { isPending, submit } = useVerifyOtpHandler({
     onSuccess: () => onNext(),
+    setErrorResponse,
   });
   const onSubmit = (data: { otp: string }) => {
     try {
@@ -77,6 +84,12 @@ const Form = ({ onNext }: Props) => {
             <OtpField key={name} form={form} label={label} name={name} />
           )
       )}
+      <ErrorAlert
+        errorTitle={t("error")}
+        errorDescriptionFallback={t("unknownError")}
+        error={errorResponse}
+        codeTransform={(code) => authErrors(code)}
+      />
     </CustomForm>
   );
 };

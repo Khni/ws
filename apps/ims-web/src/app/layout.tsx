@@ -3,6 +3,7 @@ import { Cairo, Geist, Geist_Mono, Roboto } from "next/font/google";
 import "@workspace/ui/globals.css";
 import { Providers } from "@/components/providers";
 import LocaleProvider from "@/providers/locale-provider";
+
 import { getLocale } from "next-intl/server";
 
 const fontSans = Geist({
@@ -44,7 +45,7 @@ export default async function RootLayout({
       <body
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >
-        <Providers>
+        <Providers dir={dir}>
           <LocaleProvider>{children}</LocaleProvider>
         </Providers>
       </body>
