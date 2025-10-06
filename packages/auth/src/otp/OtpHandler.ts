@@ -1,12 +1,10 @@
+import { AuthDomainError, AuthDomainErrorCodes } from "@khaled/auth-errors";
 import { identifierSchema } from "../schemas/index.js";
-import { IToken, ValidTimeString } from "../token/IToken.js";
-import { Jwt } from "../token/Jwt.js";
-import { CreateOtpService } from "./CreateOtpService.js";
+
 import { ICreateOtpService } from "./interfaces/ICreateOtpService.js";
 import { IOtpToken } from "./interfaces/IOtpToken.js";
 import { IVerifyOtpService } from "./interfaces/IVerifyOtpService.js";
 import { OtpSenderType, OtpTypeToOtpTokenExpiresInMapping } from "./types.js";
-import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken";
 
 export class OtpHandler<OtpType extends string> {
   constructor(
@@ -48,6 +46,8 @@ export class OtpHandler<OtpType extends string> {
 
       { expiresIn: this.otpTypeToOtpTokenExpiresInMapping[otpType] }
     );
+    console.log("RequestedData:", { identifier, otpType, otp, token });
+    console.log("Request token:", token);
     return token;
   };
 
@@ -60,6 +60,8 @@ export class OtpHandler<OtpType extends string> {
     token: string;
     otpType: OtpType;
   }) {
+    console.log("Verify token:", token);
+    console.log("Verifying OTP of type:", otpType);
     const payload = this.verifyToken({ token, otpType });
 
     await this.verifyOtpService.execute({
@@ -68,7 +70,7 @@ export class OtpHandler<OtpType extends string> {
       identifier: payload?.identifier,
     });
 
-    return this.tokenService.sign(
+    const _token = this.tokenService.sign(
       {
         identifier: payload.identifier,
         otpType: payload.otpType,
@@ -76,6 +78,8 @@ export class OtpHandler<OtpType extends string> {
       },
       { expiresIn: this.otpTypeToOtpTokenExpiresInMapping[otpType] }
     );
+
+    return _token;
   }
   private verifyToken = ({
     token,
@@ -84,7 +88,15 @@ export class OtpHandler<OtpType extends string> {
     token: string;
     otpType: OtpType;
   }) => {
-    const payload = this.tokenService.verify(token);
+    console.log("Verifying token:", token);
+    let payload: { identifier: string; otpType: OtpType; verified: boolean };
+    try {
+      payload = this.tokenService.verify(token);
+    } catch (error: any) {
+      console.log(error);
+      throw new AuthDomainError("OTP_TOKEN_INVALID", error.message);
+    }
+
     if (payload.otpType !== otpType) {
       throw new Error("Invalid OtpType for Token");
     }

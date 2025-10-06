@@ -25,7 +25,19 @@
       "REFRESHTOKEN_VERIFY_FAILED": "فشل في التحقق من رمز التحديث.",
       "LOGIN_FAILED": "فشل تسجيل الدخول.",
       "OTP_CREATION_FAILED": "فشل في إنشاء رمز التحقق (OTP).",
-      "OTP_VERIFICATION_FAILED": "فشل في التحقق من رمز التحقق (OTP)."
+      "OTP_VERIFICATION_FAILED": "فشل في التحقق من رمز التحقق (OTP).",
+      "OTP_TOKEN_INVALID": "يرجى طلب رمز تحقق جديد (OTP)."
+    },
+    "form": {
+      "forgetPassword": "نسيت كلمة المرور؟",
+      "resetPassword": "إعادة تعيين كلمة المرور",
+      "newPassword": "كلمة المرور الجديدة",
+      "requestOtp": "طلب رمز  (OTP)",
+      "verifyOtp": "تحقق من رمز  (OTP)",
+      "signUp": "إنشاء حساب",
+      "stepOne": "الخطوة الأولى",
+      "stepTwo": "الخطوة الثانية",
+      "stepThree": "الخطوة الثالثة"
     }
   },
   "error": "خطأ",

@@ -7,45 +7,59 @@ import { useTranslations } from "next-intl";
 import CustomForm from "@workspace/ui/core/form/custom-form";
 import InputField from "@workspace/ui/core/form/input-field";
 
-import { useRequestEmailOtpHandler } from "@/features/auth/hooks/useRequestOtpHandler";
-import { OtpType } from "@khaled/ims-shared";
-
 //----changeable
-const schema = z.object({
-  identifier: z.union([z.e164(), z.email()]),
-});
+import {
+  AuthErrorCodesType,
+  ErrorResponse,
+  otpSignUpBodySchema as schema,
+} from "@khaled/ims-shared";
+import { useRegisterHandler } from "@/features/auth/hooks/useSignUpHandler";
+import { useState } from "react";
+import { ErrorAlert } from "@workspace/ui/core/ErrorAlert";
+
+const defaultValues: z.infer<typeof schema> = {
+  password: "",
+  name: "",
+};
 
 //----
 
 export type Props = {
   onNext: () => void;
   onBack: () => void;
-  otpType: OtpType;
 };
-const Form = ({ onNext, otpType }: Props) => {
+const Form = ({}: Props) => {
   const t = useTranslations();
+
+  const [errorResponse, setErrorResponse] =
+    useState<ErrorResponse<AuthErrorCodesType>>();
+  //---changeable
+  const authErrors = useTranslations("auth.errors");
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
+    defaultValues: defaultValues,
   });
 
   //---changeable
+  const { isPending, submit } = useRegisterHandler({ setErrorResponse });
 
-  const formTitleFallback = t("sendingOtpFormTitle");
+  const formTitleFallback = t("auth.form.signUp");
 
   const submitButtonTextFallBack = t("submitButton");
 
   const isLoadingTextFallBack = t("loading");
   const fields = {
-    email: {
-      label: t("emailLabel"),
-      name: "identifier",
+    password: {
+      label: t("passwordLabel"),
+      name: "password",
+      type: "password",
+    },
+    name: {
+      label: t("name"),
+      name: "name",
       type: "text",
     },
   } as const;
-  const { isPending, submit } = useRequestEmailOtpHandler({
-    otpType: otpType,
-    onSuccess: () => onNext(),
-  });
 
   //---
 
@@ -67,6 +81,12 @@ const Form = ({ onNext, otpType }: Props) => {
           type={type}
         />
       ))}
+      <ErrorAlert
+        error={errorResponse}
+        errorTitle={t("error")}
+        errorDescriptionFallback={t("unknownError")}
+        codeTransform={(code) => authErrors(code)}
+      />
     </CustomForm>
   );
 };

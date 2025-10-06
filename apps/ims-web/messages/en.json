@@ -25,7 +25,19 @@
       "REFRESHTOKEN_VERIFY_FAILED": "Failed to verify refresh token.",
       "LOGIN_FAILED": "Login failed.",
       "OTP_CREATION_FAILED": "Failed to create OTP.",
-      "OTP_VERIFICATION_FAILED": "Failed to verify OTP."
+      "OTP_VERIFICATION_FAILED": "Failed to verify OTP.",
+      "OTP_TOKEN_INVALID": "Please request a new OTP."
+    },
+    "form": {
+      "forgetPassword": "Forget Password?",
+      "resetPassword": "Reset Password",
+      "newPassword": "New Password",
+      "requestOtp": "Request OTP",
+      "verifyOtp": "Verify OTP",
+      "signUp": "Sign Up",
+      "stepOne": "Step 1",
+      "stepTwo": "Step 2",
+      "stepThree": "Step 3"
     }
   },
   "error": "Error",

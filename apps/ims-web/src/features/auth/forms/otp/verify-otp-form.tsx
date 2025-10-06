@@ -40,14 +40,14 @@ const Form = ({ onNext }: Props) => {
   //---changeable
   const authErrors = useTranslations("auth.errors");
 
-  const formTitleFallback = t("verifyOtpFormCardTitle");
+  const formTitleFallback = t("auth.form.verifyOtp");
 
   const submitButtonTextFallBack = t("submitButton");
 
   const isLoadingTextFallBack = t("loading");
   const fields = {
     otp: {
-      label: t("verifyOtpFormCardTitle"),
+      label: t("auth.form.verifyOtp"),
       name: "otp",
       type: "otp",
     },

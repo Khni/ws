@@ -2,9 +2,20 @@
 
 import { useSignUp } from "@/api";
 import { useAuthSuccessHandler } from "@/features/auth/hooks/helpers/useAuthSuccessHandler";
-import { LocalRegisterInput } from "@khaled/ims-shared";
+import {
+  AuthErrorCodesType,
+  ErrorResponse,
+  LocalRegisterInput,
+} from "@khaled/ims-shared";
+import { Dispatch, SetStateAction } from "react";
 
-export function useRegisterHandler() {
+export function useRegisterHandler({
+  setErrorResponse,
+}: {
+  setErrorResponse: Dispatch<
+    SetStateAction<ErrorResponse<AuthErrorCodesType> | undefined>
+  >;
+}) {
   const onAuthSuccess = useAuthSuccessHandler();
 
   const otpToken = localStorage.getItem("otpToken");
@@ -23,7 +34,9 @@ export function useRegisterHandler() {
         });
       },
       onError: (error) => {
-        console.error("Registration failed", error);
+        setErrorResponse(
+          error.response?.data as ErrorResponse<AuthErrorCodesType>
+        );
       },
     },
   });

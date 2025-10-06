@@ -117,7 +117,7 @@ const Form = () => {
           href={ROUTES.auth.forget_password}
           className="ml-auto text-sm underline-offset-2 hover:underline"
         >
-          Forgot your password?
+          {t("auth.form.forgetPassword")}
         </Link>
       </div>
 

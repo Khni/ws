@@ -8,47 +8,55 @@ import CustomForm from "@workspace/ui/core/form/custom-form";
 import InputField from "@workspace/ui/core/form/input-field";
 
 //----changeable
-import { otpSignUpBodySchema as schema } from "@khaled/ims-shared";
-import { useRegisterHandler } from "@/features/auth/hooks/useRegsitrationHandler";
+import {
+  AuthErrorCodes,
+  AuthErrorCodesType,
+  ErrorResponse,
+  resetForgettenPasswordBodySchema as schema,
+} from "@khaled/ims-shared";
+import { useForgetPasswordHandler } from "@/features/auth/hooks/useForgetPasswordHandler";
+import { ErrorAlert } from "@workspace/ui/core/ErrorAlert";
+import { useState } from "react";
 
-const defaultValues: z.infer<typeof schema> = {
-  password: "",
-  name: "",
+const defaultValues = {
+  newPassword: "",
+  confirmNewPassword: "",
 };
 
 //----
 
-export type Props = {
-  onNext: () => void;
-  onBack: () => void;
-};
-const Form = ({}: Props) => {
+const Form = () => {
   const t = useTranslations();
+  const authErrors = useTranslations("auth.errors");
+  const [errorResponse, setErrorResponse] =
+    useState<ErrorResponse<AuthErrorCodesType>>();
+  //---changeable
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues,
   });
 
   //---changeable
-  const { isPending, submit } = useRegisterHandler();
 
-  const formTitleFallback = t("registration");
+  const formTitleFallback = t("forgetPassword");
 
   const submitButtonTextFallBack = t("submitButton");
 
   const isLoadingTextFallBack = t("loading");
   const fields = {
-    password: {
-      label: t("passwordLabel"),
-      name: "password",
+    newPassword: {
+      label: t("newPassword"),
+      name: "newPassword",
       type: "password",
     },
-    name: {
-      label: t("name"),
-      name: "name",
-      type: "text",
+    confirmNewPassword: {
+      label: t("confirmPassword"),
+      name: "confirmNewPassword",
+      type: "password",
     },
   } as const;
+
+  const { isPending, submit } = useForgetPasswordHandler({ setErrorResponse });
 
   //---
 
@@ -70,6 +78,12 @@ const Form = ({}: Props) => {
           type={type}
         />
       ))}
+      <ErrorAlert
+        error={errorResponse}
+        errorTitle={t("error")}
+        errorDescriptionFallback={t("unknownError")}
+        codeTransform={(code) => authErrors(code)}
+      />
     </CustomForm>
   );
 };

@@ -3,19 +3,24 @@
 import { useRequestOtp } from "@/api";
 import { RequestOtp200, RequestOtpBody } from "@/api/model";
 
-import { OtpType } from "@khaled/ims-shared";
+import { AuthErrorCodesType, ErrorResponse, OtpType } from "@khaled/ims-shared";
+import { Dispatch, SetStateAction } from "react";
 
 export type OtpRequestStorage = {
   identifier: string;
   otpType: OtpType;
   createdAt: number;
 };
-export function useRequestEmailOtpHandler({
+export function useRequestOtpHandler({
   otpType,
   onSuccess,
+  setErrorResponse,
 }: {
   otpType: OtpType;
   onSuccess?: (data: RequestOtp200) => void;
+  setErrorResponse: Dispatch<
+    SetStateAction<ErrorResponse<AuthErrorCodesType> | undefined>
+  >;
 }) {
   const { mutate: requestOtpMutate, isPending } = useRequestOtp({
     mutation: {
@@ -30,12 +35,15 @@ export function useRequestEmailOtpHandler({
             createdAt: Date.now(),
           })
         );
+        console.log("Storing otp token:", data.token);
         localStorage.setItem("otpToken", data.token);
 
         onSuccess?.(data);
       },
       onError: (error) => {
-        console.error("RequestOtp failed", error);
+        setErrorResponse(
+          error.response?.data as ErrorResponse<AuthErrorCodesType>
+        );
       },
     },
   });

@@ -42,7 +42,11 @@ import { UserService } from "./user/services/UserService.js";
 import { UserType } from "./user/types.js";
 import { LocalLoginService } from "./user/services/LocalLoginService.js";
 import { LocalRegistrationService } from "./user/services/LocalRegistrationService.js";
-import { generateExpiredDate, parseTimeString } from "@khaled/utils";
+import {
+  generateExpiredDate,
+  parseTimeString,
+  ValidTimeString,
+} from "@khaled/utils";
 import { handleSocialUser } from "./user/services/handleSocialUser.js";
 import { IOtpRepository } from "./user/interfaces/IOtpRepository .js";
 
@@ -66,8 +70,8 @@ export const appDeps = {
   ).scoped(),
   userRepository: asClass(UserRepository).scoped(),
   otpRepository: asClass(enforceClass<IOtpRepository>(OtpRepository)).scoped(),
-  refreshTokenExpiresIn: asValue("15d"),
-  accessTokenExpiresIn: asValue("1m"),
+  refreshTokenExpiresIn: asValue(enforceValue<ValidTimeString>("15d")),
+  accessTokenExpiresIn: asValue(enforceValue<ValidTimeString>("10m")),
   //values
   otpTypeToOtpTokenExpiresInMapping: asValue({
     [OtpType.SIGN_UP]: "10m",
@@ -185,11 +189,6 @@ export const appDeps = {
     },
     templateDir: "templates",
   }),
-  expiresAt: asFunction(() => {
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 15);
-    return expiresAt;
-  }).scoped(),
 };
 type AppDeps = {
   [K in keyof typeof appDeps]: (typeof appDeps)[K] extends Resolver<infer T>

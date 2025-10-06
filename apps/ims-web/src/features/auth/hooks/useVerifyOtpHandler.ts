@@ -33,7 +33,6 @@ export function useVerifyOtpHandler({
         setErrorResponse(
           error.response?.data as ErrorResponse<AuthErrorCodesType>
         );
-        console.error("OTP verification failed", error);
       },
     },
   });

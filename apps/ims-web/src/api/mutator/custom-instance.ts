@@ -1,5 +1,6 @@
 // custom-instance.ts
 
+import { AuthErrorCodesType, ErrorResponse } from "@khaled/ims-shared";
 import Axios, { AxiosError, AxiosRequestConfig } from "axios";
 
 const baseURL = process.env.NEXT_PUBLIC_BASEURL;
@@ -33,10 +34,21 @@ export const AXIOS_INSTANCE = Axios.create({
 
 // Request interceptor: add token
 AXIOS_INSTANCE.interceptors.request.use((config: any) => {
-  const token = localStorage.getItem("accessToken");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  // If Authorization header already exists and starts with 'Bearer', skip attaching anything
+  const hasBearerAlready =
+    typeof config.headers?.Authorization === "string" &&
+    config.headers.Authorization.trim().toLowerCase().startsWith("bearer");
+
+  if (!hasBearerAlready) {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers = {
+        ...config.headers,
+        Authorization: `Bearer ${token}`,
+      };
+    }
   }
+
   return config;
 });
 
@@ -49,8 +61,7 @@ AXIOS_INSTANCE.interceptors.response.use(
     };
 
     if (error.response?.status === 401) {
-      const errData = error.response.data as any;
-      console.log(errData);
+      const errData = error.response.data as ErrorResponse<AuthErrorCodesType>;
 
       // 🔹 Case 1: Wrong login credentials — do not refresh
       // if (errData?.code === "INCORRECT_CREDENTIALS") {
@@ -59,8 +70,10 @@ AXIOS_INSTANCE.interceptors.response.use(
 
       // 🔹 Case 2: Token expired or invalid — try refresh
       if (
-        (errData?.code === "INVALID_ACCESS_TOKEN" ||
-          errData?.code === "EXPIRED_ACCESS_TOKEN") &&
+        errData.errorType === "Server" &&
+        (errData?.error.code === "INVALID_ACCESS_TOKEN" ||
+          errData?.error.code === "EXPIRED_ACCESS_TOKEN" ||
+          errData?.error.code === "MISSING_ACCESS_TOKEN") &&
         !originalRequest._retry
       ) {
         if (isRefreshing) {

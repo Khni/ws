@@ -3,10 +3,22 @@
 import { useResetForgettenPassword } from "@/api";
 
 import { ROUTES } from "@/constants";
-import { ResetForgettenPasswordInput } from "@khaled/ims-shared";
+import {
+  AuthErrorCodesType,
+  ErrorResponse,
+  ResetForgettenPasswordInput,
+} from "@khaled/ims-shared";
 import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction } from "react";
+import { set } from "zod";
 
-export function useForgetPasswordHandler() {
+export function useForgetPasswordHandler({
+  setErrorResponse,
+}: {
+  setErrorResponse: Dispatch<
+    SetStateAction<ErrorResponse<AuthErrorCodesType> | undefined>
+  >;
+}) {
   const router = useRouter();
   const otpToken = localStorage.getItem("otpToken");
   const { mutate: forgetPasswordMutate, isPending } = useResetForgettenPassword(
@@ -21,7 +33,9 @@ export function useForgetPasswordHandler() {
           router.replace(ROUTES.auth.index);
         },
         onError: (error) => {
-          console.error("ForgetPassword failed", error);
+          setErrorResponse(
+            error.response?.data as ErrorResponse<AuthErrorCodesType>
+          );
         },
       },
     }

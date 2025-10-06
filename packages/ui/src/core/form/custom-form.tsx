@@ -53,7 +53,7 @@ const CustomForm = <T extends FieldValues>({
   submitButtonVariant = "default",
   onSubmit,
   footerContent,
-  className = "w-full max-w-md mx-auto",
+  className,
   formClassName = "space-y-6",
   isLoading,
   isLoadingText = "isLoading...",

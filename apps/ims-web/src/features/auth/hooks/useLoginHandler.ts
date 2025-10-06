@@ -4,7 +4,6 @@ import { useLogin } from "@/api";
 import { LocalLoginInput } from "@/api/model";
 import { useAuthSuccessHandler } from "@/features/auth/hooks/helpers/useAuthSuccessHandler";
 import { Dispatch, SetStateAction } from "react";
-import { parseServerError } from "@khaled/utils";
 
 import { AuthErrorCodesType, ErrorResponse } from "@khaled/ims-shared";
 export function useLoginHandler({

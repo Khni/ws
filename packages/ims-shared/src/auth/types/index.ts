@@ -31,7 +31,7 @@ export const OtpEnum = {
   SIGN_UP: "SIGN_UP",
   LOGIN: "LOGIN",
   FORGET_PASSWORD: "FORGET_PASSWORD",
-};
+} as const;
 export type OtpType = keyof typeof OtpEnum;
 export type CreateOtpBodyType = {
   email: string;
