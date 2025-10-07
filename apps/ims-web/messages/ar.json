@@ -2,7 +2,7 @@
   "auth": {
     "errors": {
       "AUTH_USED_EMAIL": "هذا البريد الإلكتروني مسجل بالفعل.",
-      "AUTH_USED_IDENTIFIER": "هذا المعرّف مستخدم بالفعل.",
+      "AUTH_USED_IDENTIFIER": "هذا البريد الإلكتروني مستخدم بالفعل.",
       "AUTH_UNVERIFIED_EMAIL": "لم يتم التحقق من بريدك الإلكتروني.",
       "INCORRECT_CREDENTIALS": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
       "USER_NOT_LOCAL": "هذا المستخدم مسجل عبر مزود خارجي.",
@@ -12,7 +12,8 @@
       "EXPIRED_ACCESS_TOKEN": "انتهت صلاحية رمز الوصول.",
       "MISSING_ACCESS_TOKEN": "رمز الوصول مفقود.",
       "MISSING_REFRESH_TOKEN": "رمز التحديث مفقود.",
-      "EMAIL_IS_NOT_EXIST": "هذا البريد الإلكتروني غير موجود.",
+      "USER_IS_NOT_EXIST": "هذا البريد الإلكتروني غير موجود.",
+
       "OTP_INVALID": "رمز التحقق (OTP) غير صالح.",
       "OTP_EXPIRED": "انتهت صلاحية رمز التحقق (OTP).",
       "TOKEN_EXPIRED": "انتهت صلاحية الرمز.",

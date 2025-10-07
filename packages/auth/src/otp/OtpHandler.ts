@@ -15,7 +15,11 @@ export class OtpHandler<OtpType extends string> {
 
     private indetifierTypeToSenderTypeMapping: {
       [key in "email" | "phone"]: OtpSenderType;
-    }
+    },
+    private callBackBeforeRequestOtp?: (params: {
+      identifier: string;
+      otpType: OtpType;
+    }) => Promise<void>
   ) {}
 
   request = async ({
@@ -28,6 +32,8 @@ export class OtpHandler<OtpType extends string> {
     otpType: OtpType;
   }) => {
     const { type, value } = identifierSchema.parse(identifier);
+    this.callBackBeforeRequestOtp &&
+      (await this.callBackBeforeRequestOtp({ identifier, otpType }));
     const resolvedSenderType =
       senderType ?? this.indetifierTypeToSenderTypeMapping[type];
     const otp = await this.createOtpService.execute({

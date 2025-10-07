@@ -49,6 +49,7 @@ import {
 } from "@khaled/utils";
 import { handleSocialUser } from "./user/services/handleSocialUser.js";
 import { IOtpRepository } from "./user/interfaces/IOtpRepository .js";
+import { callBackBeforeRequestOtp } from "./user/services/callBackBeforeRequestOtp.js";
 
 function enforceClass<T>(
   c: new (...args: any[]) => T
@@ -97,6 +98,9 @@ export const appDeps = {
         tokenService,
         localAuthService.resetPassword
       )
+  ).scoped(),
+  callBackBeforeRequestOtp: asFunction((userService) =>
+    callBackBeforeRequestOtp(userService)
   ).scoped(),
 
   parseTimeString: asValue(parseTimeString),

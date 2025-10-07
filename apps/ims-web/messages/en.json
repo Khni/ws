@@ -2,7 +2,7 @@
   "auth": {
     "errors": {
       "AUTH_USED_EMAIL": "This email is already registered.",
-      "AUTH_USED_IDENTIFIER": "This identifier is already in use.",
+      "AUTH_USED_IDENTIFIER": "This Email is already in use.",
       "AUTH_UNVERIFIED_EMAIL": "Your email address is not verified.",
       "INCORRECT_CREDENTIALS": "Incorrect email or password.",
       "USER_NOT_LOCAL": "This user is registered with an external provider.",
