@@ -17,6 +17,7 @@ import {
 import { useForgetPasswordHandler } from "@/features/auth/hooks/useForgetPasswordHandler";
 import { ErrorAlert } from "@workspace/ui/core/ErrorAlert";
 import { useState } from "react";
+import { getFieldErrors } from "@workspace/ui/core/getFieldErrors";
 
 const defaultValues = {
   newPassword: "",
@@ -70,13 +71,10 @@ const Form = () => {
       isLoading={isPending}
     >
       {Object.values(fields).map(({ label, name, type }) => (
-        <InputField
-          key={name}
-          form={form}
-          label={label}
-          name={name}
-          type={type}
-        />
+        <div key={name}>
+          <InputField form={form} label={label} name={name} type={type} />
+          {getFieldErrors(name, errorResponse)}
+        </div>
       ))}
       <ErrorAlert
         error={errorResponse}

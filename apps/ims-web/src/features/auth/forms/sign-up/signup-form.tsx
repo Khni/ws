@@ -16,6 +16,7 @@ import {
 import { useRegisterHandler } from "@/features/auth/hooks/useSignUpHandler";
 import { useState } from "react";
 import { ErrorAlert } from "@workspace/ui/core/ErrorAlert";
+import { getFieldErrors } from "@workspace/ui/core/getFieldErrors";
 
 const defaultValues: z.infer<typeof schema> = {
   password: "",
@@ -73,13 +74,10 @@ const Form = ({}: Props) => {
       isLoading={isPending}
     >
       {Object.values(fields).map(({ label, name, type }) => (
-        <InputField
-          key={name}
-          form={form}
-          label={label}
-          name={name}
-          type={type}
-        />
+        <div key={name}>
+          <InputField form={form} label={label} name={name} type={type} />
+          {getFieldErrors(name, errorResponse)}
+        </div>
       ))}
       <ErrorAlert
         error={errorResponse}

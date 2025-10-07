@@ -12,6 +12,7 @@ import { OtpRequestStorage } from "@/features/auth/hooks/useRequestOtpHandler";
 import { ErrorAlert } from "@workspace/ui/core/ErrorAlert";
 import { useState } from "react";
 import { AuthErrorCodesType, ErrorResponse } from "@khaled/ims-shared";
+import { getFieldErrors } from "@workspace/ui/core/getFieldErrors";
 
 //----changeable
 const schema = z.object({
@@ -78,11 +79,13 @@ const Form = ({ onNext }: Props) => {
       isLoadingText={isLoadingTextFallBack}
       isLoading={isPending}
     >
-      {Object.values(fields).map(
-        ({ label, name, type }) =>
-          type === "otp" && (
-            <OtpField key={name} form={form} label={label} name={name} />
-          )
+      {Object.values(fields).map(({ label, name, type }) =>
+        type === "otp" ? (
+          <div key={name}>
+            <OtpField form={form} label={label} name={name} />
+            {getFieldErrors(name, errorResponse)}
+          </div>
+        ) : null
       )}
       <ErrorAlert
         errorTitle={t("error")}

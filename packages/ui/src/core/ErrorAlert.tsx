@@ -25,32 +25,12 @@ export function ErrorAlert<T extends string>({
   let title = errorTitle;
   let description: React.ReactNode = errorDescriptionFallback;
 
-  if (error) {
+  if (error?.errorType === "Server") {
     switch (error.errorType) {
       case "Server": {
         const { code } = error.error;
 
         description = <span>{codeTransform ? codeTransform(code) : code}</span>;
-        break;
-      }
-
-      case "InputValidation": {
-        const { name, errors } = error.error;
-
-        if (Array.isArray(errors) && errors.length > 0) {
-          description = (
-            <ul className="list-disc list-inside space-y-1">
-              {errors.map((err, idx) => (
-                <li key={idx}>
-                  <span className="font-medium">{err.field}: </span>
-                  {err.messages?.join(", ")}
-                </li>
-              ))}
-            </ul>
-          );
-        } else {
-          description = <span>{errorDescriptionFallback}</span>;
-        }
         break;
       }
 
