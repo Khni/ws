@@ -14,6 +14,8 @@ import { OtpController } from './user/controllers/OtpController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { LocalAuthController } from './user/controllers/LocalAuthController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { CountryController } from './region/controllers/CountryController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { HealthController } from './health-check/HealthController.js';
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
 
@@ -382,6 +384,67 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'logout',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsCountryController_getCountries: Record<string, TsoaRoute.ParameterSchema> = {
+                name: {"in":"query","name":"name","dataType":"string"},
+        };
+        app.get('/country',
+            ...(fetchMiddlewares<RequestHandler>(CountryController)),
+            ...(fetchMiddlewares<RequestHandler>(CountryController.prototype.getCountries)),
+
+            async function CountryController_getCountries(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsCountryController_getCountries, request, response });
+
+                const controller = new CountryController();
+
+              await templateService.apiHandler({
+                methodName: 'getCountries',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsCountryController_getStates: Record<string, TsoaRoute.ParameterSchema> = {
+                countryId: {"in":"path","name":"countryId","required":true,"dataType":"double"},
+                name: {"in":"query","name":"name","dataType":"string"},
+        };
+        app.get('/country/:countryId',
+            ...(fetchMiddlewares<RequestHandler>(CountryController)),
+            ...(fetchMiddlewares<RequestHandler>(CountryController.prototype.getStates)),
+
+            async function CountryController_getStates(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsCountryController_getStates, request, response });
+
+                const controller = new CountryController();
+
+              await templateService.apiHandler({
+                methodName: 'getStates',
                 controller,
                 response,
                 next,

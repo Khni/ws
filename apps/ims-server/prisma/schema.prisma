@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+
   output   = "../generated/prisma"
 }
 
@@ -61,6 +62,8 @@ model User {
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
+
+ 
 }
 
 model UserIdentifier {
@@ -118,4 +121,118 @@ model RefreshToken {
   revokedAt   DateTime?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt()
+}
+
+
+//regions 
+//################################
+//################################
+
+model Region {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  translations Json?
+  wikiDataId  String?
+  subregions  Subregion[]
+  countries   Country[]
+}
+
+model Subregion {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  translations Json?
+  wikiDataId  String?
+  regionId    Int
+  region      Region       @relation(fields: [regionId], references: [id])
+  countries   Country[]
+}
+
+model Currency {
+  id      Int      @id @default(autoincrement())
+  code    String   @unique
+  name    String?
+  symbol  String?
+  countries Country[]
+}
+
+model PhoneCode {
+  id      Int      @id @default(autoincrement())
+  code    String   @unique
+  countries Country[]
+}
+
+model TimeZone {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  offset    String?
+  countries Country[]
+
+  Country Country[] @relation("CountryTimeZones")
+}
+
+model Translation {
+  id        Int      @id @default(autoincrement())
+  language  String
+  value     Json
+  countryId Int?
+  country   Country? @relation(fields: [countryId], references: [id])
+}
+
+model Country {
+  id             Int          @id @default(autoincrement())
+  name           String
+  iso3           String?
+  iso2           String? @unique
+  numericCode    String?
+  capital        String?
+  tld            String?
+  native         String?
+  latitude       String?
+  longitude      String?
+  emoji          String?
+  emojiU         String?
+  wikiDataId     String?
+  regionId       Int?
+  subregionId    Int?
+  currencyId     Int?
+  phoneCodeId    Int?
+  region         Region?      @relation(fields: [regionId], references: [id])
+  subregion      Subregion?   @relation(fields: [subregionId], references: [id])
+  currency       Currency?    @relation(fields: [currencyId], references: [id])
+  phoneCode      PhoneCode?   @relation(fields: [phoneCodeId], references: [id])
+  timezones      TimeZone[]   @relation("CountryTimeZones")
+  translations   Translation[]
+  states         State[]
+
+  TimeZone TimeZone[]
+
+  City City[]
+}
+
+model State {
+  id          Int       @id @default(autoincrement())
+  name        String
+  iso2        String?
+  fipsCode    String?
+  type        String?
+  latitude    String?
+  longitude   String?
+  wikiDataId  String?
+  countryId   Int
+  country     Country    @relation(fields: [countryId], references: [id])
+  cities      City[]
+}
+
+model City {
+  id          Int      @id @default(autoincrement())
+  name        String
+  stateCode   String?
+  countryCode String?
+  latitude    String?
+  longitude   String?
+  wikiDataId  String?
+  stateId     Int
+  countryId   Int
+  state       State     @relation(fields: [stateId], references: [id])
+  country     Country   @relation(fields: [countryId], references: [id])
 }
