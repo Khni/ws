@@ -65,10 +65,14 @@ const Form = ({ onNext, otpType }: Props) => {
       isLoading={isPending}
     >
       {Object.values(fields).map(({ label, name, type }) => (
-        <div key={name}>
-          <InputField form={form} label={label} name={name} type={type} />
-          {getFieldErrors(name, errorResponse)}
-        </div>
+        <InputField
+          key={name}
+          form={form}
+          label={label}
+          name={name}
+          type={type}
+          errorResponse={errorResponse}
+        />
       ))}
       <ErrorAlert
         errorTitle={t("error")}

@@ -21,6 +21,8 @@ import type {
 import type {
   AuthResponseType,
   FacebookLoginParams,
+  GetCountriesParams,
+  GetStatesParams,
   GoogleLoginParams,
   LocalLoginInput,
   Logout200,
@@ -632,6 +634,128 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       return useMutation(mutationOptions );
     }
     
+export const getCountries = (
+    params?: GetCountriesParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<unknown>(
+      {url: `/country`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getGetCountriesQueryKey = (params?: GetCountriesParams,) => {
+    return [`/country`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getGetCountriesQueryOptions = <TData = Awaited<ReturnType<typeof getCountries>>, TError = ErrorType<unknown>>(params?: GetCountriesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCountries>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCountriesQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCountries>>> = ({ signal }) => getCountries(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCountries>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCountriesQueryResult = NonNullable<Awaited<ReturnType<typeof getCountries>>>
+export type GetCountriesQueryError = ErrorType<unknown>
+
+
+
+export function useGetCountries<TData = Awaited<ReturnType<typeof getCountries>>, TError = ErrorType<unknown>>(
+ params?: GetCountriesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCountries>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+  
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetCountriesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions ) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+export const getStates = (
+    countryId: number,
+    params?: GetStatesParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<unknown>(
+      {url: `/country/${countryId}`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getGetStatesQueryKey = (countryId?: number,
+    params?: GetStatesParams,) => {
+    return [`/country/${countryId}`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getGetStatesQueryOptions = <TData = Awaited<ReturnType<typeof getStates>>, TError = ErrorType<unknown>>(countryId: number,
+    params?: GetStatesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getStates>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetStatesQueryKey(countryId,params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getStates>>> = ({ signal }) => getStates(countryId,params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(countryId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getStates>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetStatesQueryResult = NonNullable<Awaited<ReturnType<typeof getStates>>>
+export type GetStatesQueryError = ErrorType<unknown>
+
+
+
+export function useGetStates<TData = Awaited<ReturnType<typeof getStates>>, TError = ErrorType<unknown>>(
+ countryId: number,
+    params?: GetStatesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getStates>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+  
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetStatesQueryOptions(countryId,params,options)
+
+  const query = useQuery(queryOptions ) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
 /**
  * Simple health check endpoint
  */

@@ -23,7 +23,7 @@ import Link from "next/link";
 import { ROUTES } from "@/constants";
 import { useState } from "react";
 import { ErrorAlert } from "@workspace/ui/core/ErrorAlert";
-import { getFieldErrors } from "@workspace/ui/core/getFieldErrors";
+
 const defaultValues = {
   identifier: "",
   password: "",
@@ -103,10 +103,14 @@ const Form = () => {
       isLoading={isPending}
     >
       {Object.values(fields).map(({ label, name, type }) => (
-        <div key={name}>
-          <InputField form={form} label={label} name={name} type={type} />
-          {getFieldErrors(name, errorResponse)}
-        </div>
+        <InputField
+          key={name}
+          form={form}
+          label={label}
+          name={name}
+          type={type}
+          errorResponse={errorResponse}
+        />
       ))}
       <div className="flex items-center">
         <Link

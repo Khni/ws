@@ -1,3 +1,4 @@
+import { ErrorResponse } from "@khaled/error-handler";
 import {
   FormControl,
   FormField,
@@ -5,26 +6,29 @@ import {
   FormLabel,
   FormMessage,
 } from "@workspace/ui/components/form";
-import { Input } from "@workspace/ui/components/input";
+
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@workspace/ui/components/input-otp";
+import { getFieldErrors } from "@workspace/ui/core/getFieldErrors";
 import React from "react";
 
 import { Control, FieldValues, Path, UseFormReturn } from "react-hook-form";
-export type InputFieldProps<T extends FieldValues> = {
+export type InputFieldProps<T extends FieldValues, E> = {
   form: UseFormReturn<T>;
   name: Path<T>;
   label: string;
+  errorResponse?: ErrorResponse<E>;
 };
 
-export const OtpField = <T extends FieldValues>({
+export const OtpField = <T extends FieldValues, E>({
   form,
   name,
   label,
-}: InputFieldProps<T>) => {
+  errorResponse,
+}: InputFieldProps<T, E>) => {
   return (
     <FormField
       control={form.control}
@@ -49,6 +53,7 @@ export const OtpField = <T extends FieldValues>({
               </InputOTPGroup>
             </InputOTP>
           </FormControl>
+          {getFieldErrors(name, errorResponse)}
           <FormMessage />
         </FormItem>
       )}

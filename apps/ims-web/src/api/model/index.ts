@@ -25,3 +25,5 @@ export * from "./userResponseType";
 export * from "./userResponseTypeIdentifierType";
 export * from "./verifyOtp200";
 export * from "./verifyOtpBody";
+export * from './getCountriesParams';
+export * from './getStatesParams';
