@@ -124,6 +124,73 @@ model RefreshToken {
 }
 
 
+// orgnization
+//############################################
+//############################################
+model Language {
+  id        Int       @id @default(autoincrement())
+  code      String    @unique  // ISO 639-1 code like 'en', 'ar', 'fr', etc.
+  name      String    // English name e.g. 'English'
+  nativeName String   // Native name e.g. 'العربية'
+  isDefault Boolean   @default(false)
+  organizations  Organization[]
+}
+
+model IndustryCategory {
+  id        Int       @id @default(autoincrement())
+  code      String    @unique // e.g. "MANUFACTURING"
+  label     String    // e.g. "Manufacturing"
+  organizations  Organization[]
+}
+
+model FiscalYearPattern {
+  id         Int      @id @default(autoincrement())
+  code       String   @unique // e.g. "APR_MAR"
+  label      String   // e.g. "April - March"
+  startMonth Int      // 4
+  endMonth   Int      // 3
+  organizations  Organization[]
+}
+
+model Organization {
+  id                 String      @id @default(uuid())
+  name               String
+
+
+  stateId            Int
+  state              State       @relation(fields: [stateId], references: [id])
+
+  
+  currencyId         Int
+  currency           Currency    @relation(fields: [currencyId], references: [id])
+
+  timeZoneId         Int
+  timeZone           TimeZone    @relation(fields: [timeZoneId], references: [id])
+
+  inventoryStartDate DateTime
+  languageId             Int?
+  language               Language?          @relation(fields: [languageId], references: [id])
+
+  industryCategoryId     Int?
+  industryCategory       IndustryCategory?  @relation(fields: [industryCategoryId], references: [id])
+
+  fiscalYearPatternId    Int?
+  fiscalYearPattern      FiscalYearPattern? @relation(fields: [fiscalYearPatternId], references: [id])
+
+
+  
+
+  // optional fields
+  address            String?
+  zipCode            String?
+  
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  
+}
+
+
 //regions 
 //################################
 //################################
@@ -153,6 +220,8 @@ model Currency {
   name    String?
   symbol  String?
   countries Country[]
+
+  Organization Organization[]
 }
 
 model PhoneCode {
@@ -168,6 +237,8 @@ model TimeZone {
   countries Country[]
 
   Country Country[] @relation("CountryTimeZones")
+
+  Organization Organization[]
 }
 
 model Translation {
@@ -221,6 +292,8 @@ model State {
   countryId   Int
   country     Country    @relation(fields: [countryId], references: [id])
   cities      City[]
+
+  Organization Organization[]
 }
 
 model City {
