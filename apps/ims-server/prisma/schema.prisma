@@ -58,6 +58,14 @@ model User {
   identifiers  UserIdentifier[]
   profile      UserProfile?
   refreshTokens  RefreshToken[]
+  // Relationships
+  userRoles      UserRole[]
+  ownedRoles     Role[]           @relation("RoleOwner")
+  organizations  Organization[]   @relation("OrganizationUsers")
+  ownedOrganizations Organization[] @relation("OrganizationOwner")
+
+  // Audit & Timestamps
+  lastLoginAt    DateTime?
 
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
@@ -177,9 +185,11 @@ model Organization {
   fiscalYearPatternId    Int?
   fiscalYearPattern      FiscalYearPattern? @relation(fields: [fiscalYearPatternId], references: [id])
 
-
-  
-
+  //role relations
+  userRoles      UserRole[]
+  roles          Role[]
+  ownedBy       User       @relation("OrganizationOwner", fields: [ownedById], references: [id])
+  ownedById     String  
   // optional fields
   address            String?
   zipCode            String?
@@ -187,6 +197,11 @@ model Organization {
   createdAt          DateTime    @default(now())
   updatedAt          DateTime    @updatedAt
 
+   
+  
+  users User[] @relation("OrganizationUsers")
+
+  @@unique([name, ownedById] )
   
 }
 
@@ -308,4 +323,265 @@ model City {
   countryId   Int
   state       State     @relation(fields: [stateId], references: [id])
   country     Country   @relation(fields: [countryId], references: [id])
+}
+
+
+//// RoleBased Access Control (RBAC) Models
+//#################################################################
+//#################################################################
+
+// enums for standardization
+enum ActionName {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+  APPROVE
+  REJECT
+  EXPORT
+  IMPORT
+  SHARE
+  ARCHIVE
+  RESTORE
+}
+
+enum ResourceName {
+  USER
+  ROLE
+  ITEM
+  INVOICE
+  CUSTOMER
+  SUPPLIER
+  PURCHASE_ORDER
+  SALES_ORDER
+  WAREHOUSE
+  ORGANIZATION
+  REPORT
+}
+
+// NEW: System-defined custom permissions that don't fit CRUD patterns
+enum SystemCustomPermission {
+
+  //example custom permissions
+  // Financial permissions
+  VIEW_FINANCIAL_REPORTS
+  PROCESS_BULK_PAYMENTS
+  OVERRIDE_PRICING
+  VIEW_COST_PRICES
+  ACCESS_PROFIT_MARGINS
+
+  // Administrative permissions
+  MANAGE_ORGANIZATION_SETTINGS
+  INVITE_USERS
+  MANAGE_BILLING
+  EXPORT_ALL_DATA
+  ACCESS_AUDIT_LOGS
+
+  // Operational permissions
+  OVERRIDE_INVENTORY
+  BYPASS_APPROVAL_WORKFLOWS
+  MANAGE_INTEGRATIONS
+  SCHEDULE_BATCH_OPERATIONS
+  ACCESS_ADMIN_DASHBOARD
+
+  // Data permissions
+  VIEW_SENSITIVE_DATA
+  ACCESS_ALL_RECORDS
+  OVERRIDE_DATA_RETENTION
+}
+
+enum UserRoleStatus {
+  PENDING
+  ACTIVE
+  INACTIVE
+  REJECTED
+  SUSPENDED
+}
+
+
+// =========================================
+// ROLE-BASED PERMISSIONS SYSTEM
+// =========================================
+
+model Role {
+  id                 String              @id @default(uuid())
+  name               String
+  description        String?
+  organization       Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId     String
+  createdBy          User                @relation("RoleOwner", fields: [createdById], references: [id])
+  createdById        String
+
+  // Role metadata
+  isSystem           Boolean             @default(false)
+  status             UserRoleStatus      @default(ACTIVE)
+  priority           Int                 @default(0)
+
+  // Permissions
+  rolePermissions    RolePermission[]
+  roleCustomPermissions RoleCustomPermission[]
+  userRoles          UserRole[]
+
+  // Audit
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  expiresAt          DateTime?
+
+  @@unique([organizationId, name])
+  @@index([organizationId, status, priority])
+}
+
+// Bridge table for User <-> Role many-to-many
+model UserRole {
+  id             String           @id @default(uuid())
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  role           Role             @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId         String
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+
+  // Assignment context
+  assignedBy     String
+  assignedAt     DateTime         @default(now())
+  status         UserRoleStatus   @default(ACTIVE)
+  expiresAt      DateTime?
+
+  // Metadata
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@unique([userId, roleId, organizationId])
+  @@index([userId, status])
+  @@index([roleId, status])
+}
+
+// =========================================
+// SYSTEM PERMISSIONS (Standard CRUD operations)
+// =========================================
+
+model Action {
+  id         Int           @id @default(autoincrement())
+  name       ActionName    @unique
+  description String?
+  permissions Permission[]
+
+ 
+}
+
+model Resource {
+  id         Int           @id @default(autoincrement())
+  name       ResourceName  @unique
+  description String?
+  permissions Permission[]
+
+}
+
+// Standard CRUD permissions
+model Permission {
+  id           Int           @id @default(autoincrement())
+  action       Action        @relation(fields: [actionId], references: [id], onDelete: Cascade)
+  actionId     Int
+  resource     Resource      @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  resourceId   Int
+
+  // Permission metadata
+  description  String?
+  category     String?
+  isDangerous  Boolean       @default(false)
+
+  rolePermissions RolePermission[]
+
+  @@unique([actionId, resourceId])
+  @@index([category, isDangerous])
+}
+
+// =========================================
+// SYSTEM CUSTOM PERMISSIONS (Non-CRUD operations)
+// =========================================
+
+model CustomPermission {
+  id             String         @id @default(uuid())
+  code           SystemCustomPermission @unique // System-defined enum value
+  name           String
+  description    String?
+  category       String         // e.g., "FINANCIAL", "ADMINISTRATIVE", "OPERATIONAL"
+  riskLevel      String         @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+
+  // System metadata
+  isActive       Boolean        @default(true)
+  requiresApproval Boolean      @default(false) // High-risk permissions need approval
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  // Relationships
+  roleCustomPermissions RoleCustomPermission[]
+
+  @@index([category, riskLevel])
+  @@index([code, isActive])
+}
+
+// =========================================
+// LINK ROLE ↔ PERMISSIONS (many-to-many)
+// =========================================
+
+model RolePermission {
+  id             Int           @id @default(autoincrement())
+  role           Role          @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId         String
+  permission     Permission    @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  permissionId   Int
+
+  // Additional context for permission assignment
+  conditions     Json?
+  grantedAt      DateTime      @default(now())
+  grantedBy      String
+
+  @@unique([roleId, permissionId])
+  @@index([roleId])
+}
+
+model RoleCustomPermission {
+  id                 Int                 @id @default(autoincrement())
+  role               Role                @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId             String
+  customPermission   CustomPermission    @relation(fields: [customPermissionId], references: [id], onDelete: Cascade)
+  customPermissionId String
+
+  // Additional context for high-risk permissions
+  conditions         Json?
+  approvalRequired   Boolean             @default(false)
+  approvedBy         String?             // User ID who approved this permission
+  approvedAt         DateTime?
+  grantedAt          DateTime            @default(now())
+  grantedBy          String
+
+  @@unique([roleId, customPermissionId])
+  @@index([roleId])
+  @@index([customPermissionId, approvalRequired])
+  permissionApprovals PermissionApproval[]
+}
+
+// =========================================
+// PERMISSION APPROVAL WORKFLOW (Optional enhancement)
+// =========================================
+
+model PermissionApproval {
+  id                  String              @id @default(uuid())
+  roleCustomPermission RoleCustomPermission @relation(fields: [roleCustomPermissionId], references: [id])
+  roleCustomPermissionId Int
+
+  requestedBy         String              // User ID who requested
+  requestedAt         DateTime            @default(now())
+  approvedBy          String?             // User ID who approved
+  approvedAt          DateTime?
+  rejectedBy          String?
+  rejectedAt          DateTime?
+  reason              String?             // Justification for request
+  comments            String?             // Approver/rejector comments
+
+  status              String              @default("PENDING") // PENDING, APPROVED, REJECTED
+
+  @@index([requestedAt, status])
+  @@index([roleCustomPermissionId])
 }

@@ -127,6 +127,96 @@
 					"newPassword"
 				],
 				"type": "object"
+			},
+			"Prisma.OrganizationCreateManyInput": {
+				"properties": {
+					"updatedAt": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date-time"
+							},
+							{
+								"type": "string"
+							}
+						]
+					},
+					"createdAt": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date-time"
+							},
+							{
+								"type": "string"
+							}
+						]
+					},
+					"zipCode": {
+						"type": "string",
+						"nullable": true
+					},
+					"address": {
+						"type": "string",
+						"nullable": true
+					},
+					"ownedById": {
+						"type": "string"
+					},
+					"fiscalYearPatternId": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"industryCategoryId": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"languageId": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"inventoryStartDate": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date-time"
+							},
+							{
+								"type": "string"
+							}
+						]
+					},
+					"timeZoneId": {
+						"type": "number",
+						"format": "double"
+					},
+					"currencyId": {
+						"type": "number",
+						"format": "double"
+					},
+					"stateId": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"ownedById",
+					"inventoryStartDate",
+					"timeZoneId",
+					"currencyId",
+					"stateId",
+					"name"
+				],
+				"type": "object"
 			}
 		},
 		"securitySchemes": {}
@@ -508,7 +598,25 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"items": {
+										"properties": {
+											"name": {
+												"type": "string"
+											},
+											"id": {
+												"type": "number",
+												"format": "double"
+											}
+										},
+										"required": [
+											"name",
+											"id"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								}
 							}
 						}
 					}
@@ -537,7 +645,25 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"items": {
+										"properties": {
+											"name": {
+												"type": "string"
+											},
+											"id": {
+												"type": "number",
+												"format": "double"
+											}
+										},
+										"required": [
+											"name",
+											"id"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								}
 							}
 						}
 					}
@@ -565,6 +691,107 @@
 						}
 					}
 				]
+			}
+		},
+		"/organization": {
+			"post": {
+				"operationId": "CreateOrgnization",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"ownedById": {
+											"type": "string"
+										},
+										"fiscalYearPatternId": {
+											"type": "number",
+											"format": "double"
+										},
+										"industryCategoryId": {
+											"type": "number",
+											"format": "double"
+										},
+										"languageId": {
+											"type": "number",
+											"format": "double"
+										},
+										"timeZoneId": {
+											"type": "number",
+											"format": "double"
+										},
+										"stateId": {
+											"type": "number",
+											"format": "double"
+										},
+										"zipCode": {
+											"type": "string"
+										},
+										"address": {
+											"type": "string"
+										},
+										"inventoryStartDate": {
+											"type": "string",
+											"format": "date-time"
+										},
+										"currencyId": {
+											"type": "number",
+											"format": "double"
+										},
+										"name": {
+											"type": "string"
+										},
+										"updatedAt": {
+											"type": "string",
+											"format": "date-time"
+										},
+										"createdAt": {
+											"type": "string",
+											"format": "date-time"
+										},
+										"id": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"ownedById",
+										"fiscalYearPatternId",
+										"industryCategoryId",
+										"languageId",
+										"timeZoneId",
+										"stateId",
+										"zipCode",
+										"address",
+										"inventoryStartDate",
+										"currencyId",
+										"name",
+										"updatedAt",
+										"createdAt",
+										"id"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"organization"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Prisma.OrganizationCreateManyInput"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/health-check": {

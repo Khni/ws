@@ -16,6 +16,8 @@ import { LocalAuthController } from './user/controllers/LocalAuthController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { CountryController } from './region/controllers/CountryController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { OrgnizationController } from './orgnization/controllers/OrgnizationController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { HealthController } from './health-check/HealthController.js';
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
 
@@ -67,6 +69,11 @@ const models: TsoaRoute.Models = {
     "ResetForgettenPasswordInput": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"confirmNewPassword":{"dataType":"string","required":true},"newPassword":{"dataType":"string","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Prisma.OrganizationCreateManyInput": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"updatedAt":{"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"string"}]},"createdAt":{"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"string"}]},"zipCode":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},"address":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},"ownedById":{"dataType":"string","required":true},"fiscalYearPatternId":{"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}]},"industryCategoryId":{"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}]},"languageId":{"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}]},"inventoryStartDate":{"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"string"}],"required":true},"timeZoneId":{"dataType":"double","required":true},"currencyId":{"dataType":"double","required":true},"stateId":{"dataType":"double","required":true},"name":{"dataType":"string","required":true},"id":{"dataType":"string"}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
@@ -445,6 +452,36 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getStates',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrgnizationController_createOrgnization: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"Prisma.OrganizationCreateManyInput"},
+        };
+        app.post('/organization',
+            ...(fetchMiddlewares<RequestHandler>(OrgnizationController)),
+            ...(fetchMiddlewares<RequestHandler>(OrgnizationController.prototype.createOrgnization)),
+
+            async function OrgnizationController_createOrgnization(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrgnizationController_createOrgnization, request, response });
+
+                const controller = new OrgnizationController();
+
+              await templateService.apiHandler({
+                methodName: 'createOrgnization',
                 controller,
                 response,
                 next,
