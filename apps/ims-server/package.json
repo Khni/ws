@@ -29,7 +29,7 @@
     "tsx": "^4.20.0",
     "typescript": "~5.8.3",
     "vitest": "^3.2.3",
-    "zod-prisma-types": "^3.2.4"
+    "zod-prisma-types": "^3.3.5"
   },
   "dependencies": {
     "@khaled/auth": "workspace:*",

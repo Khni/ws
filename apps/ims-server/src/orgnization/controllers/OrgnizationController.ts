@@ -1,16 +1,27 @@
-import { Body, Controller, Post, Route, Tags } from "tsoa";
+import { Body, Controller, Post, Route, Tags, Middlewares, Get } from "tsoa";
 import { createOrgnization } from "../services/createOrgnization.js";
 import { Prisma } from "../../../generated/prisma/index.js";
-import { OrganizationCreateManyInputSchema } from "../../../prisma/generated/zod/index.js";
+import { OrganizationCreateManyInputSchema } from "../../../generated/zod/index.js";
+import { validateZodSchemaMiddleware } from "../../core/schema/validateZodErrorMiddleware.js";
+import { getOrganizationFormDataService } from "../services/getFormDataService.js";
 
 @Tags("organization")
 @Route("organization")
 export class OrgnizationController extends Controller {
+  @Middlewares([
+    validateZodSchemaMiddleware({
+      bodySchema: OrganizationCreateManyInputSchema,
+    }),
+  ])
   @Post()
   public async createOrgnization(
     @Body() body: Prisma.OrganizationCreateManyInput
   ) {
-    const data = OrganizationCreateManyInputSchema.parse(body);
-    return await createOrgnization(data);
+    return await createOrgnization(body);
+  }
+
+  @Get("/form-data")
+  public async organizationFormData() {
+    return await getOrganizationFormDataService();
   }
 }

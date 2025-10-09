@@ -14,9 +14,9 @@ import { OtpController } from './user/controllers/OtpController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { LocalAuthController } from './user/controllers/LocalAuthController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { CountryController } from './region/controllers/CountryController.js';
-// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { OrgnizationController } from './orgnization/controllers/OrgnizationController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { CountryController } from './orgnization/controllers/CountryController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { HealthController } from './health-check/HealthController.js';
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
@@ -402,6 +402,65 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrgnizationController_createOrgnization: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"Prisma.OrganizationCreateManyInput"},
+        };
+        app.post('/organization',
+            ...(fetchMiddlewares<RequestHandler>(OrgnizationController)),
+            ...(fetchMiddlewares<RequestHandler>(OrgnizationController.prototype.createOrgnization)),
+
+            async function OrgnizationController_createOrgnization(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrgnizationController_createOrgnization, request, response });
+
+                const controller = new OrgnizationController();
+
+              await templateService.apiHandler({
+                methodName: 'createOrgnization',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrgnizationController_organizationFormData: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/organization/form-data',
+            ...(fetchMiddlewares<RequestHandler>(OrgnizationController)),
+            ...(fetchMiddlewares<RequestHandler>(OrgnizationController.prototype.organizationFormData)),
+
+            async function OrgnizationController_organizationFormData(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrgnizationController_organizationFormData, request, response });
+
+                const controller = new OrgnizationController();
+
+              await templateService.apiHandler({
+                methodName: 'organizationFormData',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsCountryController_getCountries: Record<string, TsoaRoute.ParameterSchema> = {
                 name: {"in":"query","name":"name","dataType":"string"},
         };
@@ -452,36 +511,6 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getStates',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsOrgnizationController_createOrgnization: Record<string, TsoaRoute.ParameterSchema> = {
-                body: {"in":"body","name":"body","required":true,"ref":"Prisma.OrganizationCreateManyInput"},
-        };
-        app.post('/organization',
-            ...(fetchMiddlewares<RequestHandler>(OrgnizationController)),
-            ...(fetchMiddlewares<RequestHandler>(OrgnizationController.prototype.createOrgnization)),
-
-            async function OrgnizationController_createOrgnization(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsOrgnizationController_createOrgnization, request, response });
-
-                const controller = new OrgnizationController();
-
-              await templateService.apiHandler({
-                methodName: 'createOrgnization',
                 controller,
                 response,
                 next,
