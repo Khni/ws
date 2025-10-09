@@ -1,9 +1,20 @@
-import { Body, Controller, Post, Route, Tags, Middlewares, Get } from "tsoa";
+import {
+  Body,
+  Controller,
+  Post,
+  Route,
+  Tags,
+  Middlewares,
+  Get,
+  Path,
+  Query,
+} from "tsoa";
 import { createOrgnization } from "../services/createOrgnization.js";
 import { Prisma } from "../../../generated/prisma/index.js";
 import { OrganizationCreateManyInputSchema } from "../../../generated/zod/index.js";
 import { validateZodSchemaMiddleware } from "../../core/schema/validateZodErrorMiddleware.js";
 import { getOrganizationFormDataService } from "../services/getFormDataService.js";
+import { getFilterdCountryStatesServices } from "../services/state.service.js";
 
 @Tags("organization")
 @Route("organization")

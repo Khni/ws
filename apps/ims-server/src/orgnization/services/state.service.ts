@@ -1,6 +1,6 @@
 import prisma from "../../database/prisma.js";
 
-export const getCountryStatesServices = async (
+export const getFilterdCountryStatesServices = async (
   countryId: number,
   name?: string
 ) => {

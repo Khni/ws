@@ -796,25 +796,6 @@
 										"countries": {
 											"items": {
 												"properties": {
-													"states": {
-														"items": {
-															"properties": {
-																"name": {
-																	"type": "string"
-																},
-																"id": {
-																	"type": "number",
-																	"format": "double"
-																}
-															},
-															"required": [
-																"name",
-																"id"
-															],
-															"type": "object"
-														},
-														"type": "array"
-													},
 													"name": {
 														"type": "string"
 													},
@@ -824,7 +805,6 @@
 													}
 												},
 												"required": [
-													"states",
 													"name",
 													"id"
 												],

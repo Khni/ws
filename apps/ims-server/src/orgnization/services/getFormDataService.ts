@@ -1,16 +1,10 @@
 import prisma from "../../database/prisma.js";
 
 export const getOrganizationFormDataService = async () => {
-  const countriesWithStates = await prisma.country.findMany({
+  const countries = await prisma.country.findMany({
     select: {
       id: true,
       name: true,
-      states: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
     },
   });
 
@@ -46,7 +40,7 @@ export const getOrganizationFormDataService = async () => {
   });
 
   return {
-    countries: countriesWithStates,
+    countries: countries,
     languages,
     timezones,
     fiscalYearPattern,
