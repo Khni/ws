@@ -502,6 +502,43 @@ importers:
         specifier: ^3.2.3
         version: 3.2.4(@types/node@24.5.1)(@vitest/ui@3.2.4)(jiti@2.6.1)(lightningcss@1.30.1)(tsx@4.20.5)(yaml@2.8.1)
 
+  packages/organization:
+    dependencies:
+      '@khaled/error-handler':
+        specifier: workspace:*
+        version: link:../error-handler
+      '@khaled/organization-errors':
+        specifier: workspace:*
+        version: link:../organization-errors
+      '@khaled/utils':
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      '@microsoft/api-documenter':
+        specifier: ^7.26.29
+        version: 7.26.32(@types/node@24.5.1)
+      '@microsoft/api-extractor':
+        specifier: ^7.52.8
+        version: 7.52.11(@types/node@24.5.1)
+      '@vitest/coverage-v8':
+        specifier: 3.2.4
+        version: 3.2.4(vitest@3.2.4)
+      '@vitest/ui':
+        specifier: ^3.2.3
+        version: 3.2.4(vitest@3.2.4)
+      eslint:
+        specifier: ^9.28.0
+        version: 9.32.0(jiti@2.6.1)
+      typescript:
+        specifier: ~5.8.3
+        version: 5.8.3
+      vitest:
+        specifier: ^3.2.3
+        version: 3.2.4(@types/node@24.5.1)(@vitest/ui@3.2.4)(jiti@2.6.1)(lightningcss@1.30.1)(tsx@4.20.5)(yaml@2.8.1)
+      zod:
+        specifier: ^4.0.5
+        version: 4.1.9
+
   packages/organization-errors:
     dependencies:
       '@khaled/error-handler':

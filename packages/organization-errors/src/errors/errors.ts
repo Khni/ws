@@ -1,6 +1,8 @@
 // Domain Errors (expected, user-facing)
 export const OrganizationDomainErrorCodes = {
   ORGANIZATION_NAME_USED: "ORGANIZATION_NAME_USED",
+  ORGANIZATION_NOT_FOUND: "ORGANIZATION_NOT_FOUND",
+  CREATION_ORGANIZATION_REACH_LIMIT: "CREATION_ORGANIZATION_REACH_LIMIT",
 } as const;
 
 // Unexpected/Internal Errors
@@ -27,6 +29,14 @@ export const organizationDomainErrorMapping = {
   [OrganizationDomainErrorCodes.ORGANIZATION_NAME_USED]: {
     statusCode: 400, // Bad Request
     responseMessage: "Organization name is already taken.",
+  },
+  [OrganizationDomainErrorCodes.ORGANIZATION_NOT_FOUND]: {
+    statusCode: 404, // Not Found
+    responseMessage: "Organization not found.",
+  },
+  [OrganizationDomainErrorCodes.CREATION_ORGANIZATION_REACH_LIMIT]: {
+    statusCode: 403, // Forbidden
+    responseMessage: "Organization creation limit reached.",
   },
 } as const;
 
