@@ -47,6 +47,12 @@ importers:
       '@khaled/mailer':
         specifier: workspace:*
         version: link:../../packages/mailer
+      '@khaled/organization':
+        specifier: workspace:*
+        version: link:../../packages/organization
+      '@khaled/organization-errors':
+        specifier: workspace:*
+        version: link:../../packages/organization-errors
       '@khaled/utils':
         specifier: workspace:*
         version: link:../../packages/utils

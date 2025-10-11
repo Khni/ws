@@ -7,37 +7,31 @@ export type OrganizationFilterInput = {
   userId?: string;
 };
 
-export type OrganizationCreateInput = {
-  name: string;
-  ownerId: string;
-  description?: string;
-};
-
-export type OrganizationUpdateInput = {
-  name?: string;
-  description?: string;
-};
-
 export interface Organization {
   id: string;
   name: string;
   ownerId: string;
-  description?: string;
+  description: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
+export type OrganizationCreateInput = {
+  name: string;
+  ownerId: string;
+};
 
 // ===== REPOSITORY INTERFACES =====
 export interface IOrganizationRepository<
   TOrganization extends Organization = Organization,
   TCreateInput extends OrganizationCreateInput = OrganizationCreateInput,
 > {
+  create(data: TCreateInput): Promise<TOrganization>;
   findUnique(where: OrganizationUniqueInput): Promise<TOrganization | null>;
   findMany(where: OrganizationFilterInput): Promise<TOrganization[]>;
   count(where: OrganizationFilterInput): Promise<number>;
-  create(data: TCreateInput): Promise<TOrganization>;
+
   update(
-    data: OrganizationUpdateInput,
+    data: Partial<Organization>,
     where: { id: string }
   ): Promise<TOrganization>;
   // findUserMembership(where: {

@@ -1,15 +1,20 @@
 import { OrganizationDomainError } from "@khaled/organization-errors";
 import {
   IOrganizationRepository,
-  OrganizationCreateInput,
   Organization,
-  OrganizationUpdateInput,
+  OrganizationCreateInput,
 } from "../interfaces/IOrganizationRepository.js";
 import { ICache } from "@khaled/utils";
 
-export class OrganizationService {
+export class OrganizationService<
+  TOrganization extends Organization = Organization,
+  TCreateInput extends OrganizationCreateInput = OrganizationCreateInput,
+> {
   constructor(
-    protected readonly organizationRepository: IOrganizationRepository,
+    protected readonly organizationRepository: IOrganizationRepository<
+      TOrganization,
+      TCreateInput
+    >,
     protected readonly cache: ICache,
     protected readonly organizationCachePathKey: string = "organizations",
     protected readonly organizationCreationLimit: number = 5
@@ -38,11 +43,7 @@ export class OrganizationService {
     ]);
   }
 
-  async create({
-    data,
-  }: {
-    data: OrganizationCreateInput;
-  }): Promise<Organization> {
+  async create({ data }: { data: TCreateInput }): Promise<Organization> {
     // Check if organization name is taken for this owner
     const existingOrganization = await this.organizationRepository.findUnique({
       name: data.name,
@@ -83,7 +84,7 @@ export class OrganizationService {
     data,
     where,
   }: {
-    data: OrganizationUpdateInput;
+    data: Partial<Organization>;
     where: { id: string };
   }): Promise<Organization> {
     if (data.name) {

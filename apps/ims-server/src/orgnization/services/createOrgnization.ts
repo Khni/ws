@@ -5,7 +5,7 @@ export const createOrgnization = async (
   data: Prisma.OrganizationUncheckedCreateInput
 ) => {
   const isNameTaken = await prisma.organization.findUnique({
-    where: { name_ownedById: { name: data.name, ownedById: data.ownedById } },
+    where: { name_ownerId: { name: data.name, ownerId: data.ownerId } },
   });
   if (isNameTaken) {
     throw new Error("Organization name is already taken");

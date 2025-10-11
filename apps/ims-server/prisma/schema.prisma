@@ -178,6 +178,7 @@ model FiscalYearPattern {
 model Organization {
   id                 String      @id @default(uuid())
   name               String
+  description        String?
 
 
   stateId            Int
@@ -203,8 +204,8 @@ model Organization {
   //role relations
   userRoles      UserRole[]
   roles          Role[]
-  ownedBy       User       @relation("OrganizationOwner", fields: [ownedById], references: [id])
-  ownedById     String  
+  owner       User       @relation("OrganizationOwner", fields: [ownerId], references: [id])
+  ownerId     String  
   // optional fields
   address            String?
   zipCode            String?
@@ -216,7 +217,7 @@ model Organization {
   
   users User[] @relation("OrganizationUsers")
 
-  @@unique([name, ownedById] )
+  @@unique([name, ownerId] )
   
 }
 
