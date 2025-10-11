@@ -31,7 +31,8 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "zod": "^4.0.5",
-    "@khaled/error-handler": "workspace:*"
+    "@khaled/error-handler": "workspace:*",
+    "ioredis": "^5.8.1",
+    "zod": "^4.0.5"
   }
 }
