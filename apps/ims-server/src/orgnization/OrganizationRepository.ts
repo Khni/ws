@@ -1,72 +1,161 @@
 import {
-  IOrganizationRepository,
-  OrganizationFilterInput,
-  OrganizationUniqueInput,
-} from "@khaled/organization";
+  OrganizationCreateInput,
+  OrganizationOrderByInput,
+  OrganizationUpdateInput,
+  OrganizationWhereInput,
+  OrganizationWhereUniqueInput,
+} from "@khaled/ims-shared";
+
+import { PrismaTransactionManager } from "../core/database/PrismaTransactionManager.js";
 import prisma from "../database/prisma.js";
-import { Organization, Prisma } from "../../generated/prisma/index.js";
+import { PrismaClient } from "../../generated/prisma/index.js";
 
-export class OrganizationRepository
-  implements IOrganizationRepository<Organization>
-{
-  async findUnique(
-    where: OrganizationUniqueInput
-  ): Promise<Organization | null> {
-    const prismaWhere: Prisma.OrganizationWhereUniqueInput =
-      this.buildWhereClause(where);
+export class OrganizationRepository {
+  constructor(private db: PrismaClient["organization"] = prisma.organization) {}
 
-    return prisma.organization.findUnique({
-      where: prismaWhere,
-    });
-  }
-
-  /**
-   * Builds a Prisma-compatible where clause from OrganizationUniqueInput
-   */
-  private buildWhereClause(
-    where: OrganizationUniqueInput
-  ): Prisma.OrganizationWhereUniqueInput {
-    if ("id" in where) {
-      return { id: where.id };
+  async findFirst({
+    where,
+    orderBy,
+  }: {
+    where: OrganizationWhereInput;
+    orderBy?: OrganizationOrderByInput;
+  }) {
+    try {
+      return await this.db.findFirst({
+        where,
+        orderBy,
+      });
+    } catch (error: any) {
+      throw new Error(`Error finding organization: ${error.message}`, {
+        cause: error,
+      });
     }
+  }
 
-    if ("name" in where && "ownerId" in where) {
-      return {
-        name_ownerId: {
-          name: where.name,
-          ownerId: where.ownerId,
-        },
-      };
+  async createTransaction<T>(
+    callback: (tx: PrismaTransactionManager) => Promise<T>
+  ): Promise<T> {
+    try {
+      return await prisma.$transaction(async (tx) => {
+        return await callback(tx);
+      });
+    } catch (error) {
+      throw new Error(`Error: Organization Transaction failed`, {
+        cause: error,
+      });
     }
+  }
+  // Create a new organization with error handling
+  async create({
+    data,
+    tx,
+  }: {
+    data: OrganizationCreateInput;
+    tx?: PrismaTransactionManager | undefined;
+  }) {
+    const db = tx ? tx.organization : this.db;
+    try {
+      return await db.create({
+        data,
+        select: { id: true, name: true },
+      });
+    } catch (error: any) {
+      throw new Error(`Error while creating organization: ${error.message}`, {
+        cause: error,
+      });
+    }
+  }
 
-    throw new Error(
-      "Invalid OrganizationUniqueInput: must include either `id` or both `name` and `ownerId`."
-    );
+  // Update an existing organization with error handling
+  async update({
+    data,
+    where,
+    tx,
+  }: {
+    data: OrganizationUpdateInput;
+    where: OrganizationWhereUniqueInput;
+    tx?: PrismaTransactionManager;
+  }) {
+    const db = tx ? tx.organization : this.db;
+    try {
+      return await db.update({
+        data,
+        where,
+      });
+    } catch (error: any) {
+      throw new Error(`Error while updating organization: ${error.message}`, {
+        cause: error,
+      });
+    }
   }
-  async findMany(where: OrganizationFilterInput): Promise<Organization[]> {
-    return await prisma.organization.findMany({
-      where,
-    });
+
+  // Find multiple organizations with error handling
+  async findMany({
+    where,
+    limit,
+    offset,
+    orderBy,
+  }: {
+    offset?: number;
+    limit?: number;
+    orderBy?: OrganizationOrderByInput;
+    where?: OrganizationWhereInput;
+  }) {
+    try {
+      return await this.db.findMany({
+        where,
+        take: limit,
+        orderBy,
+        skip: offset,
+      });
+    } catch (error: any) {
+      throw new Error(`Error fetching organizations: ${error.message}`, {
+        cause: error,
+      });
+    }
   }
-  async count(where: OrganizationFilterInput): Promise<number> {
-    return await prisma.organization.count({
-      where,
-    });
+
+  // Delete a organization with error handling
+  async delete({
+    where,
+    tx,
+  }: {
+    where: OrganizationWhereUniqueInput;
+    tx?: PrismaTransactionManager | undefined;
+  }) {
+    const db = tx ? tx.organization : this.db;
+    try {
+      return await db.delete({ where, select: { id: true } });
+    } catch (error: any) {
+      throw new Error(`Error deleting organization: ${error.message}`, {
+        cause: error,
+      });
+    }
   }
-  async create(
-    data: Prisma.OrganizationCreateManyInput
-  ): Promise<Organization> {
-    return await prisma.organization.create({
-      data,
-    });
+
+  // Find a unique organization with error handling
+  async findUnique({ where }: { where: OrganizationWhereUniqueInput }) {
+    try {
+      return await this.db.findUnique({
+        where,
+      });
+    } catch (error: any) {
+      throw new Error(`Error finding organization: ${error.message}`, {
+        cause: error,
+      });
+    }
   }
-  async update(
-    data: Prisma.OrganizationUpdateInput,
-    where: { id: string }
-  ): Promise<Organization> {
-    return await prisma.organization.update({
-      data,
-      where,
-    });
+
+  // Count organizations with error handling
+  async count(params?: { where?: OrganizationWhereInput }) {
+    try {
+      return await this.db.count({
+        where: params?.where,
+      });
+    } catch (error: any) {
+      throw new Error(`Error counting organizations: ${error.message}`, {
+        cause: error,
+      });
+    }
   }
 }
