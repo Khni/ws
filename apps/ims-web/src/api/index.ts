@@ -20,14 +20,22 @@ import type {
 
 import type {
   AuthResponseType,
+  CreateOrgnization200,
   FacebookLoginParams,
+  GetCountries200Item,
   GetCountriesParams,
+  GetFilterdTimeZones200Item,
+  GetOwnedOrganizations200Item,
+  GetStates200Item,
   GetStatesParams,
+  GetUserOrganizations200Item,
   GoogleLoginParams,
   LocalLoginInput,
   Logout200,
   LogoutBody,
+  OrganizationFormData200,
   OtpSignUpInput,
+  PickOrganizationModelExcludeKeyofOrganizationModelIdOrCreatedAtOrUpdatedAtOrOwnerId,
   RefreshToken200,
   RefreshTokenInput,
   RequestOtp200,
@@ -634,13 +642,246 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       return useMutation(mutationOptions );
     }
     
+export const createOrgnization = (
+    pickOrganizationModelExcludeKeyofOrganizationModelIdOrCreatedAtOrUpdatedAtOrOwnerId: PickOrganizationModelExcludeKeyofOrganizationModelIdOrCreatedAtOrUpdatedAtOrOwnerId,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CreateOrgnization200>(
+      {url: `/organization`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: pickOrganizationModelExcludeKeyofOrganizationModelIdOrCreatedAtOrUpdatedAtOrOwnerId, signal
+    },
+      options);
+    }
+  
+
+
+export const getCreateOrgnizationMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOrgnization>>, TError,{data: PickOrganizationModelExcludeKeyofOrganizationModelIdOrCreatedAtOrUpdatedAtOrOwnerId}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createOrgnization>>, TError,{data: PickOrganizationModelExcludeKeyofOrganizationModelIdOrCreatedAtOrUpdatedAtOrOwnerId}, TContext> => {
+
+const mutationKey = ['createOrgnization'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createOrgnization>>, {data: PickOrganizationModelExcludeKeyofOrganizationModelIdOrCreatedAtOrUpdatedAtOrOwnerId}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createOrgnization(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateOrgnizationMutationResult = NonNullable<Awaited<ReturnType<typeof createOrgnization>>>
+    export type CreateOrgnizationMutationBody = PickOrganizationModelExcludeKeyofOrganizationModelIdOrCreatedAtOrUpdatedAtOrOwnerId
+    export type CreateOrgnizationMutationError = ErrorType<unknown>
+
+    export const useCreateOrgnization = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOrgnization>>, TError,{data: PickOrganizationModelExcludeKeyofOrganizationModelIdOrCreatedAtOrUpdatedAtOrOwnerId}, TContext>, request?: SecondParameter<typeof customInstance>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createOrgnization>>,
+        TError,
+        {data: PickOrganizationModelExcludeKeyofOrganizationModelIdOrCreatedAtOrUpdatedAtOrOwnerId},
+        TContext
+      > => {
+
+      const mutationOptions = getCreateOrgnizationMutationOptions(options);
+
+      return useMutation(mutationOptions );
+    }
+    
+export const getOwnedOrganizations = (
+    
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetOwnedOrganizations200Item[]>(
+      {url: `/organization/owner-organizations`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetOwnedOrganizationsQueryKey = () => {
+    return [`/organization/owner-organizations`] as const;
+    }
+
+    
+export const getGetOwnedOrganizationsQueryOptions = <TData = Awaited<ReturnType<typeof getOwnedOrganizations>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getOwnedOrganizations>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOwnedOrganizationsQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOwnedOrganizations>>> = ({ signal }) => getOwnedOrganizations(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOwnedOrganizations>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetOwnedOrganizationsQueryResult = NonNullable<Awaited<ReturnType<typeof getOwnedOrganizations>>>
+export type GetOwnedOrganizationsQueryError = ErrorType<unknown>
+
+
+
+export function useGetOwnedOrganizations<TData = Awaited<ReturnType<typeof getOwnedOrganizations>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getOwnedOrganizations>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+  
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetOwnedOrganizationsQueryOptions(options)
+
+  const query = useQuery(queryOptions ) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+export const getUserOrganizations = (
+    
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetUserOrganizations200Item[]>(
+      {url: `/organization/user-organizations`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetUserOrganizationsQueryKey = () => {
+    return [`/organization/user-organizations`] as const;
+    }
+
+    
+export const getGetUserOrganizationsQueryOptions = <TData = Awaited<ReturnType<typeof getUserOrganizations>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getUserOrganizations>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetUserOrganizationsQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserOrganizations>>> = ({ signal }) => getUserOrganizations(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUserOrganizations>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetUserOrganizationsQueryResult = NonNullable<Awaited<ReturnType<typeof getUserOrganizations>>>
+export type GetUserOrganizationsQueryError = ErrorType<unknown>
+
+
+
+export function useGetUserOrganizations<TData = Awaited<ReturnType<typeof getUserOrganizations>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getUserOrganizations>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+  
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetUserOrganizationsQueryOptions(options)
+
+  const query = useQuery(queryOptions ) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+export const organizationFormData = (
+    
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<OrganizationFormData200>(
+      {url: `/organization/form-data`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getOrganizationFormDataQueryKey = () => {
+    return [`/organization/form-data`] as const;
+    }
+
+    
+export const getOrganizationFormDataQueryOptions = <TData = Awaited<ReturnType<typeof organizationFormData>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof organizationFormData>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getOrganizationFormDataQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof organizationFormData>>> = ({ signal }) => organizationFormData(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof organizationFormData>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type OrganizationFormDataQueryResult = NonNullable<Awaited<ReturnType<typeof organizationFormData>>>
+export type OrganizationFormDataQueryError = ErrorType<unknown>
+
+
+
+export function useOrganizationFormData<TData = Awaited<ReturnType<typeof organizationFormData>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof organizationFormData>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+  
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getOrganizationFormDataQueryOptions(options)
+
+  const query = useQuery(queryOptions ) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
 export const getCountries = (
     params?: GetCountriesParams,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
       
-      return customInstance<unknown>(
+      return customInstance<GetCountries200Item[]>(
       {url: `/country`, method: 'GET',
         params, signal
     },
@@ -694,27 +935,27 @@ export function useGetCountries<TData = Awaited<ReturnType<typeof getCountries>>
 
 
 export const getStates = (
-    countryId: number,
+    countryId: string,
     params?: GetStatesParams,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
       
-      return customInstance<unknown>(
-      {url: `/country/${countryId}`, method: 'GET',
+      return customInstance<GetStates200Item[]>(
+      {url: `/country/${countryId}/states`, method: 'GET',
         params, signal
     },
       options);
     }
   
 
-export const getGetStatesQueryKey = (countryId?: number,
+export const getGetStatesQueryKey = (countryId?: string,
     params?: GetStatesParams,) => {
-    return [`/country/${countryId}`, ...(params ? [params]: [])] as const;
+    return [`/country/${countryId}/states`, ...(params ? [params]: [])] as const;
     }
 
     
-export const getGetStatesQueryOptions = <TData = Awaited<ReturnType<typeof getStates>>, TError = ErrorType<unknown>>(countryId: number,
+export const getGetStatesQueryOptions = <TData = Awaited<ReturnType<typeof getStates>>, TError = ErrorType<unknown>>(countryId: string,
     params?: GetStatesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getStates>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
@@ -739,12 +980,70 @@ export type GetStatesQueryError = ErrorType<unknown>
 
 
 export function useGetStates<TData = Awaited<ReturnType<typeof getStates>>, TError = ErrorType<unknown>>(
- countryId: number,
+ countryId: string,
     params?: GetStatesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getStates>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
   
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetStatesQueryOptions(countryId,params,options)
+
+  const query = useQuery(queryOptions ) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+export const getFilterdTimeZones = (
+    countryId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetFilterdTimeZones200Item[]>(
+      {url: `/country/${countryId}/time-zones`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetFilterdTimeZonesQueryKey = (countryId?: string,) => {
+    return [`/country/${countryId}/time-zones`] as const;
+    }
+
+    
+export const getGetFilterdTimeZonesQueryOptions = <TData = Awaited<ReturnType<typeof getFilterdTimeZones>>, TError = ErrorType<unknown>>(countryId: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFilterdTimeZones>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetFilterdTimeZonesQueryKey(countryId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFilterdTimeZones>>> = ({ signal }) => getFilterdTimeZones(countryId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(countryId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getFilterdTimeZones>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetFilterdTimeZonesQueryResult = NonNullable<Awaited<ReturnType<typeof getFilterdTimeZones>>>
+export type GetFilterdTimeZonesQueryError = ErrorType<unknown>
+
+
+
+export function useGetFilterdTimeZones<TData = Awaited<ReturnType<typeof getFilterdTimeZones>>, TError = ErrorType<unknown>>(
+ countryId: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFilterdTimeZones>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+  
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetFilterdTimeZonesQueryOptions(countryId,options)
 
   const query = useQuery(queryOptions ) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

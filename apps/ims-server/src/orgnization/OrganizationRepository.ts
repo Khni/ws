@@ -8,7 +8,8 @@ import {
 
 import { PrismaTransactionManager } from "../core/database/PrismaTransactionManager.js";
 import prisma from "../database/prisma.js";
-import { PrismaClient } from "../../generated/prisma/index.js";
+import { Prisma, PrismaClient } from "../../generated/prisma/index.js";
+import { OrganizationCreateManyInputSchema } from "../../generated/zod/index.js";
 
 export class OrganizationRepository {
   constructor(private db: PrismaClient["organization"] = prisma.organization) {}

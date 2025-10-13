@@ -13,17 +13,20 @@ export type OrganizationModel = {
    * @minLength 2
    * @maxLength 250
    */
-  description: string | null;
-  stateId: number;
-  currencyId: number;
-  timeZoneId: number;
-  inventoryStartDate: Date;
-  languageId: number | null;
-  industryCategoryId: number | null;
-  fiscalYearPatternId: number | null;
+  description?: string;
+  stateId: string;
+  currencyId: string;
+  timeZoneId: string;
+  /**
+   * @format date-time
+   */
+  inventoryStartDate: string;
+  languageId?: string;
+  industryCategoryId?: string;
+  fiscalYearPatternId?: string;
   ownerId: string;
-  address: string | null;
-  zipCode: string | null;
+  address?: string;
+  zipCode?: string;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -35,11 +38,18 @@ export type OrganizationCreateInput = Omit<
   OrganizationModel,
   "id" | "createdAt" | "updatedAt"
 >;
+export type OrganizationCreateBody = Omit<
+  OrganizationModel,
+  "id" | "createdAt" | "updatedAt" | "ownerId"
+>;
+
 export type OrganizationUpdateInput = Partial<OrganizationModel>;
 export type OrganizationWhereUniqueInput =
   | { id: string }
   | { name_ownerId: { name: string; ownerId: string } };
-export type OrganizationWhereInput = Partial<OrganizationModel>;
+export type OrganizationWhereInput = Partial<OrganizationModel> & {
+  userRoles?: { some?: { userId?: string } };
+};
 export type OrganizationOrderByInput =
   | Partial<Record<keyof OrganizationModel, "asc" | "desc">>
   | undefined;

@@ -7,16 +7,17 @@
 generator client {
   provider = "prisma-client-js"
 
-  output   = "../generated/prisma"
+  output = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 generator zod {
-  provider       = "zod-prisma-types"
-  output                           = "../generated/zod"
+  provider         = "zod-prisma-types"
+  output           = "../generated/zod"
   //useMultipleFiles                 = true // default is false
   //writeBarrelFiles                 = false // default is true
   //createInputTypes                 = false // default is true
@@ -31,7 +32,7 @@ generator zod {
   //useDefaultValidators             = false // default is true
   //coerceDate                       = false // default is true
   //writeNullishInModelTypes         = true // default is false
-  prismaClientPath                 = "../generated/prisma/index.js"
+  prismaClientPath = "../generated/prisma/index.js"
 }
 
 // ========= ENUMS =========
@@ -42,79 +43,73 @@ enum OtpType {
   FORGET_PASSWORD
 }
 
-
-
 enum OauthProvider {
   NONE
   FACEBOOK
   GOOGLE
 }
 
-
 // ========= MODELS =========
 
 model Otp {
-  id        String   @id @default(uuid())
-  type      OtpType
-  hashedOtp       String
-  identifier     String
-  expiresAt DateTime
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt()
+  id         String   @id @default(uuid())
+  type       OtpType
+  hashedOtp  String
+  identifier String
+  expiresAt  DateTime
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt()
 }
 
 model User {
-  id           String           @id @default(uuid())
-  password String?          
-
+  id       String  @id @default(uuid())
+  password String?
 
   // Relations
-  identifiers  UserIdentifier[]
-  profile      UserProfile?
-  refreshTokens  RefreshToken[]
+  identifiers        UserIdentifier[]
+  profile            UserProfile?
+  refreshTokens      RefreshToken[]
   // Relationships
-  userRoles      UserRole[]
-  ownedRoles     Role[]           @relation("RoleOwner")
-  organizations  Organization[]   @relation("OrganizationUsers")
-  ownedOrganizations Organization[] @relation("OrganizationOwner")
+  userRoles          UserRole[]
+  createdRoles         Role[]           @relation("RoleCreator")
+ 
+  ownedOrganizations Organization[]   @relation("OrganizationOwner")
 
   // Audit & Timestamps
-  lastLoginAt    DateTime?
+  lastLoginAt DateTime?
 
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
-
- 
 }
 
 model UserIdentifier {
-  id         String   @id @default(uuid())
+  id         String         @id @default(uuid())
   userId     String
   type       IdentifierType
   value      String
-  isVerified Boolean  @default(false)
-  isPrimary  Boolean  @default(false)
- 
+  isVerified Boolean        @default(false)
+  isPrimary  Boolean        @default(false)
 
   // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
-  @@unique([type, value])   // ensure no duplicate identifiers
+
+  @@unique([type, value]) // ensure no duplicate identifiers
   @@index([userId])
 }
 
 model UserProfile {
-  id          String   @id @default(uuid())
-  userId      String   @unique
-  name        String
-  avatarUrl   String?
+  id           String  @id @default(uuid())
+  userId       String  @unique
+  name         String
+  avatarUrl    String?
   contactEmail String? // for notifications, can differ from login email
-  
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
@@ -128,142 +123,131 @@ enum IdentifierType {
   apple
   github
   facebook
-  
 }
-
-
 
 model RefreshToken {
-  id         String   @id @default(uuid())
-  token      String   @unique
-  userId     String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userAgent  String?
-  ipAddress  String?
-  expiresAt  DateTime
-  revokedAt   DateTime?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt()
+  id        String    @id @default(uuid())
+  token     String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userAgent String?
+  ipAddress String?
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt()
 }
-
 
 // orgnization
 //############################################
 //############################################
 model Language {
-  id        Int       @id @default(autoincrement())
-  code      String    @unique  // ISO 639-1 code like 'en', 'ar', 'fr', etc.
-  name      String    // English name e.g. 'English'
-  nativeName String   // Native name e.g. 'العربية'
-  isDefault Boolean   @default(false)
-  organizations  Organization[]
+  id            String            @id @default(uuid())
+  code          String         @unique // ISO 639-1 code like 'en', 'ar', 'fr', etc.
+  name          String // English name e.g. 'English'
+  nativeName    String // Native name e.g. 'العربية'
+  isDefault     Boolean        @default(false)
+  organizations Organization[]
 }
 
 model IndustryCategory {
-  id        Int       @id @default(autoincrement())
-  code      String    @unique // e.g. "MANUFACTURING"
-  label     String    // e.g. "Manufacturing"
-  organizations  Organization[]
+  id            String            @id @default(uuid())
+  code          String         @unique // e.g. "MANUFACTURING"
+  label         String // e.g. "Manufacturing"
+  organizations Organization[]
 }
 
 model FiscalYearPattern {
-  id         Int      @id @default(autoincrement())
-  code       String   @unique // e.g. "APR_MAR"
-  label      String   // e.g. "April - March"
-  startMonth Int      // 4
-  endMonth   Int      // 3
-  organizations  Organization[]
+  id            String            @id @default(uuid())
+  code          String         @unique // e.g. "APR_MAR"
+  label         String // e.g. "April - March"
+  startMonth    String // 4
+  endMonth      String // 3
+  organizations Organization[]
 }
 
 model Organization {
-  id                 String      @id @default(uuid())
-  name               String
-  description        String?
+  id          String  @id @default(uuid())
+  name        String
+  description String?
 
+  stateId String
+  state   State @relation(fields: [stateId], references: [id])
 
-  stateId            Int
-  state              State       @relation(fields: [stateId], references: [id])
+  currencyId String
+  currency   Currency @relation(fields: [currencyId], references: [id])
 
-  
-  currencyId         Int
-  currency           Currency    @relation(fields: [currencyId], references: [id])
-
-  timeZoneId         Int
-  timeZone           TimeZone    @relation(fields: [timeZoneId], references: [id])
+  timeZoneId String
+  timeZone   TimeZone @relation(fields: [timeZoneId], references: [id])
 
   inventoryStartDate DateTime
-  languageId             Int?
-  language               Language?          @relation(fields: [languageId], references: [id])
+  languageId         String?
+  language           Language? @relation(fields: [languageId], references: [id])
 
-  industryCategoryId     Int?
-  industryCategory       IndustryCategory?  @relation(fields: [industryCategoryId], references: [id])
+  industryCategoryId String?
+  industryCategory   IndustryCategory? @relation(fields: [industryCategoryId], references: [id])
 
-  fiscalYearPatternId    Int?
-  fiscalYearPattern      FiscalYearPattern? @relation(fields: [fiscalYearPatternId], references: [id])
+  fiscalYearPatternId String?
+  fiscalYearPattern   FiscalYearPattern? @relation(fields: [fiscalYearPatternId], references: [id])
 
   //role relations
-  userRoles      UserRole[]
-  roles          Role[]
-  owner       User       @relation("OrganizationOwner", fields: [ownerId], references: [id])
-  ownerId     String  
+  userRoles UserRole[]
+  roles     Role[]
+  owner     User       @relation("OrganizationOwner", fields: [ownerId], references: [id])
+  ownerId   String
   // optional fields
-  address            String?
-  zipCode            String?
-  
-  createdAt          DateTime    @default(now())
-  updatedAt          DateTime    @updatedAt
+  address   String?
+  zipCode   String?
 
-   
-  
-  users User[] @relation("OrganizationUsers")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@unique([name, ownerId] )
-  
+
+  @@unique([name, ownerId])
 }
-
 
 //regions 
 //################################
 //################################
 
 model Region {
-  id          Int          @id @default(autoincrement())
-  name        String       @unique
+  id           String         @id @default(uuid())
+  name         String      @unique
   translations Json?
-  wikiDataId  String?
-  subregions  Subregion[]
-  countries   Country[]
+  wikiDataId   String?
+  subregions   Subregion[]
+  countries    Country[]
 }
 
 model Subregion {
-  id          Int          @id @default(autoincrement())
-  name        String       @unique
+  id           String       @id @default(uuid())
+  name         String    @unique
   translations Json?
-  wikiDataId  String?
-  regionId    Int
-  region      Region       @relation(fields: [regionId], references: [id])
-  countries   Country[]
+  wikiDataId   String?
+  regionId     String
+  region       Region    @relation(fields: [regionId], references: [id])
+  countries    Country[]
 }
 
 model Currency {
-  id      Int      @id @default(autoincrement())
-  code    String   @unique
-  name    String?
-  symbol  String?
+  id        String       @id @default(uuid())
+  code      String    @unique
+  name      String?
+  symbol    String?
   countries Country[]
 
   Organization Organization[]
 }
 
 model PhoneCode {
-  id      Int      @id @default(autoincrement())
-  code    String   @unique
+  id        String       @id @default(uuid())
+  code      String    @unique
   countries Country[]
 }
 
 model TimeZone {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
+  id        String       @id @default(uuid())
+  name      String    @unique
   offset    String?
   countries Country[]
 
@@ -273,38 +257,38 @@ model TimeZone {
 }
 
 model Translation {
-  id        Int      @id @default(autoincrement())
+  id        String      @id @default(uuid())
   language  String
   value     Json
-  countryId Int?
+  countryId String?
   country   Country? @relation(fields: [countryId], references: [id])
 }
 
 model Country {
-  id             Int          @id @default(autoincrement())
-  name           String
-  iso3           String?
-  iso2           String? @unique
-  numericCode    String?
-  capital        String?
-  tld            String?
-  native         String?
-  latitude       String?
-  longitude      String?
-  emoji          String?
-  emojiU         String?
-  wikiDataId     String?
-  regionId       Int?
-  subregionId    Int?
-  currencyId     Int?
-  phoneCodeId    Int?
-  region         Region?      @relation(fields: [regionId], references: [id])
-  subregion      Subregion?   @relation(fields: [subregionId], references: [id])
-  currency       Currency?    @relation(fields: [currencyId], references: [id])
-  phoneCode      PhoneCode?   @relation(fields: [phoneCodeId], references: [id])
-  timezones      TimeZone[]   @relation("CountryTimeZones")
-  translations   Translation[]
-  states         State[]
+  id           String           @id @default(uuid())
+  name         String
+  iso3         String?
+  iso2         String?       @unique
+  numericCode  String?
+  capital      String?
+  tld          String?
+  native       String?
+  latitude     String?
+  longitude    String?
+  emoji        String?
+  emojiU       String?
+  wikiDataId   String?
+  regionId     String?
+  subregionId  String?
+  currencyId   String?
+  phoneCodeId  String?
+  region       Region?       @relation(fields: [regionId], references: [id])
+  subregion    Subregion?    @relation(fields: [subregionId], references: [id])
+  currency     Currency?     @relation(fields: [currencyId], references: [id])
+  phoneCode    PhoneCode?    @relation(fields: [phoneCodeId], references: [id])
+  timezones    TimeZone[]    @relation("CountryTimeZones")
+  translations Translation[]
+  states       State[]
 
   TimeZone TimeZone[]
 
@@ -312,35 +296,34 @@ model Country {
 }
 
 model State {
-  id          Int       @id @default(autoincrement())
-  name        String
-  iso2        String?
-  fipsCode    String?
-  type        String?
-  latitude    String?
-  longitude   String?
-  wikiDataId  String?
-  countryId   Int
-  country     Country    @relation(fields: [countryId], references: [id])
-  cities      City[]
+  id         String     @id @default(uuid())
+  name       String
+  iso2       String?
+  fipsCode   String?
+  type       String?
+  latitude   String?
+  longitude  String?
+  wikiDataId String?
+  countryId  String
+  country    Country @relation(fields: [countryId], references: [id])
+  cities     City[]
 
   Organization Organization[]
 }
 
 model City {
-  id          Int      @id @default(autoincrement())
+  id          String     @id @default(uuid())
   name        String
   stateCode   String?
   countryCode String?
   latitude    String?
   longitude   String?
   wikiDataId  String?
-  stateId     Int
-  countryId   Int
-  state       State     @relation(fields: [stateId], references: [id])
-  country     Country   @relation(fields: [countryId], references: [id])
+  stateId     String
+  countryId   String
+  state       State   @relation(fields: [stateId], references: [id])
+  country     Country @relation(fields: [countryId], references: [id])
 }
-
 
 //// RoleBased Access Control (RBAC) Models
 //#################################################################
@@ -377,7 +360,6 @@ enum ResourceName {
 
 // NEW: System-defined custom permissions that don't fit CRUD patterns
 enum SystemCustomPermission {
-
   //example custom permissions
   // Financial permissions
   VIEW_FINANCIAL_REPORTS
@@ -414,34 +396,33 @@ enum UserRoleStatus {
   SUSPENDED
 }
 
-
 // =========================================
 // ROLE-BASED PERMISSIONS SYSTEM
 // =========================================
 
 model Role {
-  id                 String              @id @default(uuid())
-  name               String
-  description        String?
-  organization       Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId     String
-  createdBy          User                @relation("RoleOwner", fields: [createdById], references: [id])
-  createdById        String
+  id             String       @id @default(uuid())
+  name           String
+  description    String?
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  createdBy      User         @relation("RoleCreator", fields: [createdById], references: [id])
+  createdById    String
 
   // Role metadata
-  isSystem           Boolean             @default(false)
-  status             UserRoleStatus      @default(ACTIVE)
-  priority           Int                 @default(0)
+  isSystem Boolean        @default(false)
+  status   UserRoleStatus @default(ACTIVE)
+  priority Int            @default(0)
 
   // Permissions
-  rolePermissions    RolePermission[]
+  rolePermissions       RolePermission[]
   roleCustomPermissions RoleCustomPermission[]
-  userRoles          UserRole[]
+  userRoles             UserRole[]
 
   // Audit
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
-  expiresAt          DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  expiresAt DateTime?
 
   @@unique([organizationId, name])
   @@index([organizationId, status, priority])
@@ -449,23 +430,23 @@ model Role {
 
 // Bridge table for User <-> Role many-to-many
 model UserRole {
-  id             String           @id @default(uuid())
-  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String       @id @default(uuid())
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         String
-  role           Role             @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  role           Role         @relation(fields: [roleId], references: [id], onDelete: Cascade)
   roleId         String
-  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
 
   // Assignment context
-  assignedBy     String
-  assignedAt     DateTime         @default(now())
-  status         UserRoleStatus   @default(ACTIVE)
-  expiresAt      DateTime?
+  assignedBy String
+  assignedAt DateTime       @default(now())
+  status     UserRoleStatus @default(ACTIVE)
+  expiresAt  DateTime?
 
   // Metadata
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([userId, roleId, organizationId])
   @@index([userId, status])
@@ -477,34 +458,31 @@ model UserRole {
 // =========================================
 
 model Action {
-  id         Int           @id @default(autoincrement())
-  name       ActionName    @unique
+  id          String          @id @default(uuid())
+  name        ActionName   @unique
   description String?
   permissions Permission[]
-
- 
 }
 
 model Resource {
-  id         Int           @id @default(autoincrement())
-  name       ResourceName  @unique
+  id          String          @id @default(uuid())
+  name        ResourceName @unique
   description String?
   permissions Permission[]
-
 }
 
 // Standard CRUD permissions
 model Permission {
-  id           Int           @id @default(autoincrement())
-  action       Action        @relation(fields: [actionId], references: [id], onDelete: Cascade)
-  actionId     Int
-  resource     Resource      @relation(fields: [resourceId], references: [id], onDelete: Cascade)
-  resourceId   Int
+  id         String      @id @default(uuid())
+  action     Action   @relation(fields: [actionId], references: [id], onDelete: Cascade)
+  actionId   String
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  resourceId String
 
   // Permission metadata
-  description  String?
-  category     String?
-  isDangerous  Boolean       @default(false)
+  description String?
+  category    String?
+  isDangerous Boolean @default(false)
 
   rolePermissions RolePermission[]
 
@@ -517,18 +495,18 @@ model Permission {
 // =========================================
 
 model CustomPermission {
-  id             String         @id @default(uuid())
-  code           SystemCustomPermission @unique // System-defined enum value
-  name           String
-  description    String?
-  category       String         // e.g., "FINANCIAL", "ADMINISTRATIVE", "OPERATIONAL"
-  riskLevel      String         @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  id          String                 @id @default(uuid())
+  code        SystemCustomPermission @unique // System-defined enum value
+  name        String
+  description String?
+  category    String // e.g., "FINANCIAL", "ADMINISTRATIVE", "OPERATIONAL"
+  riskLevel   String                 @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
 
   // System metadata
-  isActive       Boolean        @default(true)
-  requiresApproval Boolean      @default(false) // High-risk permissions need approval
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  isActive         Boolean  @default(true)
+  requiresApproval Boolean  @default(false) // High-risk permissions need approval
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   // Relationships
   roleCustomPermissions RoleCustomPermission[]
@@ -542,40 +520,40 @@ model CustomPermission {
 // =========================================
 
 model RolePermission {
-  id             Int           @id @default(autoincrement())
-  role           Role          @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  roleId         String
-  permission     Permission    @relation(fields: [permissionId], references: [id], onDelete: Cascade)
-  permissionId   Int
+  id           String        @id @default(uuid())
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId       String
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  permissionId String
 
   // Additional context for permission assignment
-  conditions     Json?
-  grantedAt      DateTime      @default(now())
-  grantedBy      String
+  conditions Json?
+  grantedAt  DateTime @default(now())
+  grantedBy  String
 
   @@unique([roleId, permissionId])
   @@index([roleId])
 }
 
 model RoleCustomPermission {
-  id                 Int                 @id @default(autoincrement())
-  role               Role                @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  id                 String              @id @default(uuid())
+  role               Role             @relation(fields: [roleId], references: [id], onDelete: Cascade)
   roleId             String
-  customPermission   CustomPermission    @relation(fields: [customPermissionId], references: [id], onDelete: Cascade)
+  customPermission   CustomPermission @relation(fields: [customPermissionId], references: [id], onDelete: Cascade)
   customPermissionId String
 
   // Additional context for high-risk permissions
-  conditions         Json?
-  approvalRequired   Boolean             @default(false)
-  approvedBy         String?             // User ID who approved this permission
-  approvedAt         DateTime?
-  grantedAt          DateTime            @default(now())
-  grantedBy          String
+  conditions          Json?
+  approvalRequired    Boolean              @default(false)
+  approvedBy          String? // User ID who approved this permission
+  approvedAt          DateTime?
+  grantedAt           DateTime             @default(now())
+  grantedBy           String
+  permissionApprovals PermissionApproval[]
 
   @@unique([roleId, customPermissionId])
   @@index([roleId])
   @@index([customPermissionId, approvalRequired])
-  permissionApprovals PermissionApproval[]
 }
 
 // =========================================
@@ -583,20 +561,20 @@ model RoleCustomPermission {
 // =========================================
 
 model PermissionApproval {
-  id                  String              @id @default(uuid())
-  roleCustomPermission RoleCustomPermission @relation(fields: [roleCustomPermissionId], references: [id])
-  roleCustomPermissionId Int
+  id                     String               @id @default(uuid())
+  roleCustomPermission   RoleCustomPermission @relation(fields: [roleCustomPermissionId], references: [id])
+  roleCustomPermissionId String
 
-  requestedBy         String              // User ID who requested
-  requestedAt         DateTime            @default(now())
-  approvedBy          String?             // User ID who approved
-  approvedAt          DateTime?
-  rejectedBy          String?
-  rejectedAt          DateTime?
-  reason              String?             // Justification for request
-  comments            String?             // Approver/rejector comments
+  requestedBy String // User ID who requested
+  requestedAt DateTime  @default(now())
+  approvedBy  String? // User ID who approved
+  approvedAt  DateTime?
+  rejectedBy  String?
+  rejectedAt  DateTime?
+  reason      String? // Justification for request
+  comments    String? // Approver/rejector comments
 
-  status              String              @default("PENDING") // PENDING, APPROVED, REJECTED
+  status String @default("PENDING") // PENDING, APPROVED, REJECTED
 
   @@index([requestedAt, status])
   @@index([roleCustomPermissionId])

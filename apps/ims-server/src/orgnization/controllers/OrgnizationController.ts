@@ -1,22 +1,28 @@
 import {
-  Body,
   Controller,
-  Post,
+  Request,
   Route,
-  Tags,
   Middlewares,
+  Tags,
   Get,
-  Path,
+  Body,
+  Post,
   Query,
+  Path,
 } from "tsoa";
+import type { Request as RequestType } from "express";
 import { createOrgnization } from "../services/createOrgnization.js";
 import { Prisma } from "../../../generated/prisma/index.js";
 import { OrganizationCreateManyInputSchema } from "../../../generated/zod/index.js";
 import { validateZodSchemaMiddleware } from "../../core/schema/validateZodErrorMiddleware.js";
 import { getOrganizationFormDataService } from "../services/getFormDataService.js";
 import { getFilterdCountryStatesServices } from "../services/state.service.js";
-import type { OrganizationCreateInput } from "@khaled/ims-shared";
+import type {
+  OrganizationCreateBody,
+  OrganizationCreateInput,
+} from "@khaled/ims-shared";
 import {
+  organizationCreateBodySchema,
   organizationCreateInputSchema,
   organizationWhereInputSchema,
 } from "@khaled/ims-shared";
@@ -24,20 +30,27 @@ import { OrganizationService } from "../OrganizationService.js";
 import { OrganizationError } from "../errors/OrganizationError.js";
 import { errorMapper } from "@khaled/error-handler";
 import { organizationErrorMapping } from "../errors/organizationErrorsMapping.js";
+import { isAuthentecated } from "../../user/middlewares/isAuthenticatedMiddleware.js";
 
 @Tags("organization")
 @Route("organization")
 export class OrgnizationController extends Controller {
   organizationService = new OrganizationService();
   @Middlewares([
+    isAuthentecated,
     validateZodSchemaMiddleware({
-      bodySchema: organizationCreateInputSchema,
+      bodySchema: organizationCreateBodySchema,
     }),
   ])
   @Post()
-  public async createOrgnization(@Body() body: OrganizationCreateInput) {
+  public async createOrgnization(
+    @Body() body: OrganizationCreateBody,
+    @Request() req: RequestType
+  ) {
     try {
-      return await this.organizationService.create({ data: body });
+      return await this.organizationService.create({
+        data: { ...body, ownerId: req.user!.id },
+      });
     } catch (error) {
       if (error instanceof OrganizationError) {
         throw errorMapper(error, organizationErrorMapping);
@@ -47,14 +60,15 @@ export class OrgnizationController extends Controller {
     }
   }
 
-  @Middlewares([
-    validateZodSchemaMiddleware({
-      querySchema: organizationWhereInputSchema,
-    }),
-  ])
-  @Get()
-  public async getOwnedOrganizations(@Query() ownerId?: string) {
-    return await this.organizationService.findMany({ where: { ownerId } });
+  @Middlewares([isAuthentecated])
+  @Get("/owner-organizations")
+  public async getOwnedOrganizations(@Request() req: RequestType) {
+    return await this.organizationService.findOwnedOrganizations(req.user!.id);
+  }
+  @Middlewares([isAuthentecated])
+  @Get("/user-organizations")
+  public async getUserOrganizations(@Request() req: RequestType) {
+    return await this.organizationService.findUserOrganizations(req.user!.id);
   }
 
   @Get("/form-data")

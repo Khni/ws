@@ -2,34 +2,67 @@
 import { z } from "zod";
 
 export const organizationModelSchema = z.object({
-    name: z.string().min(2).max(50),
-    id: z.string(),
-    description: z.string().nullable(),
-    stateId: z.number(),
-    currencyId: z.number(),
-    timeZoneId: z.number(),
-    inventoryStartDate: z.date(),
-    languageId: z.number().nullable(),
-    industryCategoryId: z.number().nullable(),
-    fiscalYearPatternId: z.number().nullable(),
-    ownerId: z.string(),
-    address: z.string().nullable(),
-    zipCode: z.string().nullable(),
-    createdAt: z.date(),
-    updatedAt: z.date()
+  name: z.string().min(2).max(50),
+  id: z.string(),
+  description: z.string().min(2).max(250).optional(),
+  stateId: z.string(),
+  currencyId: z.string(),
+  timeZoneId: z.string(),
+  inventoryStartDate: z.iso.datetime(),
+  languageId: z.string().optional(),
+  industryCategoryId: z.string().optional(),
+  fiscalYearPatternId: z.string().optional(),
+  ownerId: z.string(),
+  address: z.string().optional(),
+  zipCode: z.string().optional(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
-export const organizationCreateInputSchema = organizationModelSchema.omit({ "id": true, "createdAt": true, "updatedAt": true });
+export const organizationCreateInputSchema = organizationModelSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const organizationCreateBodySchema = organizationModelSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  ownerId: true,
+});
 
 export const organizationUpdateInputSchema = organizationModelSchema.partial();
 
-export const organizationWhereUniqueInputSchema = z.union([z.object({
-        id: z.string()
-    }), z.object({
-        name_ownerId: z.object({
-            name: z.string(),
-            ownerId: z.string()
-        })
-    })]);
+export const organizationWhereUniqueInputSchema = z.union([
+  z.object({
+    id: z.string(),
+  }),
+  z.object({
+    name_ownerId: z.object({
+      name: z.string(),
+      ownerId: z.string(),
+    }),
+  }),
+]);
 
-export const organizationWhereInputSchema = organizationModelSchema.partial();
+export const organizationWhereInputSchema = organizationModelSchema
+  .partial()
+  .and(
+    z.object({
+      userRoles: z
+        .object({
+          some: z
+            .object({
+              userId: z.string().optional(),
+            })
+            .optional(),
+        })
+        .optional(),
+    })
+  );
+
+export const organizationOrderByInputSchema = z.union([
+  z.record(z.any(), z.union([z.literal("asc"), z.literal("desc")])),
+  z.undefined(),
+]);

@@ -1,7 +1,7 @@
 import prisma from "../../database/prisma.js";
 
 export const getFilterdCountryStatesServices = async (
-  countryId: number,
+  countryId: string,
   name?: string
 ) => {
   return await prisma.state.findMany({
@@ -15,6 +15,7 @@ export const getFilterdCountryStatesServices = async (
     select: {
       id: true,
       name: true,
+      country: { select: { timezones: true } },
     },
   });
 };

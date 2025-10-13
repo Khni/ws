@@ -10,8 +10,3 @@ export * from "./create-config.js";
 export * from "./parseTimeString.js";
 export * from "./types.js";
 export * from "./errors/serializeErrorResponse.js";
-
-//cache
-export * from "./cache/RedisCache.js";
-export * from "./cache/ICache.js";
-export * from "./cache/redisClient.js";

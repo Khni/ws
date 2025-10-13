@@ -38,8 +38,6 @@
     "@khaled/ims-shared": "workspace:*",
     "@khaled/mailer": "workspace:*",
     "@khaled/utils": "workspace:*",
-    "@khaled/organization": "workspace:*",
-    "@khaled/organization-errors": "workspace:*",
     "@prisma/client": "^6.11.1",
     "@tsoa/runtime": "^6.6.0",
     "awilix": "^12.0.5",

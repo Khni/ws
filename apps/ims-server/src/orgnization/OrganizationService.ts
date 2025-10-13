@@ -122,7 +122,7 @@ export class OrganizationService {
 
     return organization;
   }
-  async findMany({
+  protected async findMany({
     page = 0,
     pageSize = 200,
     where,
@@ -156,7 +156,16 @@ export class OrganizationService {
       totalPages: Math.ceil(totalCount / pageSize),
     };
   }
-
+  findUserOrganizations = async (userId: string) => {
+    return await this.organizationRepository.findMany({
+      where: { userRoles: { some: { userId } } },
+    });
+  };
+  findOwnedOrganizations = async (ownerId: string) => {
+    return await this.organizationRepository.findMany({
+      where: { ownerId },
+    });
+  };
   async delete(id: string) {
     const deleted = await this.organizationRepository.delete({
       where: { id },

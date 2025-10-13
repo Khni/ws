@@ -1,870 +1,1153 @@
 {
-  "openapi": "3.0.0",
-  "components": {
-    "examples": {},
-    "headers": {},
-    "parameters": {},
-    "requestBodies": {},
-    "responses": {},
-    "schemas": {
-      "UserResponseType": {
-        "properties": {
-          "identifierType": {
-            "type": "string",
-            "enum": ["email", "phone"]
-          },
-          "identifier": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          }
-        },
-        "required": ["identifierType", "identifier", "name", "id"],
-        "type": "object"
-      },
-      "RefreshTokenInput": {
-        "properties": {
-          "refreshToken": {
-            "type": "string"
-          }
-        },
-        "type": "object"
-      },
-      "_36_Enums.OtpType": {
-        "type": "string",
-        "enum": ["SIGN_UP", "LOGIN", "FORGET_PASSWORD"]
-      },
-      "OtpType": {
-        "$ref": "#/components/schemas/_36_Enums.OtpType"
-      },
-      "AuthTokensResponseType": {
-        "properties": {
-          "refreshToken": {
-            "type": "string"
-          },
-          "accessToken": {
-            "type": "string"
-          }
-        },
-        "required": ["refreshToken", "accessToken"],
-        "type": "object"
-      },
-      "AuthResponseType": {
-        "properties": {
-          "tokens": {
-            "$ref": "#/components/schemas/AuthTokensResponseType"
-          },
-          "user": {
-            "$ref": "#/components/schemas/UserResponseType"
-          }
-        },
-        "required": ["tokens", "user"],
-        "type": "object"
-      },
-      "LocalLoginInput": {
-        "properties": {
-          "password": {
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
-          }
-        },
-        "required": ["password", "identifier"],
-        "type": "object"
-      },
-      "OtpSignUpInput": {
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          }
-        },
-        "required": ["name", "password"],
-        "type": "object"
-      },
-      "ResetForgettenPasswordInput": {
-        "properties": {
-          "confirmNewPassword": {
-            "type": "string"
-          },
-          "newPassword": {
-            "type": "string"
-          }
-        },
-        "required": ["confirmNewPassword", "newPassword"],
-        "type": "object"
-      },
-      "Prisma.OrganizationCreateManyInput": {
-        "properties": {
-          "updatedAt": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "string"
-              }
-            ]
-          },
-          "createdAt": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "string"
-              }
-            ]
-          },
-          "zipCode": {
-            "type": "string",
-            "nullable": true
-          },
-          "address": {
-            "type": "string",
-            "nullable": true
-          },
-          "ownerId": {
-            "type": "string"
-          },
-          "fiscalYearPatternId": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "industryCategoryId": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "languageId": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "inventoryStartDate": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "string"
-              }
-            ]
-          },
-          "timeZoneId": {
-            "type": "number",
-            "format": "double"
-          },
-          "currencyId": {
-            "type": "number",
-            "format": "double"
-          },
-          "stateId": {
-            "type": "number",
-            "format": "double"
-          },
-          "name": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "ownerId",
-          "inventoryStartDate",
-          "timeZoneId",
-          "currencyId",
-          "stateId",
-          "name"
-        ],
-        "type": "object"
-      }
-    },
-    "securitySchemes": {}
-  },
-  "info": {
-    "title": "@khaled/ims-server",
-    "version": "1.3.0",
-    "contact": {}
-  },
-  "paths": {
-    "/user": {
-      "get": {
-        "operationId": "GetProfile",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponseType"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["user"],
-        "security": [],
-        "parameters": []
-      }
-    },
-    "/oauth/google": {
-      "get": {
-        "operationId": "GoogleLogin",
-        "responses": {
-          "302": {
-            "description": "Redirect"
-          }
-        },
-        "tags": ["oauth"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "code",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/oauth/facebook": {
-      "get": {
-        "operationId": "FacebookLogin",
-        "responses": {
-          "302": {
-            "description": "Redirect"
-          }
-        },
-        "tags": ["oauth"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "code",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/token/refresh": {
-      "post": {
-        "operationId": "RefreshToken",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "accessToken": {
-                      "type": "string"
-                    }
-                  },
-                  "required": ["accessToken"],
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["token"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RefreshTokenInput"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/otp/request": {
-      "post": {
-        "operationId": "RequestOtp",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "token": {
-                      "type": "string"
-                    }
-                  },
-                  "required": ["token"],
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["otp"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "otpType": {
-                    "$ref": "#/components/schemas/OtpType"
-                  },
-                  "identifier": {
-                    "type": "string"
-                  }
-                },
-                "required": ["otpType", "identifier"],
-                "type": "object"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/otp/verify": {
-      "post": {
-        "operationId": "VerifyOtp",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "token": {
-                      "type": "string"
-                    }
-                  },
-                  "required": ["token"],
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["otp"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "otpType": {
-                    "$ref": "#/components/schemas/OtpType"
-                  },
-                  "otp": {
-                    "type": "string"
-                  }
-                },
-                "required": ["otpType", "otp"],
-                "type": "object"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/auth/login": {
-      "post": {
-        "operationId": "Login",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthResponseType"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["auth"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LocalLoginInput"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/auth/sign-up": {
-      "post": {
-        "operationId": "SignUp",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthResponseType"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["auth"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OtpSignUpInput"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/auth/forget-password": {
-      "post": {
-        "operationId": "ResetForgettenPassword",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  },
-                  "required": ["message"],
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["auth"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ResetForgettenPasswordInput"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/auth/logout": {
-      "post": {
-        "operationId": "Logout",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  },
-                  "required": ["message"],
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["auth"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "refreshToken": {
-                    "type": "string"
-                  }
-                },
-                "type": "object"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/organization": {
-      "post": {
-        "operationId": "CreateOrgnization",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "ownerId": {
-                      "type": "string"
-                    },
-                    "fiscalYearPatternId": {
-                      "type": "number",
-                      "format": "double"
-                    },
-                    "industryCategoryId": {
-                      "type": "number",
-                      "format": "double"
-                    },
-                    "languageId": {
-                      "type": "number",
-                      "format": "double"
-                    },
-                    "timeZoneId": {
-                      "type": "number",
-                      "format": "double"
-                    },
-                    "currencyId": {
-                      "type": "number",
-                      "format": "double"
-                    },
-                    "stateId": {
-                      "type": "number",
-                      "format": "double"
-                    },
-                    "zipCode": {
-                      "type": "string"
-                    },
-                    "address": {
-                      "type": "string"
-                    },
-                    "inventoryStartDate": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "updatedAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "id": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "ownerId",
-                    "fiscalYearPatternId",
-                    "industryCategoryId",
-                    "languageId",
-                    "timeZoneId",
-                    "currencyId",
-                    "stateId",
-                    "zipCode",
-                    "address",
-                    "inventoryStartDate",
-                    "name",
-                    "updatedAt",
-                    "createdAt",
-                    "id"
-                  ],
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["organization"],
-        "security": [],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Prisma.OrganizationCreateManyInput"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/organization/form-data": {
-      "get": {
-        "operationId": "OrganizationFormData",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "currencies": {
-                      "items": {
-                        "properties": {
-                          "code": {
-                            "type": "string"
-                          },
-                          "name": {
-                            "type": "string"
-                          },
-                          "id": {
-                            "type": "number",
-                            "format": "double"
-                          },
-                          "symbol": {
-                            "type": "string"
-                          }
-                        },
-                        "required": ["code", "name", "id", "symbol"],
-                        "type": "object"
-                      },
-                      "type": "array"
-                    },
-                    "fiscalYearPattern": {
-                      "items": {
-                        "properties": {
-                          "label": {
-                            "type": "string"
-                          },
-                          "code": {
-                            "type": "string"
-                          },
-                          "id": {
-                            "type": "number",
-                            "format": "double"
-                          }
-                        },
-                        "required": ["label", "code", "id"],
-                        "type": "object"
-                      },
-                      "type": "array"
-                    },
-                    "timezones": {
-                      "items": {
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "id": {
-                            "type": "number",
-                            "format": "double"
-                          }
-                        },
-                        "required": ["name", "id"],
-                        "type": "object"
-                      },
-                      "type": "array"
-                    },
-                    "languages": {
-                      "items": {
-                        "properties": {
-                          "code": {
-                            "type": "string"
-                          },
-                          "name": {
-                            "type": "string"
-                          },
-                          "id": {
-                            "type": "number",
-                            "format": "double"
-                          }
-                        },
-                        "required": ["code", "name", "id"],
-                        "type": "object"
-                      },
-                      "type": "array"
-                    },
-                    "countries": {
-                      "items": {
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "id": {
-                            "type": "number",
-                            "format": "double"
-                          }
-                        },
-                        "required": ["name", "id"],
-                        "type": "object"
-                      },
-                      "type": "array"
-                    }
-                  },
-                  "required": [
-                    "currencies",
-                    "fiscalYearPattern",
-                    "timezones",
-                    "languages",
-                    "countries"
-                  ],
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["organization"],
-        "security": [],
-        "parameters": []
-      }
-    },
-    "/country": {
-      "get": {
-        "operationId": "GetCountries",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "id": {
-                        "type": "number",
-                        "format": "double"
-                      }
-                    },
-                    "required": ["name", "id"],
-                    "type": "object"
-                  },
-                  "type": "array"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["region"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "name",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/country/{countryId}": {
-      "get": {
-        "operationId": "GetStates",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "id": {
-                        "type": "number",
-                        "format": "double"
-                      }
-                    },
-                    "required": ["name", "id"],
-                    "type": "object"
-                  },
-                  "type": "array"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["region"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "countryId",
-            "required": true,
-            "schema": {
-              "format": "double",
-              "type": "number"
-            }
-          },
-          {
-            "in": "query",
-            "name": "name",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/health-check": {
-      "get": {
-        "operationId": "HealthCheck",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "description": "Simple health check endpoint",
-        "tags": ["Health"],
-        "security": [],
-        "parameters": []
-      }
-    }
-  },
-  "servers": [
-    {
-      "url": "/"
-    }
-  ]
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"UserResponseType": {
+				"properties": {
+					"identifierType": {
+						"type": "string",
+						"enum": [
+							"email",
+							"phone"
+						]
+					},
+					"identifier": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"identifierType",
+					"identifier",
+					"name",
+					"id"
+				],
+				"type": "object"
+			},
+			"RefreshTokenInput": {
+				"properties": {
+					"refreshToken": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"_36_Enums.OtpType": {
+				"type": "string",
+				"enum": [
+					"SIGN_UP",
+					"LOGIN",
+					"FORGET_PASSWORD"
+				]
+			},
+			"OtpType": {
+				"$ref": "#/components/schemas/_36_Enums.OtpType"
+			},
+			"AuthTokensResponseType": {
+				"properties": {
+					"refreshToken": {
+						"type": "string"
+					},
+					"accessToken": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"refreshToken",
+					"accessToken"
+				],
+				"type": "object"
+			},
+			"AuthResponseType": {
+				"properties": {
+					"tokens": {
+						"$ref": "#/components/schemas/AuthTokensResponseType"
+					},
+					"user": {
+						"$ref": "#/components/schemas/UserResponseType"
+					}
+				},
+				"required": [
+					"tokens",
+					"user"
+				],
+				"type": "object"
+			},
+			"LocalLoginInput": {
+				"properties": {
+					"password": {
+						"type": "string"
+					},
+					"identifier": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"password",
+					"identifier"
+				],
+				"type": "object"
+			},
+			"OtpSignUpInput": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"password"
+				],
+				"type": "object"
+			},
+			"ResetForgettenPasswordInput": {
+				"properties": {
+					"confirmNewPassword": {
+						"type": "string"
+					},
+					"newPassword": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"confirmNewPassword",
+					"newPassword"
+				],
+				"type": "object"
+			},
+			"Pick_OrganizationModel.Exclude_keyofOrganizationModel.id-or-createdAt-or-updatedAt-or-ownerId__": {
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "The name of the organization.",
+						"minLength": 2,
+						"maxLength": 50
+					},
+					"description": {
+						"type": "string",
+						"description": "The name of the organization.",
+						"minLength": 2,
+						"maxLength": 250
+					},
+					"stateId": {
+						"type": "string"
+					},
+					"currencyId": {
+						"type": "string"
+					},
+					"timeZoneId": {
+						"type": "string"
+					},
+					"inventoryStartDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"languageId": {
+						"type": "string"
+					},
+					"industryCategoryId": {
+						"type": "string"
+					},
+					"fiscalYearPatternId": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"zipCode": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"stateId",
+					"currencyId",
+					"timeZoneId",
+					"inventoryStartDate"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_OrganizationModel.id-or-createdAt-or-updatedAt-or-ownerId_": {
+				"$ref": "#/components/schemas/Pick_OrganizationModel.Exclude_keyofOrganizationModel.id-or-createdAt-or-updatedAt-or-ownerId__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"OrganizationCreateBody": {
+				"$ref": "#/components/schemas/Omit_OrganizationModel.id-or-createdAt-or-updatedAt-or-ownerId_"
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "@khaled/ims-server",
+		"version": "1.3.0",
+		"contact": {}
+	},
+	"paths": {
+		"/user": {
+			"get": {
+				"operationId": "GetProfile",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserResponseType"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"user"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/oauth/google": {
+			"get": {
+				"operationId": "GoogleLogin",
+				"responses": {
+					"302": {
+						"description": "Redirect"
+					}
+				},
+				"tags": [
+					"oauth"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "code",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/oauth/facebook": {
+			"get": {
+				"operationId": "FacebookLogin",
+				"responses": {
+					"302": {
+						"description": "Redirect"
+					}
+				},
+				"tags": [
+					"oauth"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "code",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/token/refresh": {
+			"post": {
+				"operationId": "RefreshToken",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"accessToken": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"accessToken"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"token"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RefreshTokenInput"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/otp/request": {
+			"post": {
+				"operationId": "RequestOtp",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"token": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"token"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"otp"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"otpType": {
+										"$ref": "#/components/schemas/OtpType"
+									},
+									"identifier": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"otpType",
+									"identifier"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/otp/verify": {
+			"post": {
+				"operationId": "VerifyOtp",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"token": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"token"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"otp"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"otpType": {
+										"$ref": "#/components/schemas/OtpType"
+									},
+									"otp": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"otpType",
+									"otp"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthResponseType"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LocalLoginInput"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/sign-up": {
+			"post": {
+				"operationId": "SignUp",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthResponseType"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/OtpSignUpInput"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/forget-password": {
+			"post": {
+				"operationId": "ResetForgettenPassword",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ResetForgettenPasswordInput"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/logout": {
+			"post": {
+				"operationId": "Logout",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"refreshToken": {
+										"type": "string"
+									}
+								},
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/organization": {
+			"post": {
+				"operationId": "CreateOrgnization",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"name": {
+											"type": "string"
+										},
+										"id": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"name",
+										"id"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"organization"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/OrganizationCreateBody"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/organization/owner-organizations": {
+			"get": {
+				"operationId": "GetOwnedOrganizations",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"properties": {
+											"zipCode": {
+												"type": "string"
+											},
+											"address": {
+												"type": "string"
+											},
+											"ownerId": {
+												"type": "string"
+											},
+											"fiscalYearPatternId": {
+												"type": "string"
+											},
+											"industryCategoryId": {
+												"type": "string"
+											},
+											"languageId": {
+												"type": "string"
+											},
+											"inventoryStartDate": {
+												"type": "string",
+												"format": "date-time"
+											},
+											"timeZoneId": {
+												"type": "string"
+											},
+											"currencyId": {
+												"type": "string"
+											},
+											"stateId": {
+												"type": "string"
+											},
+											"description": {
+												"type": "string"
+											},
+											"name": {
+												"type": "string"
+											},
+											"updatedAt": {
+												"type": "string",
+												"format": "date-time"
+											},
+											"createdAt": {
+												"type": "string",
+												"format": "date-time"
+											},
+											"id": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"zipCode",
+											"address",
+											"ownerId",
+											"fiscalYearPatternId",
+											"industryCategoryId",
+											"languageId",
+											"inventoryStartDate",
+											"timeZoneId",
+											"currencyId",
+											"stateId",
+											"description",
+											"name",
+											"updatedAt",
+											"createdAt",
+											"id"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"organization"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/organization/user-organizations": {
+			"get": {
+				"operationId": "GetUserOrganizations",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"properties": {
+											"zipCode": {
+												"type": "string"
+											},
+											"address": {
+												"type": "string"
+											},
+											"ownerId": {
+												"type": "string"
+											},
+											"fiscalYearPatternId": {
+												"type": "string"
+											},
+											"industryCategoryId": {
+												"type": "string"
+											},
+											"languageId": {
+												"type": "string"
+											},
+											"inventoryStartDate": {
+												"type": "string",
+												"format": "date-time"
+											},
+											"timeZoneId": {
+												"type": "string"
+											},
+											"currencyId": {
+												"type": "string"
+											},
+											"stateId": {
+												"type": "string"
+											},
+											"description": {
+												"type": "string"
+											},
+											"name": {
+												"type": "string"
+											},
+											"updatedAt": {
+												"type": "string",
+												"format": "date-time"
+											},
+											"createdAt": {
+												"type": "string",
+												"format": "date-time"
+											},
+											"id": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"zipCode",
+											"address",
+											"ownerId",
+											"fiscalYearPatternId",
+											"industryCategoryId",
+											"languageId",
+											"inventoryStartDate",
+											"timeZoneId",
+											"currencyId",
+											"stateId",
+											"description",
+											"name",
+											"updatedAt",
+											"createdAt",
+											"id"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"organization"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/organization/form-data": {
+			"get": {
+				"operationId": "OrganizationFormData",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"industryCategories": {
+											"items": {
+												"properties": {
+													"label": {
+														"type": "string"
+													},
+													"id": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"label",
+													"id"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										},
+										"currencies": {
+											"items": {
+												"properties": {
+													"code": {
+														"type": "string"
+													},
+													"name": {
+														"type": "string"
+													},
+													"id": {
+														"type": "string"
+													},
+													"symbol": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"code",
+													"name",
+													"id",
+													"symbol"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										},
+										"fiscalYearPattern": {
+											"items": {
+												"properties": {
+													"label": {
+														"type": "string"
+													},
+													"code": {
+														"type": "string"
+													},
+													"id": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"label",
+													"code",
+													"id"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										},
+										"timezones": {
+											"items": {
+												"properties": {
+													"name": {
+														"type": "string"
+													},
+													"id": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"name",
+													"id"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										},
+										"languages": {
+											"items": {
+												"properties": {
+													"code": {
+														"type": "string"
+													},
+													"name": {
+														"type": "string"
+													},
+													"id": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"code",
+													"name",
+													"id"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										},
+										"countries": {
+											"items": {
+												"properties": {
+													"name": {
+														"type": "string"
+													},
+													"id": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"name",
+													"id"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"industryCategories",
+										"currencies",
+										"fiscalYearPattern",
+										"timezones",
+										"languages",
+										"countries"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"organization"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/country": {
+			"get": {
+				"operationId": "GetCountries",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"properties": {
+											"name": {
+												"type": "string"
+											},
+											"id": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"name",
+											"id"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"region"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "name",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/country/{countryId}/states": {
+			"get": {
+				"operationId": "GetStates",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"properties": {
+											"country": {
+												"properties": {
+													"timezones": {
+														"items": {
+															"properties": {
+																"offset": {
+																	"type": "string"
+																},
+																"name": {
+																	"type": "string"
+																},
+																"id": {
+																	"type": "string"
+																}
+															},
+															"required": [
+																"offset",
+																"name",
+																"id"
+															],
+															"type": "object"
+														},
+														"type": "array"
+													}
+												},
+												"required": [
+													"timezones"
+												],
+												"type": "object"
+											},
+											"name": {
+												"type": "string"
+											},
+											"id": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"country",
+											"name",
+											"id"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"region"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "countryId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "name",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/country/{countryId}/time-zones": {
+			"get": {
+				"operationId": "GetFilterdTimeZones",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"properties": {
+											"name": {
+												"type": "string"
+											},
+											"id": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"name",
+											"id"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"region"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "countryId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/health-check": {
+			"get": {
+				"operationId": "HealthCheck",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"description": "Simple health check endpoint",
+				"tags": [
+					"Health"
+				],
+				"security": [],
+				"parameters": []
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
 }
