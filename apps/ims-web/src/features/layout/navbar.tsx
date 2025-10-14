@@ -17,33 +17,50 @@ import { ROUTES } from "@/constants";
 import { useUserPreferencesContext } from "@workspace/ui/blocks/providers/UserPreferencesContext";
 import { useTheme } from "next-themes";
 
-export default function AppPage() {
+import { ReactNode } from "react";
+import Auth from "@/features/auth";
+
+interface NavbarProps {
+  children?: ReactNode;
+}
+
+export default function NavbarLayout({ children }: NavbarProps) {
   const router = useRouter();
-  const { data: organizations } = useGetOwnedOrganizations();
-  const { selectedOrganizationId, setSelectedOrganizationId } =
-    useSelectedOrganizationContext();
+
   const { user, isLoading } = useAuthenticatedProfile();
   const { locale, updateLocale, rtl } = useUserPreferencesContext();
   const { setTheme } = useTheme();
 
-  useEffect(() => {
-    if (!user) {
-      router.replace(ROUTES.auth.index);
-    }
-    if (!organizations || organizations.length === 0) return;
+  if (isLoading) {
+    return <LoadingPage />;
+  }
 
-    const found = organizations.find(
-      (org) => org.id === selectedOrganizationId
+  if (!user) {
+    return (
+      <div className="flex flex-col h-screen">
+        <Navbar
+          end={
+            <>
+              <ModeToggle setTheme={setTheme} />
+              <LanguageSwitcher locale={locale} updateLocale={updateLocale} />
+            </>
+          }
+          start={
+            <Button
+              onClick={() => router.replace(ROUTES.home)}
+              variant="outline"
+              size="icon"
+              className="cursor-pointer"
+            >
+              <HomeIcon />
+            </Button>
+          }
+        />
+        <div className="flex-1 flex flex-col gap-4 bg-muted items-center justify-center p-6 md:p-4">
+          <Auth />
+        </div>
+      </div>
     );
-    if (found) {
-      router.replace(`/app/${selectedOrganizationId}`);
-    }
-  }, [organizations, selectedOrganizationId, router]);
-
-  if (!organizations) return null;
-
-  if (organizations.length === 0) {
-    return <CreateOrganizationForm />;
   }
 
   return (
@@ -58,7 +75,7 @@ export default function AppPage() {
         }
         start={
           <Button
-            onClick={() => router.replace("/")}
+            onClick={() => router.replace(ROUTES.home)}
             variant="outline"
             size="icon"
             className="cursor-pointer"
@@ -68,21 +85,7 @@ export default function AppPage() {
         }
       />
       <div className="flex-1 flex flex-col gap-4 bg-muted items-center justify-center p-6 md:p-4">
-        <div className="p-4">
-          <h1 className="text-2xl font-bold mb-4">Your Organizations</h1>
-          <ul className="space-y-2">
-            <ComboBox
-              list={organizations.map((org) => ({
-                value: org.id,
-                label: org.name,
-              }))}
-              onSelect={(value) => {
-                setSelectedOrganizationId(value);
-                router.push(`/app/${value}`);
-              }}
-            />
-          </ul>
-        </div>
+        {children}
       </div>
     </div>
   );

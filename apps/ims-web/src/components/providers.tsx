@@ -9,6 +9,7 @@ import { Toaster } from "@workspace/ui/components/toaster";
 import { CookiesProvider } from "react-cookie";
 import { useState } from "react";
 import { Direction } from "radix-ui";
+import SelectedOrganizationContextProvider from "@/providers/selected-org-provider";
 export function Providers({
   children,
   dir,
@@ -27,10 +28,12 @@ export function Providers({
     >
       <CookiesProvider>
         <UserPreferencesContextProvider>
-          <QueryClientProvider client={client}>
-            <Direction.Provider dir={dir}>{children}</Direction.Provider>
-            <Toaster />
-          </QueryClientProvider>
+          <SelectedOrganizationContextProvider>
+            <QueryClientProvider client={client}>
+              <Direction.Provider dir={dir}>{children}</Direction.Provider>
+              <Toaster />
+            </QueryClientProvider>
+          </SelectedOrganizationContextProvider>
         </UserPreferencesContextProvider>
       </CookiesProvider>
     </NextThemesProvider>

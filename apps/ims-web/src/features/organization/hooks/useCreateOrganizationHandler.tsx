@@ -1,5 +1,6 @@
 import { CreateOrgnizationMutationBody, useCreateOrgnization } from "@/api";
 import { ROUTES } from "@/constants";
+import { useSelectedOrganizationContext } from "@/providers/selected-org-provider";
 import {
   ErrorResponse,
   OrganizationCreateBody,
@@ -16,6 +17,7 @@ export function useCreateOrgnizationHanler({
     SetStateAction<ErrorResponse<OrganizationErrorCodesType> | undefined>
   >;
 }) {
+  const { setSelectedOrganizationId } = useSelectedOrganizationContext();
   const router = useRouter();
   const { toast } = useToast();
   const accessToken =
@@ -32,7 +34,8 @@ export function useCreateOrgnizationHanler({
           title: "Organization created",
           description: `Organization ${data.name} has been created successfully`,
         });
-        router.push(ROUTES.app);
+        setSelectedOrganizationId(data.id);
+        router.push(ROUTES.app.index(data.id));
       },
       onError: (error: any) => {
         const err = error.response

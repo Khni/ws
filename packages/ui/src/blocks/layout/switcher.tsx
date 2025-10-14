@@ -18,25 +18,34 @@ import {
 } from "@workspace/ui/components/dropdown-menu";
 import { DropdownMenuShortcut } from "@workspace/ui/components/dropdown-menu";
 import { renderLogo } from "@workspace/ui/blocks/layout/render-logo";
+import { se } from "date-fns/locale";
 
 // Reusable & Context-Agnostic Switcher
+type SwitcherItem = {
+  name: string;
+  id: string;
+  logo?: React.ElementType;
+  description?: string;
+};
 export function Switcher({
   items,
   addTitle = "Add",
   switcherTitle = "Options",
   onAddClick,
+  onItemSelect,
+  initialSelectedItem,
 }: {
-  items: {
-    name: string;
-    logo?: React.ElementType;
-    description: string;
-  }[];
+  onItemSelect?: (id: string) => void;
+  initialSelectedItem?: SwitcherItem;
+  items: SwitcherItem[];
   addTitle?: string;
   switcherTitle?: string;
   onAddClick?: () => void;
 }) {
   const { isMobile } = useSidebar();
-  const [selectedItem, setSelectedItem] = React.useState(items[0]);
+  const [selectedItem, setSelectedItem] = React.useState(
+    initialSelectedItem || items[0]
+  );
 
   if (!selectedItem) return null;
 
@@ -76,8 +85,11 @@ export function Switcher({
             )}
             {items.map((item, index) => (
               <DropdownMenuItem
-                key={item.name}
-                onClick={() => setSelectedItem(item)}
+                key={item.id}
+                onClick={() => {
+                  onItemSelect?.(item.id);
+                  setSelectedItem(item);
+                }}
                 className="gap-2 p-2"
               >
                 <div className="flex size-6 items-center justify-center rounded-sm border">

@@ -1,9 +1,13 @@
 export const ROUTES = {
-  app: "/app",
+  app: {
+    index: (orgId?: string) => `/app${orgId ? `/${orgId}` : ""}`,
+    create_org: "/app/create-org-form",
+  },
   auth: {
     index: "/auth",
     forget_password: "/auth/forget-password",
   },
+
   home: "/",
 };
 

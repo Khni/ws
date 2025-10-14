@@ -23,7 +23,7 @@ export default function LoginPage({ children }: { children: ReactNode }) {
     return <LoadingPage />;
   }
   if (user) {
-    redirect(ROUTES.app);
+    redirect(ROUTES.app.index());
   }
   // Use a flex column layout with h-screen to avoid scroll caused by h-screen on content.
   // The Navbar has a fixed height, and the content area uses flex-1 to fill the remaining space.

@@ -22,7 +22,7 @@ export function useAuthSuccessHandler() {
     localStorage.setItem("accessToken", tokens.accessToken);
 
     // Redirect (defaults to app home)
-    router.push(options.redirectTo ?? ROUTES.app);
+    location.reload();
 
     // Toast
     toast({

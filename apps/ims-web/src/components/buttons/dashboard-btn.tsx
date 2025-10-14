@@ -31,7 +31,7 @@ export default function DashboardButton({
 
   return (
     <Button
-      onClick={() => router.replace(ROUTES.app)}
+      onClick={() => router.replace(ROUTES.app.index())}
       variant="outline"
       size="icon"
       className="cursor-pointer"
