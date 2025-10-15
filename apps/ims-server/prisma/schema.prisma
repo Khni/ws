@@ -67,14 +67,14 @@ model User {
   password String?
 
   // Relations
-  identifiers        UserIdentifier[]
-  profile            UserProfile?
-  refreshTokens      RefreshToken[]
+  identifiers   UserIdentifier[]
+  profile       UserProfile?
+  refreshTokens RefreshToken[]
   // Relationships
-  userRoles          UserRole[]
-  createdRoles         Role[]           @relation("RoleCreator")
- 
-  ownedOrganizations Organization[]   @relation("OrganizationOwner")
+  userRoles     UserRole[]
+  createdRoles  Role[]           @relation("RoleCreator")
+
+  ownedOrganizations Organization[] @relation("OrganizationOwner")
 
   // Audit & Timestamps
   lastLoginAt DateTime?
@@ -142,7 +142,7 @@ model RefreshToken {
 //############################################
 //############################################
 model Language {
-  id            String            @id @default(uuid())
+  id            String         @id @default(uuid())
   code          String         @unique // ISO 639-1 code like 'en', 'ar', 'fr', etc.
   name          String // English name e.g. 'English'
   nativeName    String // Native name e.g. 'العربية'
@@ -151,14 +151,14 @@ model Language {
 }
 
 model IndustryCategory {
-  id            String            @id @default(uuid())
+  id            String         @id @default(uuid())
   code          String         @unique // e.g. "MANUFACTURING"
   label         String // e.g. "Manufacturing"
   organizations Organization[]
 }
 
 model FiscalYearPattern {
-  id            String            @id @default(uuid())
+  id            String         @id @default(uuid())
   code          String         @unique // e.g. "APR_MAR"
   label         String // e.g. "April - March"
   startMonth    String // 4
@@ -172,7 +172,7 @@ model Organization {
   description String?
 
   stateId String
-  state   State @relation(fields: [stateId], references: [id])
+  state   State  @relation(fields: [stateId], references: [id])
 
   currencyId String
   currency   Currency @relation(fields: [currencyId], references: [id])
@@ -202,7 +202,6 @@ model Organization {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-
   @@unique([name, ownerId])
 }
 
@@ -211,7 +210,7 @@ model Organization {
 //################################
 
 model Region {
-  id           String         @id @default(uuid())
+  id           String      @id @default(uuid())
   name         String      @unique
   translations Json?
   wikiDataId   String?
@@ -220,7 +219,7 @@ model Region {
 }
 
 model Subregion {
-  id           String       @id @default(uuid())
+  id           String    @id @default(uuid())
   name         String    @unique
   translations Json?
   wikiDataId   String?
@@ -230,7 +229,7 @@ model Subregion {
 }
 
 model Currency {
-  id        String       @id @default(uuid())
+  id        String    @id @default(uuid())
   code      String    @unique
   name      String?
   symbol    String?
@@ -240,13 +239,13 @@ model Currency {
 }
 
 model PhoneCode {
-  id        String       @id @default(uuid())
+  id        String    @id @default(uuid())
   code      String    @unique
   countries Country[]
 }
 
 model TimeZone {
-  id        String       @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String    @unique
   offset    String?
   countries Country[]
@@ -257,7 +256,7 @@ model TimeZone {
 }
 
 model Translation {
-  id        String      @id @default(uuid())
+  id        String   @id @default(uuid())
   language  String
   value     Json
   countryId String?
@@ -265,7 +264,7 @@ model Translation {
 }
 
 model Country {
-  id           String           @id @default(uuid())
+  id           String        @id @default(uuid())
   name         String
   iso3         String?
   iso2         String?       @unique
@@ -296,7 +295,7 @@ model Country {
 }
 
 model State {
-  id         String     @id @default(uuid())
+  id         String  @id @default(uuid())
   name       String
   iso2       String?
   fipsCode   String?
@@ -312,7 +311,7 @@ model State {
 }
 
 model City {
-  id          String     @id @default(uuid())
+  id          String  @id @default(uuid())
   name        String
   stateCode   String?
   countryCode String?
@@ -458,14 +457,14 @@ model UserRole {
 // =========================================
 
 model Action {
-  id          String          @id @default(uuid())
+  id          String       @id @default(uuid())
   name        ActionName   @unique
   description String?
   permissions Permission[]
 }
 
 model Resource {
-  id          String          @id @default(uuid())
+  id          String       @id @default(uuid())
   name        ResourceName @unique
   description String?
   permissions Permission[]
@@ -473,7 +472,7 @@ model Resource {
 
 // Standard CRUD permissions
 model Permission {
-  id         String      @id @default(uuid())
+  id         String   @id @default(uuid())
   action     Action   @relation(fields: [actionId], references: [id], onDelete: Cascade)
   actionId   String
   resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
@@ -520,7 +519,7 @@ model CustomPermission {
 // =========================================
 
 model RolePermission {
-  id           String        @id @default(uuid())
+  id           String     @id @default(uuid())
   role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
   roleId       String
   permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
@@ -528,15 +527,17 @@ model RolePermission {
 
   // Additional context for permission assignment
   conditions Json?
-  grantedAt  DateTime @default(now())
-  grantedBy  String
+  isActive   Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([roleId, permissionId])
   @@index([roleId])
 }
 
 model RoleCustomPermission {
-  id                 String              @id @default(uuid())
+  id                 String           @id @default(uuid())
   role               Role             @relation(fields: [roleId], references: [id], onDelete: Cascade)
   roleId             String
   customPermission   CustomPermission @relation(fields: [customPermissionId], references: [id], onDelete: Cascade)
