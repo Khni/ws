@@ -14,6 +14,8 @@ import { OtpController } from './user/controllers/OtpController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { LocalAuthController } from './user/controllers/LocalAuthController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { RoleController } from './role/RoleController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { OrgnizationController } from './orgnization/controllers/OrgnizationController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { CountryController } from './orgnization/controllers/CountryController.js';
@@ -69,6 +71,26 @@ const models: TsoaRoute.Models = {
     "ResetForgettenPasswordInput": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"confirmNewPassword":{"dataType":"string","required":true},"newPassword":{"dataType":"string","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Pick_RoleCreateInput.Exclude_keyofRoleCreateInput.createdById__": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"name":{"dataType":"string","required":true},"description":{"dataType":"string"},"organizationId":{"dataType":"string","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Omit_RoleCreateInput.createdById_": {
+        "dataType": "refAlias",
+        "type": {"ref":"Pick_RoleCreateInput.Exclude_keyofRoleCreateInput.createdById__","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RolePermissionCreateManyInput": {
+        "dataType": "refAlias",
+        "type": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"permissionId":{"dataType":"string","required":true},"roleId":{"dataType":"string","required":true}}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RoleCreateBody": {
+        "dataType": "refAlias",
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"Omit_RoleCreateInput.createdById_"},{"dataType":"nestedObjectLiteral","nestedProperties":{"permissions":{"ref":"RolePermissionCreateManyInput","required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_OrganizationModel.Exclude_keyofOrganizationModel.id-or-createdAt-or-updatedAt-or-ownerId__": {
@@ -401,6 +423,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'logout',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsRoleController_createRole: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"RoleCreateBody"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+        };
+        app.post('/role',
+            ...(fetchMiddlewares<RequestHandler>(RoleController)),
+            ...(fetchMiddlewares<RequestHandler>(RoleController.prototype.createRole)),
+
+            async function RoleController_createRole(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsRoleController_createRole, request, response });
+
+                const controller = new RoleController();
+
+              await templateService.apiHandler({
+                methodName: 'createRole',
                 controller,
                 response,
                 next,

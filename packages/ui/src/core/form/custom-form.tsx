@@ -12,13 +12,17 @@ import {
 import SubmitButton from "@workspace/ui/core/form/submit-button";
 import React from "react";
 import { Form } from "@workspace/ui/components/form";
+import DynamicFields, {
+  DynamicField,
+} from "@workspace/ui/core/form/dynamic-fields";
+import DynamicGrid, { DynamicGridItem } from "@workspace/ui/core/dynamic-grid";
 
 // ------------------
 // Props
 // ------------------
-interface CustomFormProps<T extends FieldValues> {
+interface CustomFormProps<T extends FieldValues, E> {
   form: UseFormReturn<T>;
-
+  fields?: DynamicGridItem<DynamicField<T, E>>[];
   cardTitle?: string;
   cardDescription?: string;
   submitButtonText?: string;
@@ -43,9 +47,9 @@ interface CustomFormProps<T extends FieldValues> {
 // ------------------
 // Component
 // ------------------
-const CustomForm = <T extends FieldValues>({
+const CustomForm = <T extends FieldValues, E>({
   form,
-
+  fields,
   cardTitle = "Form",
   cardDescription = "",
   submitButtonText = "submit",
@@ -59,7 +63,7 @@ const CustomForm = <T extends FieldValues>({
   isLoadingText = "isLoading...",
 
   children,
-}: CustomFormProps<T>) => {
+}: CustomFormProps<T, E>) => {
   const getButtonPositionClass = () => {
     switch (submitButtonPosition) {
       case "left":
@@ -87,7 +91,17 @@ const CustomForm = <T extends FieldValues>({
             onSubmit={form.handleSubmit(onSubmit)}
             className={formClassName}
           >
-            {children}
+            <>
+              {fields ? (
+                <DynamicGrid
+                  items={fields}
+                  contentMapper={(content: any) => (
+                    <DynamicFields fields={[content]} />
+                  )}
+                />
+              ) : null}
+              {children}
+            </>
             <div className={`flex ${getButtonPositionClass()} mt-6`}>
               <SubmitButton
                 isLoading={isLoading}

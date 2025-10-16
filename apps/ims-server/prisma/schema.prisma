@@ -410,7 +410,6 @@ model Role {
 
   // Role metadata
   isSystem Boolean        @default(false)
-  status   UserRoleStatus @default(ACTIVE)
   priority Int            @default(0)
 
   // Permissions
@@ -424,7 +423,7 @@ model Role {
   expiresAt DateTime?
 
   @@unique([organizationId, name])
-  @@index([organizationId, status, priority])
+  @@index([organizationId])
 }
 
 // Bridge table for User <-> Role many-to-many

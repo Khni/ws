@@ -8,13 +8,16 @@ import { RoleDomainError } from "./errors/RoleDomainError.js";
 
 export class RoleService {
   constructor(
-    private readonly roleRepository: RoleRepository,
+    private readonly roleRepository: RoleRepository = new RoleRepository(),
     private readonly roleCreationLimit: number = 10
   ) {}
-  async createRole(
-    data: RoleCreateInput,
-    rolePermissionsData: RolePermissionCreateManyInput
-  ) {
+  async create({
+    data,
+    rolePermissionsData,
+  }: {
+    data: RoleCreateInput;
+    rolePermissionsData: RolePermissionCreateManyInput;
+  }) {
     const rolesCount = await this.roleRepository.count({
       where: {
         organizationId: data.organizationId,
@@ -41,20 +44,20 @@ export class RoleService {
     });
   }
 
-  async updateRole(id: string, data: RoleUpdateInput) {
+  async update(id: string, data: RoleUpdateInput) {
     return await this.roleRepository.update({
       where: { id },
       data,
     });
   }
 
-  async findRole(id: string) {
+  async find(id: string) {
     return await this.roleRepository.findUnique({
       where: { id },
     });
   }
 
-  async deleteRole(id: string) {
+  async delete(id: string) {
     return await this.roleRepository.delete({
       where: { id },
     });

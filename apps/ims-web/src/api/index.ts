@@ -21,6 +21,7 @@ import type {
 import type {
   AuthResponseType,
   CreateOrgnization200,
+  CreateRole200,
   FacebookLoginParams,
   GetCountries200Item,
   GetCountriesParams,
@@ -42,6 +43,7 @@ import type {
   RequestOtpBody,
   ResetForgettenPassword200,
   ResetForgettenPasswordInput,
+  RoleCreateBody,
   UserResponseType,
   VerifyOtp200,
   VerifyOtpBody
@@ -638,6 +640,65 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       > => {
 
       const mutationOptions = getLogoutMutationOptions(options);
+
+      return useMutation(mutationOptions );
+    }
+    
+export const createRole = (
+    roleCreateBody: RoleCreateBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CreateRole200>(
+      {url: `/role`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: roleCreateBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getCreateRoleMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createRole>>, TError,{data: RoleCreateBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createRole>>, TError,{data: RoleCreateBody}, TContext> => {
+
+const mutationKey = ['createRole'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createRole>>, {data: RoleCreateBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createRole(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateRoleMutationResult = NonNullable<Awaited<ReturnType<typeof createRole>>>
+    export type CreateRoleMutationBody = RoleCreateBody
+    export type CreateRoleMutationError = ErrorType<unknown>
+
+    export const useCreateRole = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createRole>>, TError,{data: RoleCreateBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createRole>>,
+        TError,
+        {data: RoleCreateBody},
+        TContext
+      > => {
+
+      const mutationOptions = getCreateRoleMutationOptions(options);
 
       return useMutation(mutationOptions );
     }
