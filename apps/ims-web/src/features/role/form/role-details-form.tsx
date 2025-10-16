@@ -53,9 +53,9 @@ const Form = () => {
         {
           key: "name",
           content: { name: "name", label: "name", form: form, type: "text" },
-          color: "",
+          color: "blue",
           spans: {
-            base: 1,
+            base: 4,
             md: 2,
           },
         },
@@ -67,9 +67,9 @@ const Form = () => {
             form: form,
             type: "text",
           },
-          color: "",
+          color: "blue",
           spans: {
-            base: 1,
+            base: 4,
             md: 2,
           },
         },

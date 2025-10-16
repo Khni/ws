@@ -23,21 +23,30 @@ export default function DynamicGrid<
   items: I[];
   contentMapper: (content: Content) => React.ReactNode;
 }) {
-  // helper to map spans to valid Tailwind classes
-  const buildSpanClasses = (spans: ResponsiveSpans) => {
-    const map: Record<string, string> = {
-      base: "",
-      sm: "sm:",
-      md: "md:",
-      lg: "lg:",
-      xl: "xl:",
-    };
-
-    return Object.entries(spans)
-      .map(([bp, val]) => `${map[bp]}col-span-${val}`)
-      .join(" ");
+  const spanClassMap = {
+    1: "col-span-1",
+    2: "col-span-2",
+    3: "col-span-3",
+    4: "col-span-4",
   };
 
+  const responsivePrefix = {
+    base: "",
+    sm: "sm:",
+    md: "md:",
+    lg: "lg:",
+    xl: "xl:",
+  };
+
+  const buildSpanClasses = (spans: ResponsiveSpans) =>
+    Object.entries(spans)
+      .map(
+        ([bp, val]) =>
+          `${responsivePrefix[bp as keyof ResponsiveSpans]}${spanClassMap[val!]}`
+      )
+      .join(" ");
+
+  console.log(items);
   return (
     <div className="grid grid-cols-4 gap-2">
       {items.map((item) => (
