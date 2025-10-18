@@ -15,7 +15,9 @@ import { Form } from "@workspace/ui/components/form";
 import DynamicFields, {
   DynamicField,
 } from "@workspace/ui/core/form/dynamic-fields";
-import DynamicGrid, { DynamicGridItem } from "@workspace/ui/core/dynamic-grid";
+import DynamicGrid, {
+  DynamicGridItem,
+} from "@workspace/ui/core/grid/dynamic-grid";
 
 // ------------------
 // Props
