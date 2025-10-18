@@ -11,10 +11,8 @@ type ResponsiveSpans = {
 export type DynamicGridItem<Content> = {
   key: string | number;
   content: Content;
-  color: string;
   spans: ResponsiveSpans;
-};
-
+} & Pick<React.HTMLAttributes<HTMLDivElement>, "className">;
 export default function DynamicGrid<
   Content,
   I extends DynamicGridItem<Content>,
@@ -30,7 +28,7 @@ export default function DynamicGrid<
       {items.map((item) => (
         <div
           key={item.key}
-          className={`${item.color} ${buildFullSpanClasses(item.spans)} p-4 rounded text-center`}
+          className={`${item.className} ${buildFullSpanClasses(item.spans)} p-4 rounded text-center`}
         >
           {contentMapper(item.content)}
         </div>
