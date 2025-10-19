@@ -93,6 +93,16 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"intersection","subSchemas":[{"ref":"Omit_RoleCreateInput.createdById_"},{"dataType":"nestedObjectLiteral","nestedProperties":{"permissions":{"ref":"RolePermissionCreateManyInput","required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RoleUpdateInput": {
+        "dataType": "refAlias",
+        "type": {"ref":"Omit_RoleCreateInput.createdById_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RoleUpdateBody": {
+        "dataType": "refAlias",
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"RoleUpdateInput"},{"dataType":"nestedObjectLiteral","nestedProperties":{"permissions":{"ref":"RolePermissionCreateManyInput","required":true}}}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_OrganizationModel.Exclude_keyofOrganizationModel.id-or-createdAt-or-updatedAt-or-ownerId__": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"name":{"dataType":"string","required":true,"validators":{"minLength":{"value":2},"maxLength":{"value":50}}},"description":{"dataType":"string","validators":{"minLength":{"value":2},"maxLength":{"value":250}}},"stateId":{"dataType":"string","required":true},"currencyId":{"dataType":"string","required":true},"timeZoneId":{"dataType":"string","required":true},"inventoryStartDate":{"dataType":"string","required":true},"languageId":{"dataType":"string"},"industryCategoryId":{"dataType":"string"},"fiscalYearPatternId":{"dataType":"string"},"address":{"dataType":"string"},"zipCode":{"dataType":"string"}},"validators":{}},
@@ -454,6 +464,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'createRole',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsRoleController_updateRole: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"RoleUpdateBody"},
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+        };
+        app.put('/role/:id',
+            ...(fetchMiddlewares<RequestHandler>(RoleController)),
+            ...(fetchMiddlewares<RequestHandler>(RoleController.prototype.updateRole)),
+
+            async function RoleController_updateRole(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsRoleController_updateRole, request, response });
+
+                const controller = new RoleController();
+
+              await templateService.apiHandler({
+                methodName: 'updateRole',
                 controller,
                 response,
                 next,

@@ -44,6 +44,8 @@ import type {
   ResetForgettenPassword200,
   ResetForgettenPasswordInput,
   RoleCreateBody,
+  RoleUpdateBody,
+  UpdateRole200,
   UserResponseType,
   VerifyOtp200,
   VerifyOtpBody
@@ -699,6 +701,65 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       > => {
 
       const mutationOptions = getCreateRoleMutationOptions(options);
+
+      return useMutation(mutationOptions );
+    }
+    
+export const updateRole = (
+    id: string,
+    roleUpdateBody: RoleUpdateBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<UpdateRole200>(
+      {url: `/role/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: roleUpdateBody
+    },
+      options);
+    }
+  
+
+
+export const getUpdateRoleMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateRole>>, TError,{id: string;data: RoleUpdateBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateRole>>, TError,{id: string;data: RoleUpdateBody}, TContext> => {
+
+const mutationKey = ['updateRole'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateRole>>, {id: string;data: RoleUpdateBody}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateRole(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateRoleMutationResult = NonNullable<Awaited<ReturnType<typeof updateRole>>>
+    export type UpdateRoleMutationBody = RoleUpdateBody
+    export type UpdateRoleMutationError = ErrorType<unknown>
+
+    export const useUpdateRole = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateRole>>, TError,{id: string;data: RoleUpdateBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateRole>>,
+        TError,
+        {id: string;data: RoleUpdateBody},
+        TContext
+      > => {
+
+      const mutationOptions = getUpdateRoleMutationOptions(options);
 
       return useMutation(mutationOptions );
     }

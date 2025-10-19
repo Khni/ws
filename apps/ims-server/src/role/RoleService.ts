@@ -26,7 +26,7 @@ export class RoleService {
     if (rolesCount >= this.roleCreationLimit) {
       throw new RoleDomainError("CREATION_ROLE_REACH_LIMIT");
     }
-    const isUsedRoleName = await this.roleRepository.findUnique({
+    const isUsedName = await this.roleRepository.findUnique({
       where: {
         organizationId_name: {
           organizationId: data.organizationId,
@@ -34,7 +34,7 @@ export class RoleService {
         },
       },
     });
-    if (isUsedRoleName) {
+    if (isUsedName) {
       throw new RoleDomainError("ROLE_NAME_USED");
     }
     return await this.roleRepository.create({
@@ -44,10 +44,44 @@ export class RoleService {
     });
   }
 
-  async update(id: string, data: RoleUpdateInput) {
-    return await this.roleRepository.update({
-      where: { id },
-      data,
+  async update({
+    data,
+    rolePermissionsData,
+    id,
+  }: {
+    data: RoleUpdateInput;
+    rolePermissionsData: RolePermissionCreateManyInput;
+    id: string;
+  }) {
+    const { organizationId, name, description } = data;
+    const isUsedName = await this.roleRepository.findUnique({
+      where: {
+        organizationId_name: {
+          name,
+          organizationId,
+        },
+      },
+    });
+    if (isUsedName) {
+      throw new RoleDomainError("ROLE_NAME_USED");
+    }
+    return await this.roleRepository.createTransaction(async (tx) => {
+      const role = await this.roleRepository.update({
+        where: { id },
+        data: { name, description, organizationId },
+        tx,
+      });
+
+      await this.roleRepository.deleteManyRolePermissions({
+        where: { roleId: id },
+        tx,
+      });
+      //re create with the updated list
+      await this.roleRepository.createManyRolePermissions({
+        data: rolePermissionsData,
+        tx,
+      });
+      return role;
     });
   }
 

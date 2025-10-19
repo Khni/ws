@@ -16,7 +16,10 @@ import {
 } from "../../generated/prisma/index.js";
 
 export class RoleRepository {
-  constructor(private db: PrismaClient["role"] = prisma.role) {}
+  constructor(
+    private db: PrismaClient["role"] = prisma.role,
+    private rp_db: PrismaClient["rolePermission"] = prisma.rolePermission
+  ) {}
 
   async findFirst({
     where,
@@ -170,6 +173,51 @@ export class RoleRepository {
       throw new Error(`Error counting roles: ${error.message}`, {
         cause: error,
       });
+    }
+  }
+
+  /// role permissions
+  async createManyRolePermissions({
+    data,
+    tx,
+  }: {
+    data: RolePermissionCreateManyInput;
+    tx?: PrismaTransactionManager | undefined;
+  }) {
+    const db = tx ? tx.rolePermission : this.rp_db;
+    try {
+      return await db.createMany({
+        data,
+      });
+    } catch (error: any) {
+      throw new Error(
+        `Error while creating many role permissions: ${error.message}`,
+        {
+          cause: error,
+        }
+      );
+    }
+  }
+
+  async deleteManyRolePermissions({
+    where,
+    tx,
+  }: {
+    where: { roleId: string };
+    tx?: PrismaTransactionManager | undefined;
+  }) {
+    const db = tx ? tx.rolePermission : this.rp_db;
+    try {
+      return await db.deleteMany({
+        where,
+      });
+    } catch (error: any) {
+      throw new Error(
+        `Error while deleting many role permissions: ${error.message}`,
+        {
+          cause: error,
+        }
+      );
     }
   }
 }

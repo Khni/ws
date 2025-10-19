@@ -54,4 +54,8 @@ export * from './roleCreateBody';
 export * from './roleCreateBodyAllOf';
 export * from './rolePermissionCreateManyInput';
 export * from './rolePermissionCreateManyInputItem';
+export * from './roleUpdateBody';
+export * from './roleUpdateBodyAllOf';
+export * from './roleUpdateInput';
+export * from './updateRole200';
 export * from './userRoleStatus';

@@ -167,7 +167,8 @@
 					],
 					"type": "object"
 				},
-				"type": "array"
+				"type": "array",
+				"description": "Represents multiple role-permission associations."
 			},
 			"RoleCreateBody": {
 				"allOf": [
@@ -185,7 +186,31 @@
 						],
 						"type": "object"
 					}
-				]
+				],
+				"description": "API request body type — sent to backend.\nIncludes permissions array."
+			},
+			"RoleUpdateInput": {
+				"$ref": "#/components/schemas/Omit_RoleCreateInput.createdById_",
+				"description": "Base input type for updating a role.\nSimilar to creation, but excludes createdById."
+			},
+			"RoleUpdateBody": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/RoleUpdateInput"
+					},
+					{
+						"properties": {
+							"permissions": {
+								"$ref": "#/components/schemas/RolePermissionCreateManyInput"
+							}
+						},
+						"required": [
+							"permissions"
+						],
+						"type": "object"
+					}
+				],
+				"description": "API request body type — sent to backend during updates.\nIncludes permissions array."
 			},
 			"Pick_OrganizationModel.Exclude_keyofOrganizationModel.id-or-createdAt-or-updatedAt-or-ownerId__": {
 				"properties": {
@@ -657,6 +682,95 @@
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/RoleCreateBody"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/role/{id}": {
+			"put": {
+				"operationId": "UpdateRole",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"priority": {
+											"type": "number",
+											"format": "double"
+										},
+										"isSystem": {
+											"type": "boolean"
+										},
+										"createdById": {
+											"type": "string"
+										},
+										"organizationId": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										},
+										"expiresAt": {
+											"type": "string",
+											"format": "date-time"
+										},
+										"updatedAt": {
+											"type": "string",
+											"format": "date-time"
+										},
+										"createdAt": {
+											"type": "string",
+											"format": "date-time"
+										},
+										"id": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"priority",
+										"isSystem",
+										"createdById",
+										"organizationId",
+										"description",
+										"name",
+										"expiresAt",
+										"updatedAt",
+										"createdAt",
+										"id"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"role"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RoleUpdateBody"
 							}
 						}
 					}

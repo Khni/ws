@@ -5,10 +5,9 @@
  * OpenAPI spec version: 1.3.0
  */
 import type { PickRoleCreateInputExcludeKeyofRoleCreateInputCreatedById } from './pickRoleCreateInputExcludeKeyofRoleCreateInputCreatedById';
-import type { RoleCreateBodyAllOf } from './roleCreateBodyAllOf';
 
 /**
- * API request body type — sent to backend.
-Includes permissions array.
+ * Base input type for updating a role.
+Similar to creation, but excludes createdById.
  */
-export type RoleCreateBody = PickRoleCreateInputExcludeKeyofRoleCreateInputCreatedById & RoleCreateBodyAllOf;
+export type RoleUpdateInput = PickRoleCreateInputExcludeKeyofRoleCreateInputCreatedById;

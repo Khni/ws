@@ -6,4 +6,7 @@
  */
 import type { RolePermissionCreateManyInputItem } from './rolePermissionCreateManyInputItem';
 
+/**
+ * Represents multiple role-permission associations.
+ */
 export type RolePermissionCreateManyInput = RolePermissionCreateManyInputItem[];

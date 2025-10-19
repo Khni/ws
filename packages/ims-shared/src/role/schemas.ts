@@ -21,6 +21,11 @@ export const roleCreateInputSchema = roleModelSchema.omit({
   expiresAt: true,
 });
 
+export const roleCreateFormSchema = roleCreateInputSchema.omit({
+  createdById: true,
+  organizationId: true,
+});
+
 export const rolePermissionCreateManyInputSchema = z.array(
   z.object({
     roleId: z.string(),
@@ -28,15 +33,19 @@ export const rolePermissionCreateManyInputSchema = z.array(
   })
 );
 
-export const roleCreateBodySchema = roleCreateInputSchema
-  .omit({ createdById: true })
-  .and(
-    z.object({
-      permissions: rolePermissionCreateManyInputSchema,
-    })
-  );
+export const roleUpdateInputSchema = roleCreateInputSchema.omit({
+  createdById: true,
+});
 
-export const roleUpdateInputSchema = roleModelSchema.partial();
+export const roleUpdateFormSchema = roleUpdateInputSchema.omit({
+  organizationId: true,
+});
+
+export const roleUpdateBodySchema = roleUpdateInputSchema.and(
+  z.object({
+    permissions: rolePermissionCreateManyInputSchema,
+  })
+);
 
 export const roleWhereUniqueInputSchema = z.union([
   z.object({
@@ -55,8 +64,8 @@ export const roleOrderByInputSchema = z.union([
   z.undefined(),
 ]);
 
-export const roleCreateFormSchema = roleCreateInputSchema
-  .omit({ createdById: true, organizationId: true })
+export const roleCreateBodySchema = roleCreateInputSchema
+  .omit({ createdById: true })
   .and(
     z.object({
       permissions: rolePermissionCreateManyInputSchema,

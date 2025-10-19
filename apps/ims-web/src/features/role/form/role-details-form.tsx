@@ -6,6 +6,7 @@ import z from "zod";
 //----changeable
 import {
   ErrorResponse,
+  type RoleCreateForm,
   RoleErrorCodesType,
   roleCreateFormSchema as schema,
 } from "@khaled/ims-shared";
@@ -17,22 +18,33 @@ const defaultValues = {
 
 //----
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import CustomForm from "@workspace/ui/core/form/custom-form";
 import { useCreateRole } from "@/api";
 
-const Form = () => {
-  const [errorResponse, setErrorResponse] =
-    useState<ErrorResponse<RoleErrorCodesType>>();
-  //----changeable
-  const { mutate, isPending } = useCreateRole();
-
-  //--------------
+type Props = {
+  role?: RoleCreateForm;
+};
+const Form = ({ role }: Props) => {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues,
   });
+
+  const [errorResponse, setErrorResponse] =
+    useState<ErrorResponse<RoleErrorCodesType>>();
+  //----changeable
+  const { mutate, isPending } = useCreateRole();
+  useEffect(() => {
+    if (role) {
+      form.reset({
+        name: role?.name,
+        description: role?.description || "",
+      });
+    }
+  }, [role, form]);
+  //--------------
 
   const formTitleFallback = "Create New Role";
 

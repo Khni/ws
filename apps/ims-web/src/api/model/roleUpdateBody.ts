@@ -5,10 +5,10 @@
  * OpenAPI spec version: 1.3.0
  */
 import type { PickRoleCreateInputExcludeKeyofRoleCreateInputCreatedById } from './pickRoleCreateInputExcludeKeyofRoleCreateInputCreatedById';
-import type { RoleCreateBodyAllOf } from './roleCreateBodyAllOf';
+import type { RoleUpdateBodyAllOf } from './roleUpdateBodyAllOf';
 
 /**
- * API request body type — sent to backend.
+ * API request body type — sent to backend during updates.
 Includes permissions array.
  */
-export type RoleCreateBody = PickRoleCreateInputExcludeKeyofRoleCreateInputCreatedById & RoleCreateBodyAllOf;
+export type RoleUpdateBody = PickRoleCreateInputExcludeKeyofRoleCreateInputCreatedById & RoleUpdateBodyAllOf;
