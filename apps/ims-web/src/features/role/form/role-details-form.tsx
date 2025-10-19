@@ -21,12 +21,18 @@ const defaultValues = {
 import { useEffect, useState } from "react";
 
 import CustomForm from "@workspace/ui/core/form/custom-form";
-import { useCreateRole } from "@/api";
+import { useUpsertRoleHandler } from "@/features/role/form/useUpsertRoleHandler";
 
 type Props = {
-  role?: RoleCreateForm;
+  role?: RoleCreateForm & { id: string };
+  getPlaceHolders?: (key: "submit" | "loading") => string;
+  getFormTitle?: (key: "formTitle") => string;
 };
-const Form = ({ role }: Props) => {
+const Form = ({
+  role,
+  getFormTitle = (key) => "Fill The Fields",
+  getPlaceHolders: getText = (key) => key,
+}: Props) => {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues,
@@ -35,7 +41,7 @@ const Form = ({ role }: Props) => {
   const [errorResponse, setErrorResponse] =
     useState<ErrorResponse<RoleErrorCodesType>>();
   //----changeable
-  const { mutate, isPending } = useCreateRole();
+  const { submit, isPending } = useUpsertRoleHandler({ id: role?.id });
   useEffect(() => {
     if (role) {
       form.reset({
@@ -46,19 +52,17 @@ const Form = ({ role }: Props) => {
   }, [role, form]);
   //--------------
 
-  const formTitleFallback = "Create New Role";
+  const formTitleFallback = getFormTitle("formTitle");
 
-  const submitButtonTextFallBack = "Submit";
+  const submitButtonTextFallBack = getText("submit");
 
-  const isLoadingTextFallBack = "Loading...";
+  const isLoadingTextFallBack = getText("loading");
   return (
     <CustomForm
       cardTitle={formTitleFallback}
       submitButtonText={submitButtonTextFallBack}
       form={form}
-      onSubmit={(data) =>
-        mutate({ data: { ...data, organizationId: "", permissions: [] } })
-      }
+      onSubmit={submit}
       isLoadingText={isLoadingTextFallBack}
       isLoading={isPending}
       fields={[
