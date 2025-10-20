@@ -38,11 +38,10 @@ export function NavMain({
   isItemActive,
 }: {
   items: Item[];
-  isItemActive?: (items: Item, selectedSubItem: SubItem | null) => boolean;
+  isItemActive?: (items: Item) => boolean;
   onSubItemClick?: (subItem: SubItem) => void;
   isSubItemActive?: (subItem: SubItem) => boolean;
 }) {
-  const [activeSubItem, setActiveSubItem] = useState<SubItem | null>(null);
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -51,7 +50,7 @@ export function NavMain({
           <Collapsible
             key={item.title}
             asChild
-            defaultOpen={isItemActive?.(item, activeSubItem) || item.isActive}
+            defaultOpen={isItemActive?.(item) || item.isActive}
             className="group/collapsible"
           >
             <SidebarMenuItem>
@@ -73,7 +72,6 @@ export function NavMain({
                         )}
                         onClick={() => {
                           onSubItemClick?.(subItem);
-                          setActiveSubItem(subItem);
                         }}
                       >
                         {subItem.title}

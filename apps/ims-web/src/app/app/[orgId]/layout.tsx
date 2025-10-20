@@ -109,7 +109,7 @@ export default function WorkSpaceLayout({
             isSubItemActive={(subItem) =>
               pathName.includes(subItem.title.toLowerCase())
             }
-            isItemActive={(item, _subItem) =>
+            isItemActive={(item) =>
               !!item.items?.find((subItem) =>
                 pathName.includes(subItem.title.toLowerCase())
               )
