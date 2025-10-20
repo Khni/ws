@@ -3,10 +3,21 @@ import { cookies } from "next/headers";
 
 export default getRequestConfig(async () => {
   const cookieStore = await cookies();
-  const locale = cookieStore.get("locale")?.value || "en"; // Default to 'en' if not set
+  const locale = cookieStore.get("locale")?.value || "en";
+
+  // Dynamically import multiple message files
+  const [common, auth, organization] = await Promise.all([
+    (await import(`../../messages/common/${locale}.json`)).default,
+    (await import(`../../messages/auth/${locale}.json`)).default,
+    (await import(`../../messages/organization/${locale}.json`)).default,
+  ]);
 
   return {
     locale,
-    messages: (await import(`../../messages/${locale}.json`)).default,
+    messages: {
+      ...common,
+      ...auth,
+      ...organization,
+    },
   };
 });

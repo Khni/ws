@@ -1,0 +1,27 @@
+{
+  "organization": {
+    "errors": {
+      "ORGANIZATION_CREATION_FAILED": "Failed to create the organization.",
+      "ORGANIZATION_UPDATE_FAILED": "Failed to update the organization.",
+      "ORGANIZATION_NAME_USED": "This organization name is already in use.",
+      "ORGANIZATION_NOT_FOUND": "Organization not found.",
+      "CREATION_ORGANIZATION_REACH_LIMIT": "You have reached the limit for creating organizations."
+    },
+    "form": {
+      "createOrganization": "Create Organization",
+      "updateOrganization": "Update Organization",
+      "organizationName": "Organization Name",
+      "organizationDescription": "Organization Description",
+      "state": "State",
+      "country": "Country",
+      "currency": "Currency",
+      "timeZone": "Time Zone",
+      "inventoryStartDate": "Inventory Start Date",
+      "language": "Language",
+      "industryCategory": "Industry Category",
+      "fiscalYearPattern": "Fiscal Year Pattern",
+      "address": "Address",
+      "zipCode": "ZIP Code"
+    }
+  }
+}

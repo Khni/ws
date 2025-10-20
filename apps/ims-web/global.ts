@@ -1,8 +1,7 @@
-import messages from "./messages/en.json";
+import { Messages } from "messages/types";
 
 declare module "next-intl" {
   interface AppConfig {
-    // ...
-    Messages: typeof messages;
+    Messages: Messages;
   }
 }
