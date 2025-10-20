@@ -17,22 +17,32 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@workspace/ui/components/sidebar";
-import React from "react";
+import { cn } from "@workspace/ui/lib/utils";
+import { useState } from "react";
 
+type SubItem = {
+  title: string;
+  url: string;
+};
+type Item = {
+  title: string;
+  url: string;
+  icon?: LucideIcon;
+  isActive?: boolean;
+  items?: SubItem[];
+};
 export function NavMain({
   items,
+  onSubItemClick,
+  isSubItemActive,
+  isItemActive,
 }: {
-  items: {
-    title: string;
-    url: string;
-    icon?: LucideIcon;
-    isActive?: boolean;
-    items?: {
-      title: string;
-      url: string;
-    }[];
-  }[];
+  items: Item[];
+  isItemActive?: (items: Item, selectedSubItem: SubItem | null) => boolean;
+  onSubItemClick?: (subItem: SubItem) => void;
+  isSubItemActive?: (subItem: SubItem) => boolean;
 }) {
+  const [activeSubItem, setActiveSubItem] = useState<SubItem | null>(null);
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -41,7 +51,7 @@ export function NavMain({
           <Collapsible
             key={item.title}
             asChild
-            defaultOpen={item.isActive}
+            defaultOpen={isItemActive?.(item, activeSubItem) || item.isActive}
             className="group/collapsible"
           >
             <SidebarMenuItem>
@@ -56,10 +66,17 @@ export function NavMain({
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton asChild>
-                        <a href={subItem.url}>
-                          <span>{subItem.title}</span>
-                        </a>
+                      <SidebarMenuSubButton
+                        className={cn(
+                          "cursor-pointer",
+                          isSubItemActive?.(subItem) && "bg-muted"
+                        )}
+                        onClick={() => {
+                          onSubItemClick?.(subItem);
+                          setActiveSubItem(subItem);
+                        }}
+                      >
+                        {subItem.title}
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}

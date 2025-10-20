@@ -3,7 +3,7 @@ import { CustomLayout } from "@workspace/ui/blocks/layout/custom-layout";
 import { NavMain } from "@workspace/ui/blocks/layout/nav-main";
 
 import { Switcher } from "@workspace/ui/blocks/layout/switcher";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import {
   AudioWaveform,
   BookOpen,
@@ -22,7 +22,7 @@ import LanguageSwitcher from "@workspace/ui/core/settings/langauge-switcher";
 import { useUserPreferencesContext } from "@workspace/ui/blocks/providers/UserPreferencesContext";
 import { useTheme } from "next-themes";
 import { Button } from "@workspace/ui/components/button";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/constants";
@@ -32,8 +32,18 @@ import UserButton from "@/components/buttons/user-btn";
 import { UserNav } from "@workspace/ui/blocks/layout/nav-user";
 import { useGetOwnedOrganizations } from "@/api";
 import { useSelectedOrganizationContext } from "@/providers/selected-org-provider";
+import { menuData } from "@/features/sidebar/data";
+import React from "react";
 
-export default function WorkSpaceLayout({ children }: { children: ReactNode }) {
+export default function WorkSpaceLayout({
+  children,
+  params,
+}: {
+  children: ReactNode;
+  params: Promise<{ orgId: string }>;
+}) {
+  const { orgId } = React.use(params);
+  const pathName = usePathname();
   const { locale, updateLocale, rtl } = useUserPreferencesContext();
   const { setTheme } = useTheme();
   const router = useRouter();
@@ -41,6 +51,18 @@ export default function WorkSpaceLayout({ children }: { children: ReactNode }) {
   const { data: organizations } = useGetOwnedOrganizations();
   const { selectedOrganizationId, setSelectedOrganizationId } =
     useSelectedOrganizationContext();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return <LoadingPage />;
+  }
+  if (!selectedOrganizationId) {
+    throw new Error("selectedOrganizationId is undefiend");
+  }
   if (isLoading) {
     return <LoadingPage />;
   }
@@ -61,10 +83,9 @@ export default function WorkSpaceLayout({ children }: { children: ReactNode }) {
             }
             setSelectedOrganizationId(id);
           }}
-          initialSelectedItem={
-            organizations?.find((org) => org.id === selectedOrganizationId) ||
-            undefined
-          }
+          initialSelectedItem={organizations?.find(
+            (org) => org.id === selectedOrganizationId
+          )}
           items={
             organizations?.map((org) => ({
               name: org.name,
@@ -79,7 +100,22 @@ export default function WorkSpaceLayout({ children }: { children: ReactNode }) {
       }
       sidebarContent={
         <>
-          <NavMain items={[]} />
+          <NavMain
+            onSubItemClick={(subitem) =>
+              router.replace(
+                subitem.url.replace(":orgId", selectedOrganizationId)
+              )
+            }
+            isSubItemActive={(subItem) =>
+              pathName.includes(subItem.title.toLowerCase())
+            }
+            isItemActive={(item, _subItem) =>
+              !!item.items?.find((subItem) =>
+                pathName.includes(subItem.title.toLowerCase())
+              )
+            }
+            items={menuData}
+          />
         </>
       }
       sidebarFooter={
