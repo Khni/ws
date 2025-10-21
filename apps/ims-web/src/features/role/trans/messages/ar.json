@@ -1,0 +1,26 @@
+{
+  "role": {
+    "errors": {
+      "ROLE_NAME_USED": "اسم الدور مستخدم بالفعل.",
+      "ROLE_NOT_FOUND": "لم يتم العثور على الدور المحدد.",
+      "CREATION_ROLE_REACH_LIMIT": "لقد وصلت إلى الحد الأقصى لعدد الأدوار التي يمكن إنشاؤها.",
+      "ROLE_CREATION_FAILED": "فشل في إنشاء الدور. يرجى المحاولة مرة أخرى.",
+      "ROLE_UPDATE_FAILED": "فشل في تحديث الدور. يرجى المحاولة مرة أخرى."
+    },
+    "fields": {
+      "name": "الاسم",
+      "description": "الوصف",
+      "permissions": "الصلاحيات"
+    },
+    "columnHeaders": {
+      "name": "الاسم",
+      "description": "الوصف",
+      "updatedAt": "آخر تحديث"
+    },
+    "headers": {
+      "role": "الدور",
+      "roles": "الأدوار",
+      "newRole": "دور جديد"
+    }
+  }
+}

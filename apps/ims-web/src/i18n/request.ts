@@ -6,10 +6,11 @@ export default getRequestConfig(async () => {
   const locale = cookieStore.get("locale")?.value || "en";
 
   // Dynamically import multiple message files
-  const [common, auth, organization] = await Promise.all([
+  const [common, auth, organization, roles] = await Promise.all([
     (await import(`../../messages/common/${locale}.json`)).default,
     (await import(`../../messages/auth/${locale}.json`)).default,
     (await import(`../../messages/organization/${locale}.json`)).default,
+    (await import(`../features/role/trans/messages/${locale}.json`)).default,
   ]);
 
   return {
@@ -18,6 +19,7 @@ export default getRequestConfig(async () => {
       ...common,
       ...auth,
       ...organization,
+      ...roles,
     },
   };
 });
