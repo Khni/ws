@@ -22,6 +22,8 @@ import { useEffect, useState } from "react";
 
 import CustomForm from "@workspace/ui/core/form/custom-form";
 import { useUpsertRoleHandler } from "@/features/role/form/useUpsertRoleHandler";
+import { useRoleTranslations } from "@/features/role/translations/hooks/useRoleTrans";
+import { useCommonTranslations } from "messages/common/hooks/useCommonTranslations";
 
 type Props = {
   role?: RoleCreateForm & { id: string };
@@ -33,6 +35,9 @@ const Form = ({
   getFormTitle = (key) => "Fill The Fields",
   getPlaceHolders: getText = (key) => key,
 }: Props) => {
+  const { msgTranslations } = useCommonTranslations();
+  const { roleFieldTranslations, roleHeaderTranslations } =
+    useRoleTranslations();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues,
@@ -52,7 +57,7 @@ const Form = ({
   }, [role, form]);
   //--------------
 
-  const formTitleFallback = getFormTitle("formTitle");
+  const formTitleFallback = roleHeaderTranslations("newRole");
 
   const submitButtonTextFallBack = getText("submit");
 
@@ -68,7 +73,12 @@ const Form = ({
       fields={[
         {
           key: "name",
-          content: { name: "name", label: "name", form: form, type: "text" },
+          content: {
+            name: "name",
+            label: roleFieldTranslations("name"),
+            form: form,
+            type: "text",
+          },
 
           spans: {
             base: 4,
@@ -79,7 +89,7 @@ const Form = ({
           key: "description",
           content: {
             name: "description",
-            label: "description",
+            label: roleFieldTranslations("description"),
             form: form,
             type: "text",
           },

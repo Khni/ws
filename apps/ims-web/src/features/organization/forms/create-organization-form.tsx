@@ -86,7 +86,7 @@ const Form = () => {
   console.log(countryTimezones);
   const formTitleFallback = t("organization.form.createOrganization");
 
-  const submitButtonTextFallBack = t("submitButton");
+  const submitButtonTextFallBack = t("common.actions.submit");
 
   const isLoadingTextFallBack = t("loading");
 

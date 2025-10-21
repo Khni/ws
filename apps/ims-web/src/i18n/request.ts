@@ -13,7 +13,7 @@ export default getRequestConfig(async () => {
     (await import(`../features/role/translations/messages/${locale}.json`))
       .default,
   ]);
-
+  console.log(common, auth.auth);
   return {
     locale,
     messages: {
