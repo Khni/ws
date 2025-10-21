@@ -24,7 +24,7 @@ export class RoleService {
       },
     });
     if (rolesCount >= this.roleCreationLimit) {
-      throw new RoleDomainError("CREATION_ROLE_REACH_LIMIT");
+      throw new RoleDomainError("ROLE_CREATION_LIMIT_REACHED");
     }
     const isUsedName = await this.roleRepository.findUnique({
       where: {

@@ -3,7 +3,7 @@
     "errors": {
       "ROLE_NAME_USED": "This role name is already in use.",
       "ROLE_NOT_FOUND": "The specified role could not be found.",
-      "CREATION_ROLE_REACH_LIMIT": "You have reached the maximum number of roles that can be created.",
+      "ROLE_CREATION_LIMIT_REACHED": "You have reached the maximum number of roles that can be created.",
       "ROLE_CREATION_FAILED": "Failed to create the role. Please try again.",
       "ROLE_UPDATE_FAILED": "Failed to update the role. Please try again."
     },

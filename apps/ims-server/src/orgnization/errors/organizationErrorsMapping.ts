@@ -14,7 +14,7 @@ export const organizationDomainErrorMapping = {
     statusCode: 404, // Not Found
     responseMessage: "Organization not found.",
   },
-  [OrganizationDomainErrorCodes.CREATION_ORGANIZATION_REACH_LIMIT]: {
+  [OrganizationDomainErrorCodes.ORGANIZATION_CREATION_LIMIT_REACHED]: {
     statusCode: 403, // Forbidden
     responseMessage: "Organization creation limit reached.",
   },

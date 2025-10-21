@@ -10,7 +10,8 @@ export default getRequestConfig(async () => {
     (await import(`../../messages/common/${locale}.json`)).default,
     (await import(`../../messages/auth/${locale}.json`)).default,
     (await import(`../../messages/organization/${locale}.json`)).default,
-    (await import(`../features/role/trans/messages/${locale}.json`)).default,
+    (await import(`../features/role/translations/messages/${locale}.json`))
+      .default,
   ]);
 
   return {

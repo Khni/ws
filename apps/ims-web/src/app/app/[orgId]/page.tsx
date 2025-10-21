@@ -1,8 +1,11 @@
+import React from "react";
+
 export default function OrganizationPage({
   params,
 }: {
-  params: { orgId: string };
+  params: Promise<{ orgId: string }>;
 }) {
+  const { orgId } = React.use(params);
   //here I will fetch organization by id
-  return <div>{params.orgId}</div>;
+  return <div>{orgId}</div>;
 }

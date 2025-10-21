@@ -47,7 +47,7 @@ export class OrganizationService {
 
       if (ownedOrgsCount >= this.organizationCreationLimit) {
         throw new OrganizationDomainError(
-          "CREATION_ORGANIZATION_REACH_LIMIT",
+          "ORGANIZATION_CREATION_LIMIT_REACHED",
           `User cannot create more than ${this.organizationCreationLimit} organizations`
         );
       }

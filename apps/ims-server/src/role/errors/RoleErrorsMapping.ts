@@ -14,7 +14,7 @@ export const roleDomainErrorMapping = {
     statusCode: 404, // Not Found
     responseMessage: "Role not found.",
   },
-  [RoleDomainErrorCodes.CREATION_ROLE_REACH_LIMIT]: {
+  [RoleDomainErrorCodes.ROLE_CREATION_LIMIT_REACHED]: {
     statusCode: 403, // Forbidden
     responseMessage: "Role creation limit reached.",
   },

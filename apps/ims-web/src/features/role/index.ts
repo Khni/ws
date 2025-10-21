@@ -1,1 +1,1 @@
-export * from "./trans/messages";
+export * from "./translations/messages";
