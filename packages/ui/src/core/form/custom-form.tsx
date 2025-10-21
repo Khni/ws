@@ -1,5 +1,10 @@
 "use client";
-import { UseFormReturn, FieldValues, SubmitHandler } from "react-hook-form";
+import {
+  UseFormReturn,
+  FieldValues,
+  SubmitHandler,
+  Path,
+} from "react-hook-form";
 
 import { FC, ReactNode } from "react";
 import {
@@ -25,6 +30,7 @@ import DynamicGrid, {
 interface CustomFormProps<T extends FieldValues, E> {
   form: UseFormReturn<T>;
   fields?: DynamicGridItem<DynamicField<T, E>>[];
+  getLabel?: (name: Path<T>) => string;
   cardTitle?: string;
   cardDescription?: string;
   submitButtonText?: string;
@@ -63,6 +69,7 @@ const CustomForm = <T extends FieldValues, E>({
   formClassName = "space-y-6",
   isLoading,
   isLoadingText = "isLoading...",
+  getLabel,
 
   children,
 }: CustomFormProps<T, E>) => {
@@ -98,7 +105,7 @@ const CustomForm = <T extends FieldValues, E>({
                 <DynamicGrid
                   items={fields}
                   contentMapper={(content: any) => (
-                    <DynamicFields fields={[content]} />
+                    <DynamicFields fields={[{ ...content, getLabel }]} />
                   )}
                 />
               ) : null}

@@ -9,9 +9,10 @@ import SelectFormField from "@workspace/ui/core/form/select-field";
 import { ReactNode, ComponentType } from "react";
 
 export type BaseDynamicField<T extends FieldValues, E> = {
-  name?: Path<T>; // optional if we just render a custom component
+  name: Path<T>; // optional if we just render a custom component
   form?: UseFormReturn<T>;
   label?: string;
+  getLabel?: (name: Path<T>) => string;
   errorResponse?: ErrorResponse<E>;
 };
 
@@ -50,7 +51,7 @@ export const DynamicFields = <
                 key={field.name}
                 form={field.form!}
                 name={field.name!}
-                label={field.label!}
+                label={field.getLabel?.(field.name) || field.label || ""}
                 type={field.type}
                 errorResponse={field.errorResponse}
               />
@@ -62,7 +63,7 @@ export const DynamicFields = <
                 key={field.name}
                 form={field.form!}
                 name={field.name!}
-                label={field.label!}
+                label={field.getLabel?.(field.name) || field.label || ""}
                 errorResponse={field.errorResponse}
               />
             );
@@ -73,7 +74,7 @@ export const DynamicFields = <
                 key={field.name}
                 form={field.form!}
                 name={field.name!}
-                label={field.label!}
+                label={field.getLabel?.(field.name) || field.label || ""}
                 options={field.options}
                 errorResponse={field.errorResponse}
               />
@@ -85,7 +86,7 @@ export const DynamicFields = <
                 key={field.name}
                 form={field.form!}
                 name={field.name!}
-                label={field.label!}
+                label={field.getLabel?.(field.name) || field.label || ""}
                 options={field.options}
                 errorResponse={field.errorResponse}
               />

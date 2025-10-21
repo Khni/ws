@@ -65,6 +65,7 @@ const Form = ({
   return (
     <CustomForm
       cardTitle={formTitleFallback}
+      getLabel={roleFieldTranslations}
       submitButtonText={submitButtonTextFallBack}
       form={form}
       onSubmit={submit}
@@ -75,7 +76,6 @@ const Form = ({
           key: "name",
           content: {
             name: "name",
-            label: roleFieldTranslations("name"),
             form: form,
             type: "text",
           },
@@ -89,7 +89,6 @@ const Form = ({
           key: "description",
           content: {
             name: "description",
-            label: roleFieldTranslations("description"),
             form: form,
             type: "text",
           },
