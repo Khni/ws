@@ -1,4 +1,4 @@
-import RoleForm from "@/features/role/form/role-details-form";
+import { RoleForm } from "@/features/role";
 import React from "react";
 
 export default function RolePage() {

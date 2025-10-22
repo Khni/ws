@@ -8,6 +8,9 @@
       "deleted": "The {thing} has been deleted successfully",
       "sent": "The {thing} has been sent successfully"
     },
+    "alertMsgs": {
+      "unknownError": "An unknown error occurred. Please try again later."
+    },
     "actions": {
       "save": "Save",
       "add": "Add",

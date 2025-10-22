@@ -27,7 +27,7 @@ import DynamicGrid, {
 // ------------------
 // Props
 // ------------------
-interface CustomFormProps<T extends FieldValues, E> {
+export interface CustomFormProps<T extends FieldValues, E> {
   form: UseFormReturn<T>;
   fields?: DynamicGridItem<DynamicField<T, E>>[];
   getLabel?: (name: Path<T>) => string;
@@ -105,7 +105,7 @@ const CustomForm = <T extends FieldValues, E>({
                 <DynamicGrid
                   items={fields}
                   contentMapper={(content: any) => (
-                    <DynamicFields fields={[{ ...content, getLabel }]} />
+                    <DynamicFields fields={[{ ...content, getLabel, form }]} />
                   )}
                 />
               ) : null}

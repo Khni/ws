@@ -2,7 +2,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
-
+import { useEffect } from "react";
+import { Form as CustomForm } from "@/components/form";
 //----changeable
 import {
   ErrorResponse,
@@ -18,35 +19,31 @@ const defaultValues = {
 
 //----
 
-import { useEffect, useState } from "react";
-
-import CustomForm from "@workspace/ui/core/form/custom-form";
-import { useUpsertRoleHandler } from "@/features/role/form/useUpsertRoleHandler";
-import { useRoleTranslations } from "@/features/role/translations/hooks/useRoleTrans";
-import { useCommonTranslations } from "messages/common/hooks/useCommonTranslations";
-
 type Props = {
   role?: RoleCreateForm & { id: string };
-  getPlaceHolders?: (key: "submit" | "loading") => string;
-  getFormTitle?: (key: "formTitle") => string;
+  error?: ErrorResponse<RoleErrorCodesType>;
+  codeTransform?: (key: RoleErrorCodesType) => string;
+  submit: (data: RoleCreateForm) => void;
+  isLoading: boolean;
+  roleFieldTranslations: (key: keyof RoleCreateForm) => string;
+  formTitle: string;
 };
 const Form = ({
   role,
-  getFormTitle = (key) => "Fill The Fields",
-  getPlaceHolders: getText = (key) => key,
+  error,
+  submit,
+  isLoading,
+  roleFieldTranslations,
+  formTitle,
+  codeTransform,
 }: Props) => {
-  const { msgTranslations } = useCommonTranslations();
-  const { roleFieldTranslations, roleHeaderTranslations } =
-    useRoleTranslations();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues,
   });
 
-  const [errorResponse, setErrorResponse] =
-    useState<ErrorResponse<RoleErrorCodesType>>();
   //----changeable
-  const { submit, isPending } = useUpsertRoleHandler({ id: role?.id });
+
   useEffect(() => {
     if (role) {
       form.reset({
@@ -57,26 +54,20 @@ const Form = ({
   }, [role, form]);
   //--------------
 
-  const formTitleFallback = roleHeaderTranslations("newRole");
-
-  const submitButtonTextFallBack = getText("submit");
-
-  const isLoadingTextFallBack = getText("loading");
   return (
     <CustomForm
-      cardTitle={formTitleFallback}
+      cardTitle={formTitle}
       getLabel={roleFieldTranslations}
-      submitButtonText={submitButtonTextFallBack}
       form={form}
       onSubmit={submit}
-      isLoadingText={isLoadingTextFallBack}
-      isLoading={isPending}
+      isLoading={isLoading}
+      error={error}
+      codeTransform={codeTransform}
       fields={[
         {
           key: "name",
           content: {
             name: "name",
-            form: form,
             type: "text",
           },
 
@@ -89,7 +80,6 @@ const Form = ({
           key: "description",
           content: {
             name: "description",
-            form: form,
             type: "text",
           },
 
@@ -99,9 +89,7 @@ const Form = ({
           },
         },
       ]}
-    >
-      <></>
-    </CustomForm>
+    />
   );
 };
 

@@ -7,6 +7,7 @@ export const useCommonTranslations = () => {
   const placeholderTranslations = useTranslations("common.placeholders");
   const statusTranslations = useTranslations("common.status");
   const validationTranslations = useTranslations("common.validation");
+  const alertMsgsTranslations = useTranslations("common.alertMsgs");
 
   return {
     actionTranslations,
@@ -15,5 +16,6 @@ export const useCommonTranslations = () => {
     placeholderTranslations,
     statusTranslations,
     validationTranslations,
+    alertMsgsTranslations,
   };
 };
