@@ -11,6 +11,7 @@ import {
   RoleErrorCodesType,
   roleCreateFormSchema as schema,
 } from "@khaled/ims-shared";
+import PermissionsMatrix from "@/features/role/form/permissionsMatrix";
 
 const defaultValues = {
   name: "",
@@ -89,7 +90,9 @@ const Form = ({
           },
         },
       ]}
-    />
+    >
+      <PermissionsMatrix />
+    </CustomForm>
   );
 };
 

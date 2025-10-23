@@ -4,6 +4,8 @@ import Form from "./role-details-form";
 import { useRoleTranslations } from "@/features/role/translations/hooks/useRoleTrans";
 import { ErrorResponse, RoleErrorCodesType } from "@khaled/ims-shared";
 import { useState } from "react";
+import { MatrixView } from "@workspace/ui/core/matrix-view";
+import PermissionsMatrix from "@/features/role/form/permissionsMatrix";
 
 export const RoleForm = ({ id }: { id?: string }) => {
   const [error, setError] = useState<ErrorResponse<RoleErrorCodesType>>();
@@ -18,13 +20,15 @@ export const RoleForm = ({ id }: { id?: string }) => {
   } = useRoleTranslations();
 
   return (
-    <Form
-      submit={submit}
-      isLoading={isPending}
-      roleFieldTranslations={roleFieldTranslations}
-      formTitle={roleHeaderTranslations("newRole")}
-      error={error}
-      codeTransform={roleErrorTranslations}
-    />
+    <>
+      <Form
+        submit={submit}
+        isLoading={isPending}
+        roleFieldTranslations={roleFieldTranslations}
+        formTitle={roleHeaderTranslations("newRole")}
+        error={error}
+        codeTransform={roleErrorTranslations}
+      />
+    </>
   );
 };

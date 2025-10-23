@@ -5,7 +5,9 @@ import CustomForm, {
 import { useCommonTranslations } from "messages/common/hooks/useCommonTranslations";
 import { FieldValues } from "react-hook-form";
 
-export type FormProps<T extends FieldValues, E, S extends string> = {} & Omit<
+export type FormProps<T extends FieldValues, E, S extends string> = {
+  children?: React.ReactNode;
+} & Omit<
   CustomFormProps<T, E>,
   "isLoadingText" | "submitButtonText" | "children"
 > &
@@ -20,6 +22,7 @@ export const Form = <T extends FieldValues, E, S extends string>({
   codeTransform,
   cardTitle,
   cardDescription,
+  children,
 }: FormProps<T, E, S>) => {
   const {
     placeholderTranslations,
@@ -39,6 +42,7 @@ export const Form = <T extends FieldValues, E, S extends string>({
       cardTitle={cardTitle}
       cardDescription={cardDescription}
     >
+      {children}
       <ErrorAlert
         errorTitle={statusTranslations("error")}
         errorDescriptionFallback={alertMsgsTranslations("unknownError")}
