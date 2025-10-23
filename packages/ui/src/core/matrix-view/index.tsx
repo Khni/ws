@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import {
   Table,
   TableBody,
@@ -9,9 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table";
-import { Checkbox } from "@workspace/ui/components/checkbox";
 
-// ✅ Generic Prop Types
 export type MatrixViewProps<
   R extends Record<string, any>,
   C extends Record<string, any>,
@@ -21,116 +19,146 @@ export type MatrixViewProps<
   ColIdKey extends keyof C = keyof C,
   CellIdKey extends keyof Cell = keyof Cell,
 > = {
-  rowHeaders: R[];
-  columnHeaders: C[];
-  cells: Cell[];
+  rowHeaders: {
+    data: R[];
+    keys: { idKey: RowIdKey; nameKey?: keyof R };
+  };
+  columnHeaders: {
+    data: C[];
+    keys: { idKey: ColIdKey; nameKey: keyof C };
+  };
+  cells: {
+    data: Cell[];
+    keys: { idKey: CellIdKey; rowIdKey: keyof Cell; colIdKey: keyof Cell };
+  };
   checkedCells?: Checked[];
   onChange?: (checked: Checked[]) => void;
 
-  // ✅ Keys to use for mapping (type-safe)
-  rowIdKey: RowIdKey;
-  colIdKey: ColIdKey;
-  cellIdKey: CellIdKey;
+  /**
+   * Custom render function for cells
+   */
+  renderCell?: (params: {
+    cell: Cell;
+    row: R;
+    column: C;
+    checked: boolean;
+    toggle: () => void;
+  }) => ReactNode;
 
-  // ✅ For rendering names
-  rowNameKey?: keyof R;
-  colNameKey?: keyof C;
+  /**
+   * Optional class names for styling
+   */
+  className?: string;
 };
 
-export const MatrixView = <
+export function MatrixView<
   R extends Record<string, any>,
   C extends Record<string, any>,
   Cell extends Record<string, any>,
   Checked extends Record<string, any>,
+  RowIdKey extends keyof R = keyof R,
+  ColIdKey extends keyof C = keyof C,
+  CellIdKey extends keyof Cell = keyof Cell,
 >({
   rowHeaders,
   columnHeaders,
   cells,
   checkedCells = [],
   onChange,
-  rowIdKey,
-  colIdKey,
-  cellIdKey,
-  rowNameKey,
-  colNameKey,
-}: MatrixViewProps<R, C, Cell, Checked>) => {
-  const [_checkedCells, setCheckedCells] = useState(checkedCells);
+  renderCell,
+  className,
+}: MatrixViewProps<R, C, Cell, Checked, RowIdKey, ColIdKey, CellIdKey>) {
+  const [_checkedCells, setCheckedCells] = useState<Checked[]>(checkedCells);
 
-  // ✅ Helper to get a type-safe ID value
-  const getKeyValue = <T extends Record<string, any>, K extends keyof T>(
-    obj: T,
-    key: K
-  ) => obj[key] as string;
+  // ✅ Helpers
+  const getRowId = (row: R) => row[rowHeaders.keys.idKey];
+  const getColId = (col: C) => col[columnHeaders.keys.idKey];
+  const getRowName = (row: R) =>
+    rowHeaders.keys.nameKey ? row[rowHeaders.keys.nameKey] : getRowId(row);
+  const getColName = (col: C) => col[columnHeaders.keys.nameKey];
 
-  const isCellChecked = (cellId: string) =>
-    _checkedCells.some((p: any) => p[cellIdKey] === cellId);
+  const getCellId = (cell: Cell) => cell[cells.keys.idKey];
+  const getCellRowId = (cell: Cell) => cell[cells.keys.rowIdKey];
+  const getCellColId = (cell: Cell) => cell[cells.keys.colIdKey];
 
-  const findCell = (rowId: string, colId: string) =>
-    cells.find(
-      (c) =>
-        getKeyValue(c, rowIdKey as keyof Cell) === rowId &&
-        getKeyValue(c, colIdKey as keyof Cell) === colId
-    );
+  const isCellChecked = (cellId: string | number) =>
+    _checkedCells.some((c) => Object.values(c).includes(cellId));
 
-  const handleToggle = (cellId: string) => {
-    setCheckedCells((prev: any[]) => {
-      const exists = prev.some((p) => p[cellIdKey] === cellId);
+  const handleToggle = (cellId: string | number) => {
+    setCheckedCells((prev) => {
+      const exists = isCellChecked(cellId);
       const newChecked = exists
-        ? prev.filter((p) => p[cellIdKey] !== cellId)
-        : [...prev, { [cellIdKey]: cellId }];
+        ? prev.filter((c) => !Object.values(c).includes(cellId))
+        : [...prev, { cellId } as unknown as Checked];
 
-      onChange?.(newChecked as Checked[]);
+      onChange?.(newChecked);
       return newChecked;
     });
   };
 
+  const findCell = (rowId: string | number, colId: string | number) =>
+    cells.data.find(
+      (c) => getCellRowId(c) === rowId && getCellColId(c) === colId
+    );
+
   return (
-    <div className="rounded-2xl border shadow-sm overflow-hidden">
+    <div
+      className={`rounded-2xl border shadow-sm overflow-hidden ${className ?? ""}`}
+    >
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="bg-muted font-semibold w-40 text-left"></TableHead>
-            {columnHeaders.map((col) => (
+            <TableHead className="bg-muted font-semibold w-40 text-left">
+              Resources
+            </TableHead>
+            {columnHeaders.data.map((col) => (
               <TableHead
-                key={getKeyValue(col, colIdKey)}
+                key={getColId(col)}
                 className="text-center font-semibold bg-muted"
               >
-                {colNameKey
-                  ? getKeyValue(col, colNameKey)
-                  : getKeyValue(col, colIdKey)}
+                {getColName(col)}
               </TableHead>
             ))}
           </TableRow>
         </TableHeader>
 
         <TableBody>
-          {rowHeaders.map((row) => (
-            <TableRow key={getKeyValue(row, rowIdKey)}>
+          {rowHeaders.data.map((row) => (
+            <TableRow key={getRowId(row)}>
               <TableCell className="font-medium bg-muted/30 text-left">
-                {rowNameKey
-                  ? getKeyValue(row, rowNameKey)
-                  : getKeyValue(row, rowIdKey)}
+                {getRowName(row)}
               </TableCell>
 
-              {columnHeaders.map((col) => {
-                const rowId = getKeyValue(row, rowIdKey);
-                const colId = getKeyValue(col, colIdKey);
-                const cell = findCell(rowId, colId);
-                const checked = cell
-                  ? isCellChecked(getKeyValue(cell, cellIdKey))
-                  : false;
+              {columnHeaders.data.map((col) => {
+                const cell = findCell(getRowId(row), getColId(col));
+
+                if (!cell)
+                  return (
+                    <TableCell key={getColId(col)} className="text-center">
+                      <div>-</div>
+                    </TableCell>
+                  );
+
+                const cellId = getCellId(cell);
+                const checked = isCellChecked(cellId);
+                const toggle = () => handleToggle(cellId);
 
                 return (
-                  <TableCell key={colId} className="text-center">
-                    {!cell ? (
-                      <div>-</div>
+                  <TableCell key={getColId(col)} className="text-center">
+                    {renderCell ? (
+                      renderCell({
+                        cell,
+                        row,
+                        column: col,
+                        checked,
+                        toggle,
+                      })
                     ) : (
-                      <Checkbox
+                      <input
+                        type="checkbox"
                         className="cursor-pointer"
                         checked={checked}
-                        onCheckedChange={() =>
-                          handleToggle(getKeyValue(cell, cellIdKey))
-                        }
+                        onChange={toggle}
                       />
                     )}
                   </TableCell>
@@ -142,4 +170,4 @@ export const MatrixView = <
       </Table>
     </div>
   );
-};
+}
