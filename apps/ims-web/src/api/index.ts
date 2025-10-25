@@ -27,6 +27,8 @@ import type {
   GetCountriesParams,
   GetFilterdTimeZones200Item,
   GetOwnedOrganizations200Item,
+  GetPermissionMatrix200,
+  GetRolePermissions200Item,
   GetStates200Item,
   GetStatesParams,
   GetUserOrganizations200Item,
@@ -764,6 +766,122 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       return useMutation(mutationOptions );
     }
     
+export const getPermissionMatrix = (
+    
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetPermissionMatrix200>(
+      {url: `/permissions/headers`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetPermissionMatrixQueryKey = () => {
+    return [`/permissions/headers`] as const;
+    }
+
+    
+export const getGetPermissionMatrixQueryOptions = <TData = Awaited<ReturnType<typeof getPermissionMatrix>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPermissionMatrix>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPermissionMatrixQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPermissionMatrix>>> = ({ signal }) => getPermissionMatrix(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPermissionMatrix>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPermissionMatrixQueryResult = NonNullable<Awaited<ReturnType<typeof getPermissionMatrix>>>
+export type GetPermissionMatrixQueryError = ErrorType<unknown>
+
+
+
+export function useGetPermissionMatrix<TData = Awaited<ReturnType<typeof getPermissionMatrix>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPermissionMatrix>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+  
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPermissionMatrixQueryOptions(options)
+
+  const query = useQuery(queryOptions ) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+export const getRolePermissions = (
+    roleId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetRolePermissions200Item[]>(
+      {url: `/permissions/${roleId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetRolePermissionsQueryKey = (roleId?: string,) => {
+    return [`/permissions/${roleId}`] as const;
+    }
+
+    
+export const getGetRolePermissionsQueryOptions = <TData = Awaited<ReturnType<typeof getRolePermissions>>, TError = ErrorType<unknown>>(roleId: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getRolePermissions>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetRolePermissionsQueryKey(roleId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRolePermissions>>> = ({ signal }) => getRolePermissions(roleId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(roleId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getRolePermissions>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetRolePermissionsQueryResult = NonNullable<Awaited<ReturnType<typeof getRolePermissions>>>
+export type GetRolePermissionsQueryError = ErrorType<unknown>
+
+
+
+export function useGetRolePermissions<TData = Awaited<ReturnType<typeof getRolePermissions>>, TError = ErrorType<unknown>>(
+ roleId: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getRolePermissions>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+  
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetRolePermissionsQueryOptions(roleId,options)
+
+  const query = useQuery(queryOptions ) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
 export const createOrgnization = (
     pickOrganizationModelExcludeKeyofOrganizationModelIdOrCreatedAtOrUpdatedAtOrOwnerId: PickOrganizationModelExcludeKeyofOrganizationModelIdOrCreatedAtOrUpdatedAtOrOwnerId,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal

@@ -212,6 +212,38 @@
 				],
 				"description": "API request body type — sent to backend during updates.\nIncludes permissions array."
 			},
+			"_36_Enums.ActionName": {
+				"type": "string",
+				"enum": [
+					"CREATE",
+					"READ",
+					"UPDATE",
+					"DELETE",
+					"APPROVE",
+					"REJECT",
+					"EXPORT",
+					"IMPORT",
+					"SHARE",
+					"ARCHIVE",
+					"RESTORE"
+				]
+			},
+			"_36_Enums.ResourceName": {
+				"type": "string",
+				"enum": [
+					"USER",
+					"ROLE",
+					"ITEM",
+					"INVOICE",
+					"CUSTOMER",
+					"SUPPLIER",
+					"PURCHASE_ORDER",
+					"SALES_ORDER",
+					"WAREHOUSE",
+					"ORGANIZATION",
+					"REPORT"
+				]
+			},
 			"Pick_OrganizationModel.Exclude_keyofOrganizationModel.id-or-createdAt-or-updatedAt-or-ownerId__": {
 				"properties": {
 					"name": {
@@ -775,6 +807,159 @@
 						}
 					}
 				}
+			}
+		},
+		"/permissions/headers": {
+			"get": {
+				"operationId": "GetPermissionMatrix",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"permissions": {
+											"items": {
+												"properties": {
+													"isDangerous": {
+														"type": "boolean"
+													},
+													"category": {
+														"type": "string"
+													},
+													"resourceId": {
+														"type": "string"
+													},
+													"actionId": {
+														"type": "string"
+													},
+													"description": {
+														"type": "string"
+													},
+													"id": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"isDangerous",
+													"category",
+													"resourceId",
+													"actionId",
+													"description",
+													"id"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										},
+										"resources": {
+											"items": {
+												"properties": {
+													"description": {
+														"type": "string"
+													},
+													"name": {
+														"$ref": "#/components/schemas/_36_Enums.ResourceName"
+													},
+													"id": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"description",
+													"name",
+													"id"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										},
+										"actions": {
+											"items": {
+												"properties": {
+													"description": {
+														"type": "string"
+													},
+													"name": {
+														"$ref": "#/components/schemas/_36_Enums.ActionName"
+													},
+													"id": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"description",
+													"name",
+													"id"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"permissions",
+										"resources",
+										"actions"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"permissions"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/permissions/{roleId}": {
+			"get": {
+				"operationId": "GetRolePermissions",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"properties": {
+											"permissionId": {
+												"type": "string"
+											},
+											"id": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"permissionId",
+											"id"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"permissions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "roleId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/organization": {

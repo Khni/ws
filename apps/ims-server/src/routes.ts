@@ -16,6 +16,8 @@ import { LocalAuthController } from './user/controllers/LocalAuthController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { RoleController } from './role/RoleController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { PermissionController } from './role/PermissionController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { OrgnizationController } from './orgnization/controllers/OrgnizationController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { CountryController } from './orgnization/controllers/CountryController.js';
@@ -101,6 +103,16 @@ const models: TsoaRoute.Models = {
     "RoleUpdateBody": {
         "dataType": "refAlias",
         "type": {"dataType":"intersection","subSchemas":[{"ref":"RoleUpdateInput"},{"dataType":"nestedObjectLiteral","nestedProperties":{"permissions":{"ref":"RolePermissionCreateManyInput","required":true}}}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "_36_Enums.ActionName": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["CREATE"]},{"dataType":"enum","enums":["READ"]},{"dataType":"enum","enums":["UPDATE"]},{"dataType":"enum","enums":["DELETE"]},{"dataType":"enum","enums":["APPROVE"]},{"dataType":"enum","enums":["REJECT"]},{"dataType":"enum","enums":["EXPORT"]},{"dataType":"enum","enums":["IMPORT"]},{"dataType":"enum","enums":["SHARE"]},{"dataType":"enum","enums":["ARCHIVE"]},{"dataType":"enum","enums":["RESTORE"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "_36_Enums.ResourceName": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["USER"]},{"dataType":"enum","enums":["ROLE"]},{"dataType":"enum","enums":["ITEM"]},{"dataType":"enum","enums":["INVOICE"]},{"dataType":"enum","enums":["CUSTOMER"]},{"dataType":"enum","enums":["SUPPLIER"]},{"dataType":"enum","enums":["PURCHASE_ORDER"]},{"dataType":"enum","enums":["SALES_ORDER"]},{"dataType":"enum","enums":["WAREHOUSE"]},{"dataType":"enum","enums":["ORGANIZATION"]},{"dataType":"enum","enums":["REPORT"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_OrganizationModel.Exclude_keyofOrganizationModel.id-or-createdAt-or-updatedAt-or-ownerId__": {
@@ -495,6 +507,65 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'updateRole',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsPermissionController_getPermissionMatrix: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/permissions/headers',
+            ...(fetchMiddlewares<RequestHandler>(PermissionController)),
+            ...(fetchMiddlewares<RequestHandler>(PermissionController.prototype.getPermissionMatrix)),
+
+            async function PermissionController_getPermissionMatrix(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsPermissionController_getPermissionMatrix, request, response });
+
+                const controller = new PermissionController();
+
+              await templateService.apiHandler({
+                methodName: 'getPermissionMatrix',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsPermissionController_getRolePermissions: Record<string, TsoaRoute.ParameterSchema> = {
+                roleId: {"in":"path","name":"roleId","required":true,"dataType":"string"},
+        };
+        app.get('/permissions/:roleId',
+            ...(fetchMiddlewares<RequestHandler>(PermissionController)),
+            ...(fetchMiddlewares<RequestHandler>(PermissionController.prototype.getRolePermissions)),
+
+            async function PermissionController_getRolePermissions(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsPermissionController_getRolePermissions, request, response });
+
+                const controller = new PermissionController();
+
+              await templateService.apiHandler({
+                methodName: 'getRolePermissions',
                 controller,
                 response,
                 next,
