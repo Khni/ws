@@ -31,7 +31,7 @@ export type MatrixViewProps<
     data: Cell[];
     keys: { idKey: CellIdKey; rowIdKey: keyof Cell; colIdKey: keyof Cell };
   };
-  checkedCells?: Checked[];
+  checkedCells?: { data: Checked[]; keys: { cellId: keyof Checked } };
   onChange?: (checked: Checked[]) => void;
 
   /**
@@ -63,12 +63,14 @@ export function MatrixView<
   rowHeaders,
   columnHeaders,
   cells,
-  checkedCells = [],
+  checkedCells = { data: [], keys: { cellId: "cellId" } },
   onChange,
   renderCell,
   className,
 }: MatrixViewProps<R, C, Cell, Checked, RowIdKey, ColIdKey, CellIdKey>) {
-  const [_checkedCells, setCheckedCells] = useState<Checked[]>(checkedCells);
+  const [_checkedCells, setCheckedCells] = useState<Checked[]>(
+    checkedCells.data
+  );
 
   // ✅ Helpers
   const getRowId = (row: R) => row[rowHeaders.keys.idKey];

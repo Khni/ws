@@ -36,8 +36,8 @@ export default function PermissionsMatrix() {
   ];
 
   const checkedCells = [
-    { cellId: "f5a8a3c1-1cb3-40bb-9a2c-1a44a0f87bfa" },
-    { cellId: "cb3a47a1-f40e-4f89-a91f-b4c17dc931a7" },
+    { permId: "f5a8a3c1-1cb3-40bb-9a2c-1a44a0f87bfa" },
+    { permId: "cb3a47a1-f40e-4f89-a91f-b4c17dc931a7" },
   ];
 
   return (
@@ -51,7 +51,7 @@ export default function PermissionsMatrix() {
         data: cells,
         keys: { colIdKey: "colId", idKey: "id", rowIdKey: "rowId" },
       }}
-      checkedCells={checkedCells}
+      checkedCells={{ data: checkedCells, keys: { cellId: "permId" } }}
       onChange={(newChecked) => console.log("New Checked Cells:", newChecked)}
     />
   );
