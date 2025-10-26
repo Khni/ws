@@ -10,6 +10,7 @@ import {
   Query,
   Path,
   Put,
+  Queries,
 } from "tsoa";
 import type { Request as RequestType } from "express";
 import {
@@ -17,6 +18,8 @@ import {
   type RoleUpdateBody,
   roleUpdateBodySchema,
   type RoleCreateBody,
+  type RoleFilters,
+  roleFiltersSchema,
 } from "@khaled/ims-shared";
 import { RoleService } from "./RoleService.js";
 import { isAuthentecated } from "../user/middlewares/isAuthenticatedMiddleware.js";
@@ -24,6 +27,7 @@ import { validateZodSchemaMiddleware } from "../core/schema/validateZodErrorMidd
 import { RoleError } from "./errors/RoleError.js";
 import { errorMapper } from "@khaled/error-handler";
 import { roleErrorMapping } from "./errors/RoleErrorsMapping.js";
+
 @Tags("role")
 @Route("role")
 export class RoleController extends Controller {
@@ -78,5 +82,16 @@ export class RoleController extends Controller {
 
       throw error;
     }
+  }
+
+  @Middlewares([
+    isAuthentecated,
+    validateZodSchemaMiddleware({
+      querySchema: roleFiltersSchema,
+    }),
+  ])
+  @Get("/")
+  public async roleList(@Queries() queryParams: RoleFilters) {
+    return await this.roleService.findMany(queryParams);
   }
 }

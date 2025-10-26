@@ -120,7 +120,10 @@ export class RoleRepository {
   }) {
     try {
       return await this.db.findMany({
-        where,
+        where: {
+          ...where,
+          name: { contains: where?.name, mode: "insensitive" },
+        },
         take: limit,
         orderBy,
         skip: offset,

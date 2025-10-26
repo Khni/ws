@@ -90,6 +90,16 @@ export class RoleService {
       where: { id },
     });
   }
+  async findMany({
+    organizationId,
+  }: {
+    organizationId: string;
+    name?: string;
+  }) {
+    return await this.roleRepository.findMany({
+      where: { organizationId, name: "" },
+    });
+  }
 
   async delete(id: string) {
     return await this.roleRepository.delete({

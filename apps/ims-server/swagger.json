@@ -212,6 +212,22 @@
 				],
 				"description": "API request body type — sent to backend during updates.\nIncludes permissions array."
 			},
+			"RoleFilters": {
+				"properties": {
+					"organizationId": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"organizationId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"_36_Enums.ActionName": {
 				"type": "string",
 				"enum": [
@@ -718,6 +734,94 @@
 						}
 					}
 				}
+			},
+			"get": {
+				"operationId": "RoleList",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"properties": {
+											"priority": {
+												"type": "number",
+												"format": "double"
+											},
+											"isSystem": {
+												"type": "boolean"
+											},
+											"createdById": {
+												"type": "string"
+											},
+											"organizationId": {
+												"type": "string"
+											},
+											"description": {
+												"type": "string"
+											},
+											"name": {
+												"type": "string"
+											},
+											"expiresAt": {
+												"type": "string",
+												"format": "date-time"
+											},
+											"updatedAt": {
+												"type": "string",
+												"format": "date-time"
+											},
+											"createdAt": {
+												"type": "string",
+												"format": "date-time"
+											},
+											"id": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"priority",
+											"isSystem",
+											"createdById",
+											"organizationId",
+											"description",
+											"name",
+											"expiresAt",
+											"updatedAt",
+											"createdAt",
+											"id"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"role"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "organizationId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "name",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/role/{id}": {
