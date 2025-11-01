@@ -1,5 +1,6 @@
 import {
   RoleCreateInput,
+  RoleFilters,
   RolePermissionCreateManyInput,
   RoleUpdateInput,
 } from "@khaled/ims-shared";
@@ -90,14 +91,9 @@ export class RoleService {
       where: { id },
     });
   }
-  async findMany({
-    organizationId,
-  }: {
-    organizationId: string;
-    name?: string;
-  }) {
+  async findMany(where: RoleFilters) {
     return await this.roleRepository.findMany({
-      where: { organizationId, name: "" },
+      where,
     });
   }
 
