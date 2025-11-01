@@ -14,6 +14,11 @@ export const roleModelSchema = z.object({
 
 export const roleWhereInputSchema = roleModelSchema.partial();
 
+export const roleFiltersSchema = z.object({
+  organizationId: z.uuid(),
+  name: z.string().optional(),
+});
+
 export const roleCreateInputSchema = roleModelSchema.omit({
   id: true,
   createdAt: true,

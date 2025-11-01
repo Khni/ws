@@ -46,6 +46,8 @@ import type {
   ResetForgettenPassword200,
   ResetForgettenPasswordInput,
   RoleCreateBody,
+  RoleList200Item,
+  RoleListParams,
   RoleUpdateBody,
   UpdateRole200,
   UserResponseType,
@@ -707,6 +709,65 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       return useMutation(mutationOptions );
     }
     
+export const roleList = (
+    params: RoleListParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<RoleList200Item[]>(
+      {url: `/role`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getRoleListQueryKey = (params?: RoleListParams,) => {
+    return [`/role`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getRoleListQueryOptions = <TData = Awaited<ReturnType<typeof roleList>>, TError = ErrorType<unknown>>(params: RoleListParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof roleList>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getRoleListQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof roleList>>> = ({ signal }) => roleList(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof roleList>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type RoleListQueryResult = NonNullable<Awaited<ReturnType<typeof roleList>>>
+export type RoleListQueryError = ErrorType<unknown>
+
+
+
+export function useRoleList<TData = Awaited<ReturnType<typeof roleList>>, TError = ErrorType<unknown>>(
+ params: RoleListParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof roleList>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+  
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getRoleListQueryOptions(params,options)
+
+  const query = useQuery(queryOptions ) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
 export const updateRole = (
     id: string,
     roleUpdateBody: RoleUpdateBody,

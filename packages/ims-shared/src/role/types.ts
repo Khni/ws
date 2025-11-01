@@ -21,6 +21,14 @@ export type RoleModel = {
  */
 export type RoleWhereInput = Partial<RoleModel>;
 
+export interface RoleFilters {
+  /**
+   * @format uuid
+   */
+  organizationId: string;
+  name?: string; // this for containing
+}
+
 /* -------------------------------------------------------------------------- */
 /*                             CREATE ROLE TYPES                              */
 /* -------------------------------------------------------------------------- */
