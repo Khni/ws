@@ -1,0 +1,66 @@
+// orgnization
+//############################################
+//############################################
+model Language {
+  id            String         @id @default(uuid())
+  code          String         @unique // ISO 639-1 code like 'en', 'ar', 'fr', etc.
+  name          String // English name e.g. 'English'
+  nativeName    String // Native name e.g. 'العربية'
+  isDefault     Boolean        @default(false)
+  organizations Organization[]
+}
+
+model IndustryCategory {
+  id            String         @id @default(uuid())
+  code          String         @unique // e.g. "MANUFACTURING"
+  label         String // e.g. "Manufacturing"
+  organizations Organization[]
+}
+
+model FiscalYearPattern {
+  id            String         @id @default(uuid())
+  code          String         @unique // e.g. "APR_MAR"
+  label         String // e.g. "April - March"
+  startMonth    String // 4
+  endMonth      String // 3
+  organizations Organization[]
+}
+
+model Organization {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+
+  stateId String
+  state   State  @relation(fields: [stateId], references: [id])
+
+  currencyId String
+  currency   Currency @relation(fields: [currencyId], references: [id])
+
+  timeZoneId String
+  timeZone   TimeZone @relation(fields: [timeZoneId], references: [id])
+
+  inventoryStartDate DateTime
+  languageId         String?
+  language           Language? @relation(fields: [languageId], references: [id])
+
+  industryCategoryId String?
+  industryCategory   IndustryCategory? @relation(fields: [industryCategoryId], references: [id])
+
+  fiscalYearPatternId String?
+  fiscalYearPattern   FiscalYearPattern? @relation(fields: [fiscalYearPatternId], references: [id])
+
+  //role relations
+  userRoles UserRole[]
+  roles     Role[]
+  owner     User       @relation("OrganizationOwner", fields: [ownerId], references: [id])
+  ownerId   String
+  // optional fields
+  address   String?
+  zipCode   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, ownerId])
+}

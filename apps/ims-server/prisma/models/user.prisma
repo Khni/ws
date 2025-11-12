@@ -1,0 +1,102 @@
+// ========= ENUMS =========
+
+enum OtpType {
+  SIGN_UP
+  LOGIN
+  FORGET_PASSWORD
+}
+
+enum OauthProvider {
+  NONE
+  FACEBOOK
+  GOOGLE
+}
+
+// ========= MODELS =========
+
+model Otp {
+  id         String   @id @default(uuid())
+  type       OtpType
+  hashedOtp  String
+  identifier String
+  expiresAt  DateTime
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt()
+}
+
+model User {
+  id       String  @id @default(uuid())
+  password String?
+
+  // Relations
+  identifiers   UserIdentifier[]
+  profile       UserProfile?
+  refreshTokens RefreshToken[]
+  // Relationships
+  userRoles     UserRole[]
+  createdRoles  Role[]           @relation("RoleCreator")
+
+  ownedOrganizations Organization[] @relation("OrganizationOwner")
+
+  // Audit & Timestamps
+  lastLoginAt DateTime?
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+}
+
+model UserIdentifier {
+  id         String         @id @default(uuid())
+  userId     String
+  type       IdentifierType
+  value      String
+  isVerified Boolean        @default(false)
+  isPrimary  Boolean        @default(false)
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@unique([type, value]) // ensure no duplicate identifiers
+  @@index([userId])
+}
+
+model UserProfile {
+  id           String  @id @default(uuid())
+  userId       String  @unique
+  name         String
+  avatarUrl    String?
+  contactEmail String? // for notifications, can differ from login email
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+}
+
+enum IdentifierType {
+  email
+  phone
+  username
+  google
+  apple
+  github
+  facebook
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  token     String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userAgent String?
+  ipAddress String?
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt()
+}
