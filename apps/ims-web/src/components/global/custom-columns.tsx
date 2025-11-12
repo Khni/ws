@@ -11,7 +11,7 @@ interface CustomColumn<T> {
   wrapperElement?: React.ElementType;
   render?: CellRenderFn<T>;
 }
-interface Props<T> {
+export interface CreateColumnsProps<T> {
   columns: CustomColumn<T>[];
   getHeader: (key: keyof T) => string;
 }
@@ -19,7 +19,7 @@ interface Props<T> {
 export function createColumns<T extends object>({
   columns,
   getHeader,
-}: Props<T>): ColumnDef<T>[] {
+}: CreateColumnsProps<T>): ColumnDef<T>[] {
   return columns.map((col) => ({
     accessorKey: col.key as string,
     header: getHeader(col.key),

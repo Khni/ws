@@ -1,4 +1,3 @@
-
 enum UserRoleStatus {
   PENDING
   ACTIVE
@@ -17,8 +16,8 @@ model Role {
   createdById    String
 
   // Role metadata
-  isSystem Boolean        @default(false)
-  priority Int            @default(0)
+  isSystem Boolean @default(false)
+  priority Int     @default(0)
 
   // Permissions
   rolePermissions       RolePermission[]
@@ -89,12 +88,12 @@ model RoleCustomPermission {
   customPermissionId String
 
   // Additional context for high-risk permissions
-  conditions          Json?
-  approvalRequired    Boolean              @default(false)
-  approvedBy          String? // User ID who approved this permission
-  approvedAt          DateTime?
-  grantedAt           DateTime             @default(now())
-  grantedBy           String
+  conditions       Json?
+  approvalRequired Boolean   @default(false)
+  approvedBy       String? // User ID who approved this permission
+  approvedAt       DateTime?
+  grantedAt        DateTime  @default(now())
+  grantedBy        String
 
   @@unique([roleId, customPermissionId])
   @@index([roleId])

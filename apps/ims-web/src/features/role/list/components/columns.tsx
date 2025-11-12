@@ -1,11 +1,15 @@
 "use client";
 
 import { useRoleTranslations } from "@/features/role/translations/hooks/useRoleTrans";
-import { createColumns } from "@/components/global/custom-columns";
+import {
+  createColumns,
+  CreateColumnsProps,
+} from "@/components/global/custom-columns";
 import { RoleList200Item } from "@/api/model";
 
-export const RoleColumns = () => {
-  const { roleColumnHeaderTranslations } = useRoleTranslations();
+export const RoleColumns = ({
+  getHeader,
+}: Pick<CreateColumnsProps<RoleList200Item>, "getHeader">) => {
   return createColumns<RoleList200Item>({
     columns: [
       {
@@ -15,8 +19,6 @@ export const RoleColumns = () => {
         key: "description",
       },
     ],
-    getHeader: roleColumnHeaderTranslations as (
-      key: keyof RoleList200Item
-    ) => string,
+    getHeader,
   });
 };
